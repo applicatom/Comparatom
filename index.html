@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#f59e0b" />
+<title>Comparatom</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Comparatom" />
+<style>
+  /* ===================== THÈME ===================== */
+  :root {
+    --bg: #f4f5f7;
+    --card: #ffffff;
+    --card2: #f8f9fb;
+    --text: #1a1a1e;
+    --text2: #6b7280;
+    --text3: #9ca3af;
+    --border: #eceef1;
+    --border2: #dde0e5;
+    --accent: #f59e0b;
+    --accent-strong: #d97706;
+    --accent-soft: #fef3c7;
+    --btn-text: #3a2400;
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --amber: #d97706;
+    --amber-soft: #fef3c7;
+    --red: #dc2626;
+    --red-soft: #fee2e2;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);
+    --maxw: 620px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101216;
+      --card: #191c22;
+      --card2: #20242c;
+      --text: #f0f1f3;
+      --text2: #9aa0ab;
+      --text3: #6b7280;
+      --border: #282c34;
+      --border2: #353a45;
+      --accent: #f59e0b;
+      --accent-strong: #fbbf24;
+      --accent-soft: #3a2d12;
+      --btn-text: #241700;
+      --green: #4ade80;
+      --green-soft: #14331f;
+      --amber: #fbbf24;
+      --amber-soft: #3a2d12;
+      --red: #f87171;
+      --red-soft: #3a1a1a;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101216; --card: #191c22; --card2: #20242c;
+    --text: #f0f1f3; --text2: #9aa0ab; --text3: #6b7280;
+    --border: #282c34; --border2: #353a45;
+    --accent: #f59e0b; --accent-strong: #fbbf24; --accent-soft: #3a2d12; --btn-text: #241700;
+    --green: #4ade80; --green-soft: #14331f; --amber: #fbbf24; --amber-soft: #3a2d12;
+    --red: #f87171; --red-soft: #3a1a1a; --shadow: 0 1px 3px rgba(0,0,0,.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  input, select, button, textarea { font-family: inherit; font-size: 16px; color: var(--text); }
+  button { cursor: pointer; }
+  a { color: var(--accent-strong); }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
+
+  /* ===================== EN-TÊTE ===================== */
+  .topbar {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-inner { max-width: var(--maxw); margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .brand { font-weight: 800; letter-spacing: -.02em; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .brand .dot { width: 22px; height: 22px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; font-size: 13px; }
+  .topbar .sub { margin-left: auto; font-size: 12px; color: var(--text2); font-weight: 600; }
+  .page-title { font-size: 22px; font-weight: 800; letter-spacing: -.02em; margin: 18px 0 4px; }
+  .page-sub { color: var(--text2); font-size: 13px; margin-bottom: 16px; }
+
+  /* ===================== NAV BASSE ===================== */
+  .bottom-nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    display: flex; padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+  }
+  .bottom-nav button {
+    flex: 1; background: none; border: none; padding: 7px 2px 5px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: var(--text3); font-size: 10px; font-weight: 600; border-radius: 12px;
+  }
+  .bottom-nav button .ic { font-size: 19px; line-height: 1; }
+  .bottom-nav button.active { color: var(--accent-strong); }
+  .app-scroll { padding-bottom: 96px; min-height: 100%; }
+
+  /* ===================== CARTES / COMPOSANTS ===================== */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .card.pad { padding: 16px; }
+  .stack > * + * { margin-top: 12px; }
+  .muted { color: var(--text2); }
+  .tiny { font-size: 12px; }
+  .center { text-align: center; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .spread { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .grow { flex: 1; min-width: 0; }
+  .ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  label.field { display: block; }
+  .field-label { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+  input[type=text], input[type=number], input[type=date], input[type=search], select, textarea {
+    width: 100%; padding: 13px 14px; background: var(--card2);
+    border: 1.5px solid var(--border2); border-radius: var(--radius-sm); outline: none;
+    transition: border-color .12s;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  input::placeholder { color: var(--text3); }
+  select { -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239ca3af' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 34px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 18px; border-radius: var(--radius-sm); border: none;
+    background: var(--accent); color: var(--btn-text); font-weight: 800; font-size: 15px;
+    width: 100%;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn.secondary { background: var(--card2); color: var(--text); border: 1.5px solid var(--border2); }
+  .btn.ghost { background: none; color: var(--text2); border: 1.5px solid var(--border2); }
+  .btn.small { padding: 9px 12px; font-size: 13px; width: auto; }
+  .btn.danger { background: var(--red-soft); color: var(--red); }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
+    border-radius: 999px; border: 1.5px solid var(--border2); background: var(--card2);
+    font-size: 13px; font-weight: 600; color: var(--text2);
+  }
+  .chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
+
+  .seg { display: flex; gap: 6px; background: var(--card2); border: 1.5px solid var(--border2); border-radius: var(--radius-sm); padding: 4px; }
+  .seg button { flex: 1; background: none; border: none; padding: 9px 6px; border-radius: 7px; font-weight: 700; font-size: 13px; color: var(--text2); }
+  .seg button.on { background: var(--accent); color: var(--btn-text); }
+
+  .pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+  .pill.green { background: var(--green-soft); color: var(--green); }
+  .pill.amber { background: var(--amber-soft); color: var(--amber); }
+  .pill.red { background: var(--red-soft); color: var(--red); }
+  .pill.grey { background: var(--card2); color: var(--text3); }
+
+  .list-row { display: flex; align-items: center; gap: 12px; padding: 13px 14px; }
+  .list-row + .list-row { border-top: 1px solid var(--border); }
+  .list-row .lead { width: 34px; height: 34px; border-radius: 9px; background: var(--card2); display: grid; place-items: center; font-size: 17px; flex-shrink: 0; }
+
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .cat-tile { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 10px; text-align: center; box-shadow: var(--shadow); }
+  .cat-tile .em { font-size: 24px; }
+  .cat-tile .nm { font-size: 12px; font-weight: 700; margin-top: 6px; }
+  .cat-tile .ct { font-size: 11px; color: var(--text3); }
+
+  .price-big { font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+  .unit { font-size: 12px; color: var(--text2); font-weight: 600; }
+
+  .autocomplete { position: relative; }
+  .ac-list { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 30;
+    background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--radius-sm);
+    box-shadow: 0 8px 30px rgba(0,0,0,.14); max-height: 240px; overflow-y: auto; }
+  .ac-item { padding: 11px 14px; display: flex; align-items: center; gap: 10px; }
+  .ac-item + .ac-item { border-top: 1px solid var(--border); }
+  .ac-item:active { background: var(--card2); }
+  .ac-item .em { font-size: 16px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    background: var(--text); color: var(--bg); padding: 11px 18px; border-radius: 999px;
+    font-size: 13px; font-weight: 700; z-index: 200; opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s; white-space: nowrap; max-width: 90vw;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
+
+  .modal-back {
+    position: fixed; inset: 0; z-index: 150; background: rgba(0,0,0,.4);
+    display: none; align-items: flex-end; justify-content: center;
+  }
+  .modal-back.open { display: flex; }
+  .modal {
+    background: var(--card); width: 100%; max-width: var(--maxw);
+    border-radius: 22px 22px 0 0; padding: 20px 18px calc(24px + env(safe-area-inset-bottom));
+    max-height: 88vh; overflow-y: auto;
+  }
+  .modal-handle { width: 38px; height: 4px; border-radius: 2px; background: var(--border2); margin: 0 auto 16px; }
+  .modal h3 { font-size: 17px; font-weight: 800; margin-bottom: 14px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .bar-track { height: 8px; border-radius: 999px; background: var(--card2); overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; }
+
+  .empty { text-align: center; padding: 40px 20px; color: var(--text2); }
+  .empty .em { font-size: 34px; }
+  .empty p { margin-top: 8px; font-size: 13px; }
+
+  .divider { height: 1px; background: var(--border); margin: 14px 0; }
+  .link-btn { background: none; border: none; color: var(--accent-strong); font-weight: 700; font-size: 13px; padding: 0; width: auto; }
+
+  /* Onboarding / warning plein écran */
+  .fullscreen { position: fixed; inset: 0; z-index: 120; background: var(--bg); overflow-y: auto; display: none; }
+  .fullscreen.show { display: block; }
+  .fs-inner { max-width: 440px; margin: 0 auto; padding: 48px 22px calc(40px + env(safe-area-inset-bottom)); }
+</style>
+</head>
+<body>
+
+<!-- ============ ÉCRAN : FIREBASE NON CONFIGURÉ ============ -->
+<div id="screen-config" class="fullscreen">
+  <div class="fs-inner">
+    <div style="font-size:40px">🔧</div>
+    <h1 style="font-size:22px;font-weight:800;margin:12px 0 8px">Configuration Firebase requise</h1>
+    <p class="muted" style="font-size:13px;line-height:1.7">
+      L'app a besoin d'un projet Firebase pour synchroniser tes relevés entre les téléphones.
+    </p>
+    <ol class="muted" style="font-size:13px;line-height:1.8;margin:16px 0 16px 18px">
+      <li>Crée un projet sur <b>console.firebase.google.com</b></li>
+      <li>Active <b>Firestore Database</b> (région europe)</li>
+      <li>Ajoute une <b>app Web</b> et copie l'objet de config</li>
+      <li>Colle les 6 clés dans <code>index.html</code> — bloc <code>CONFIG FIREBASE</code></li>
+    </ol>
+    <div class="card pad tiny muted">Tant que la config n'est pas remplie, seule cette page s'affiche.</div>
+  </div>
+</div>
+
+<!-- ============ ÉCRAN : ONBOARDING (créer / rejoindre foyer) ============ -->
+<div id="screen-onboarding" class="fullscreen">
+  <div class="fs-inner">
+    <div class="brand" style="font-size:22px"><span class="dot">🏷️</span> Comparatom</div>
+    <p class="muted" style="margin:14px 0 26px;font-size:14px;line-height:1.6">
+      Le carnet de prix partagé de votre foyer. Relevez un prix en magasin, sachez tout de suite si c'est cher.
+    </p>
+
+    <div class="card pad stack">
+      <div class="field-label">Créer un foyer</div>
+      <input type="text" id="ob-nom" placeholder="Nom du foyer (ex. Maison)" autocomplete="off" />
+      <button class="btn" onclick="creerFoyer()">Créer mon foyer</button>
+    </div>
+
+    <div class="center muted tiny" style="margin:18px 0">— ou —</div>
+
+    <div class="card pad stack">
+      <div class="field-label">Rejoindre avec un code</div>
+      <input type="text" id="ob-code" placeholder="COMP-XXXX" autocomplete="off" style="text-transform:uppercase" />
+      <button class="btn secondary" onclick="rejoindreParCode()">Rejoindre</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" style="display:none">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">🏷️</span> Comparatom</div>
+      <div class="sub" id="foyer-badge">—</div>
+    </div>
+  </div>
+
+  <div class="app-scroll">
+    <div class="wrap">
+
+      <!-- ---------- SAISIE ---------- -->
+      <section id="page-saisie" class="page active">
+        <div class="page-title">Nouveau relevé</div>
+        <div class="page-sub">Ajoute un prix en quelques secondes.</div>
+
+        <div class="card pad stack">
+          <label class="field autocomplete">
+            <div class="field-label">Produit</div>
+            <input type="text" id="s-produit" placeholder="Ex. Poulet, Lait 1L, Bananes…" autocomplete="off" oninput="onProduitInput()" onfocus="onProduitInput()" />
+            <div id="s-ac" class="ac-list" style="display:none"></div>
+          </label>
+
+          <div id="s-newprod" style="display:none">
+            <div class="field-label">Nouveau produit — catégorie</div>
+            <div id="s-cats" style="display:flex;flex-wrap:wrap;gap:7px"></div>
+            <div class="field-label" style="margin-top:12px">Prix exprimé…</div>
+            <div class="seg" id="s-unit">
+              <button type="button" data-u="kg" onclick="setUnit('kg')">au kilo</button>
+              <button type="button" data-u="piece" onclick="setUnit('piece')">à la pièce</button>
+              <button type="button" data-u="L" onclick="setUnit('L')">au litre</button>
+            </div>
+          </div>
+
+          <div id="s-lockedmeta" class="tiny muted" style="display:none"></div>
+
+          <label class="field">
+            <div class="field-label">Magasin</div>
+            <select id="s-magasin" onchange="onMagasinChange()"></select>
+          </label>
+
+          <label class="field">
+            <div class="field-label">Prix <span id="s-unitlabel" class="unit"></span></div>
+            <input type="number" id="s-prix" inputmode="decimal" step="0.01" min="0" placeholder="0,00" />
+            <button type="button" class="link-btn" style="margin-top:8px" onclick="toggleCalc()">🧮 J'ai payé un total pour plusieurs</button>
+          </label>
+
+          <div id="s-calc" class="card pad" style="display:none;background:var(--card2)">
+            <div class="row">
+              <label class="field grow"><div class="field-label">Total payé (€)</div><input type="number" id="s-calc-total" inputmode="decimal" step="0.01" min="0" placeholder="0,00" oninput="runCalc()" /></label>
+              <label class="field grow"><div class="field-label" id="s-calc-qtylabel">Quantité</div><input type="number" id="s-calc-qty" inputmode="decimal" step="0.001" min="0" placeholder="0" oninput="runCalc()" /></label>
+            </div>
+            <div class="tiny muted" id="s-calc-out" style="margin-top:8px">—</div>
+          </div>
+
+          <div class="spread">
+            <div class="tiny muted" id="s-date-display"></div>
+            <button type="button" class="link-btn" onclick="toggleDate()">modifier la date</button>
+          </div>
+          <input type="date" id="s-date" style="display:none" onchange="renderDateDisplay()" />
+
+          <label class="row" style="gap:10px">
+            <input type="checkbox" id="s-promo" style="width:20px;height:20px" />
+            <span class="tiny">C'est un <b>prix promo</b> (exclu des comparaisons)</span>
+          </label>
+
+          <button class="btn" onclick="enregistrerReleve()">Enregistrer le relevé</button>
+        </div>
+
+        <div class="spread" style="margin:22px 0 8px">
+          <div style="font-weight:800">Derniers relevés</div>
+        </div>
+        <div id="s-recent" class="card"></div>
+      </section>
+
+      <!-- ---------- PRODUITS ---------- -->
+      <section id="page-produits" class="page">
+        <div class="page-title">Produits</div>
+        <div class="page-sub">Parcours par rayon ou cherche un produit.</div>
+        <input type="search" id="p-search" placeholder="Rechercher un produit…" oninput="renderProduits()" style="margin-bottom:14px" />
+        <div id="p-results"></div>
+      </section>
+
+      <!-- ---------- FICHE PRODUIT ---------- -->
+      <section id="page-fiche" class="page">
+        <button class="link-btn" onclick="showPage('page-produits')" style="margin:14px 0 4px">← Produits</button>
+        <div id="fiche-body"></div>
+      </section>
+
+      <!-- ---------- STATS ---------- -->
+      <section id="page-stats" class="page">
+        <div class="page-title">Mes magasins</div>
+        <div class="page-sub">Écart moyen vs le meilleur prix relevé.</div>
+        <div id="stats-body"></div>
+      </section>
+
+      <!-- ---------- LISTE ---------- -->
+      <section id="page-liste" class="page">
+        <div class="page-title">Liste de courses</div>
+        <div class="page-sub">Partagée dans le foyer.</div>
+
+        <div class="card pad stack">
+          <label class="field autocomplete">
+            <div class="field-label">Ajouter un produit</div>
+            <input type="text" id="l-add" placeholder="Nom du produit…" autocomplete="off" oninput="onListeInput()" onfocus="onListeInput()" />
+            <div id="l-ac" class="ac-list" style="display:none"></div>
+          </label>
+        </div>
+
+        <label class="field" style="margin:16px 0 6px">
+          <div class="field-label">Estimer le panier chez</div>
+          <select id="l-magasin" onchange="renderListe()"></select>
+        </label>
+
+        <div id="liste-body"></div>
+      </section>
+
+      <!-- ---------- RÉGLAGES ---------- -->
+      <section id="page-reglages" class="page">
+        <div class="page-title">Réglages</div>
+        <div class="page-sub" id="r-version"></div>
+        <div id="reglages-body" class="stack"></div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button data-page="page-saisie" onclick="showPage('page-saisie')"><span class="ic">➕</span>Saisie</button>
+    <button data-page="page-produits" onclick="showPage('page-produits')"><span class="ic">🗂️</span>Produits</button>
+    <button data-page="page-stats" onclick="showPage('page-stats')"><span class="ic">📊</span>Stats</button>
+    <button data-page="page-liste" onclick="showPage('page-liste')"><span class="ic">🛒</span>Liste</button>
+    <button data-page="page-reglages" onclick="showPage('page-reglages')"><span class="ic">⚙️</span>Réglages</button>
+  </nav>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div id="modal" class="modal-back" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ============ FIREBASE ============ -->
+<script type="module">
+  // ============================================================
+  // === CONFIG FIREBASE ===  (remplace les 6 valeurs ci-dessous)
+  // ============================================================
+  const firebaseConfig = {
+    apiKey: "REMPLACE_MOI",
+    authDomain: "REMPLACE_MOI.firebaseapp.com",
+    projectId: "REMPLACE_MOI",
+    storageBucket: "REMPLACE_MOI.firebasestorage.app",
+    messagingSenderId: "REMPLACE_MOI",
+    appId: "REMPLACE_MOI"
+  };
+  // ============================================================
+
+  const CONFIGURED = !Object.values(firebaseConfig).some(v => String(v).includes("REMPLACE_MOI"));
+  window.__CT_CONFIGURED = CONFIGURED;
+
+  if (!CONFIGURED) {
+    document.getElementById('screen-config').classList.add('show');
+  } else {
+    const { initializeApp } = await import('https://cdn.jsdelivr.net/npm/firebase@10.12.0/app/+esm');
+    const {
+      getFirestore, collection, addDoc, onSnapshot, doc, setDoc, deleteDoc, updateDoc, getDocs
+    } = await import('https://cdn.jsdelivr.net/npm/firebase@10.12.0/firestore/+esm');
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const CT = {
+      db, collection, addDoc, onSnapshot, doc, setDoc, deleteDoc, updateDoc, getDocs,
+      foyerId: null,
+      unsub: [],
+    };
+    window.CT = CT;
+
+    // Écoute la liste des foyers (pour retrouver un foyer par code)
+    onSnapshot(collection(db, 'foyers'), snap => {
+      window._foyers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      window.onFoyersLoaded && window.onFoyersLoaded();
+    });
+
+    CT.start = function (foyerId) {
+      CT.unsub.forEach(u => u());
+      CT.unsub = [];
+      CT.foyerId = foyerId;
+      const sub = (name, target, after) => {
+        const u = onSnapshot(collection(db, 'foyers', foyerId, name), snap => {
+          window[target] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          window.__ctReady = window.__ctReady || {};
+          window.__ctReady[name] = true;
+          window.rerender && window.rerender();
+          after && after();
+        });
+        CT.unsub.push(u);
+      };
+      window.__ctReady = {};
+      sub('magasins', '_magasins');
+      sub('produits', '_produits');
+      sub('releves', '_releves');
+      sub('liste', '_liste');
+    };
+
+    CT.col = (name) => collection(db, 'foyers', CT.foyerId, name);
+    CT.ref = (name, id) => doc(db, 'foyers', CT.foyerId, name, id);
+
+    window.onCTReady && window.onCTReady();
+  }
+</script>
+
+<!-- ============ LOGIQUE APP ============ -->
+<script>
+(function () {
+  'use strict';
+
+  const APP_VERSION = 1;
+  const LS = {
+    foyerId: 'comparatom_foyer_id',
+    foyerNom: 'comparatom_foyer_nom',
+    mesFoyers: 'comparatom_mes_foyers',
+    lastMag: 'comparatom_last_magasin',
+    userNom: 'comparatom_user_nom',
+    theme: 'comparatom_theme',
+  };
+
+  const CATS = [
+    { k: 'viande', em: '🥩', nm: 'Viande' },
+    { k: 'poisson', em: '🐟', nm: 'Poisson' },
+    { k: 'legumes', em: '🥦', nm: 'Légumes' },
+    { k: 'fruits', em: '🍎', nm: 'Fruits' },
+    { k: 'cremerie', em: '🧀', nm: 'Crémerie' },
+    { k: 'boulangerie', em: '🥖', nm: 'Boulangerie' },
+    { k: 'epicerie-salee', em: '🥫', nm: 'Épicerie salée' },
+    { k: 'epicerie-sucree', em: '🍫', nm: 'Épicerie sucrée' },
+    { k: 'surgeles', em: '🧊', nm: 'Surgelés' },
+    { k: 'boissons', em: '🥤', nm: 'Boissons' },
+    { k: 'hygiene', em: '🧴', nm: 'Hygiène' },
+    { k: 'entretien', em: '🧽', nm: 'Entretien' },
+    { k: 'bebe', em: '👶', nm: 'Bébé' },
+    { k: 'animaux', em: '🐾', nm: 'Animaux' },
+    { k: 'autre', em: '📦', nm: 'Autre' },
+  ];
+  const catOf = k => CATS.find(c => c.k === k) || CATS[CATS.length - 1];
+  const UNIT_LABEL = { kg: '€/kg', piece: '€/pièce', L: '€/L' };
+  const UNIT_QTY = { kg: 'Poids (kg)', piece: 'Nombre de pièces', L: 'Volume (L)' };
+  const STALE_DAYS = 60;
+  const DEAD_DAYS = 120;
+
+  // ---------- état écran saisie ----------
+  const S = { produit: null, unit: 'kg', newProd: false };
+
+  // ================= HELPERS =================
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  const daysSince = iso => Math.floor((Date.now() - new Date(iso + 'T12:00:00').getTime()) / 86400000);
+  const fmtEuro = n => (Math.round(n * 100) / 100).toFixed(2).replace('.', ',') + ' €';
+  const fmtPrix = (n, unit) => fmtEuro(n) + (unit ? '/' + UNIT_LABEL[unit].slice(2) : '');
+  const fmtDateFR = iso => { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y.slice(2); };
+  const norm = s => String(s || '').toLowerCase().trim().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+  function toast(msg) {
+    const t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+  function openModal(html) { $('modal-content').innerHTML = html; $('modal').classList.add('open'); }
+  function closeModal() { $('modal').classList.remove('open'); }
+  window.closeModal = closeModal;
+
+  const magById = id => (window._magasins || []).find(m => m.id === id);
+  const prodById = id => (window._produits || []).find(p => p.id === id);
+
+  // ================= LOGIQUE PRIX =================
+  // relevés non-promo d'un couple (produit, magasin), triés par date décroissante
+  function relevesCouple(pid, mid, includePromo) {
+    return (window._releves || [])
+      .filter(r => r.produitId === pid && r.magasinId === mid && (includePromo || !r.promo))
+      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  }
+  // prix "actuel" = relevé non-promo le plus récent
+  function prixActuel(pid, mid) {
+    const r = relevesCouple(pid, mid, false)[0];
+    if (!r) return null;
+    const j = daysSince(r.date);
+    return { prix: r.prix, date: r.date, jours: j, stale: j > STALE_DAYS, dead: j > DEAD_DAYS };
+  }
+  // meilleur prix d'un produit = min des prix actuels non-périmés
+  function meilleurPrix(pid) {
+    let best = null;
+    (window._magasins || []).forEach(m => {
+      const pa = prixActuel(pid, m.id);
+      if (pa && !pa.dead && (best == null || pa.prix < best.prix)) best = { prix: pa.prix, magasinId: m.id };
+    });
+    return best;
+  }
+  function ecartPct(prix, best) { return best && best.prix > 0 ? (prix / best.prix - 1) * 100 : 0; }
+  function classeEcart(pct) { return pct <= 1 ? 'green' : pct <= 8 ? 'amber' : 'red'; }
+
+  function statsMagasin(mid) {
+    const prods = window._produits || [];
+    let ecarts = [], moinsCher = 0, comparables = 0;
+    prods.forEach(p => {
+      const pa = prixActuel(p.id, mid);
+      if (!pa || pa.dead) return;
+      const best = meilleurPrix(p.id);
+      if (!best) return;
+      // au moins un autre magasin a un prix actuel
+      const autres = (window._magasins || []).some(m2 => {
+        if (m2.id === mid) return false;
+        const x = prixActuel(p.id, m2.id);
+        return x && !x.dead;
+      });
+      if (!autres) return;
+      comparables++;
+      ecarts.push(ecartPct(pa.prix, best));
+      if (Math.abs(pa.prix - best.prix) < 0.005) moinsCher++;
+    });
+    const releves = (window._releves || []).filter(r => r.magasinId === mid);
+    const dernier = releves.reduce((mx, r) => (r.date > mx ? r.date : mx), '');
+    const moy = ecarts.length ? ecarts.reduce((a, b) => a + b, 0) / ecarts.length : null;
+    return { moy, moinsCher, comparables, nbReleves: releves.length, dernier };
+  }
+
+  // ================= NAVIGATION =================
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
+    document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.page === id));
+    window.scrollTo(0, 0);
+    if (id === 'page-saisie') renderRecent();
+    if (id === 'page-produits') renderProduits();
+    if (id === 'page-stats') renderStats();
+    if (id === 'page-liste') { fillMagasinSelect($('l-magasin'), true); renderListe(); }
+    if (id === 'page-reglages') renderReglages();
+  }
+  window.showPage = showPage;
+
+  function rerender() {
+    const active = document.querySelector('.page.active');
+    if (!active) return;
+    fillMagasinSelect($('s-magasin'), false);
+    if (active.id === 'page-saisie') renderRecent();
+    if (active.id === 'page-produits') renderProduits();
+    if (active.id === 'page-fiche' && window._ficheId) renderFiche(window._ficheId);
+    if (active.id === 'page-stats') renderStats();
+    if (active.id === 'page-liste') { fillMagasinSelect($('l-magasin'), true); renderListe(); }
+    if (active.id === 'page-reglages') renderReglages();
+    updateFoyerBadge();
+  }
+  window.rerender = rerender;
+
+  // ================= FOYER =================
+  function mesFoyers() { try { return JSON.parse(localStorage.getItem(LS.mesFoyers) || '[]'); } catch (e) { return []; } }
+  function addMonFoyer(id, nom) {
+    const l = mesFoyers().filter(f => f.id !== id);
+    l.unshift({ id, nom });
+    localStorage.setItem(LS.mesFoyers, JSON.stringify(l));
+  }
+  function genCode() {
+    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = ''; for (let i = 0; i < 4; i++) s += c[Math.floor(Math.random() * c.length)];
+    return 'COMP-' + s;
+  }
+
+  async function creerFoyer() {
+    const nom = $('ob-nom').value.trim();
+    if (!nom) return toast('⚠️ Donne un nom au foyer');
+    if (!window.CT) return toast('Chargement… réessaie');
+    try {
+      const code = genCode();
+      const ref = await CT.addDoc(CT.collection(CT.db, 'foyers'), { nom, code, createdAt: Date.now() });
+      entrerFoyer(ref.id, nom);
+      openModal(`
+        <h3>Foyer « ${esc(nom)} » créé 🎉</h3>
+        <p class="muted tiny" style="margin-bottom:10px">Partage ce code avec ta conjointe pour qu'elle rejoigne le même carnet.</p>
+        <div class="card pad center" style="background:var(--card2)">
+          <div class="field-label">Code du foyer</div>
+          <div style="font-size:26px;font-weight:800;font-family:ui-monospace,monospace;letter-spacing:2px">${esc(code)}</div>
+        </div>
+        <button class="btn" style="margin-top:14px" onclick="partagerCode('${esc(code)}','${esc(nom)}')">📤 Partager l'invitation</button>
+        <button class="btn ghost" style="margin-top:8px" onclick="closeModal()">Fermer</button>
+      `);
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+
+  function rejoindreParCode() {
+    const raw = ($('ob-code').value || $('r-join-code')?.value || '').trim().toUpperCase();
+    if (!raw) return toast('⚠️ Entre un code');
+    const code = raw.startsWith('COMP-') ? raw : 'COMP-' + raw;
+    const f = (window._foyers || []).find(x => (x.code || '').toUpperCase() === code);
+    if (!f) return toast('❌ Aucun foyer avec ce code');
+    entrerFoyer(f.id, f.nom);
+    toast('✅ Bienvenue dans « ' + f.nom +' »');
+    closeModal();
+  }
+
+  function entrerFoyer(id, nom) {
+    localStorage.setItem(LS.foyerId, id);
+    localStorage.setItem(LS.foyerNom, nom);
+    addMonFoyer(id, nom);
+    window._magasins = []; window._produits = []; window._releves = []; window._liste = [];
+    window._ficheId = null;
+    CT.start(id);
+    $('screen-onboarding').classList.remove('show');
+    $('app').style.display = 'block';
+    updateFoyerBadge();
+    initSaisieDefaults();
+    showPage('page-saisie');
+  }
+
+  function quitterFoyer(id) {
+    const l = mesFoyers().filter(f => f.id !== id);
+    localStorage.setItem(LS.mesFoyers, JSON.stringify(l));
+    if (localStorage.getItem(LS.foyerId) === id) {
+      localStorage.removeItem(LS.foyerId);
+      localStorage.removeItem(LS.foyerNom);
+      if (l[0]) entrerFoyer(l[0].id, l[0].nom);
+      else { $('app').style.display = 'none'; $('screen-onboarding').classList.add('show'); }
+    } else renderReglages();
+  }
+
+  function updateFoyerBadge() {
+    const nom = localStorage.getItem(LS.foyerNom) || '';
+    $('foyer-badge').textContent = nom;
+  }
+
+  async function partagerCode(code, nom) {
+    const txt = `Rejoins notre carnet de prix « ${nom} » sur Comparatom.\nCode : ${code}\nhttps://applicatom.github.io/Comparatom`;
+    try {
+      if (navigator.share) await navigator.share({ text: txt });
+      else { await navigator.clipboard.writeText(txt); toast('📋 Invitation copiée'); }
+    } catch (e) {}
+  }
+  window.creerFoyer = creerFoyer;
+  window.rejoindreParCode = rejoindreParCode;
+  window.partagerCode = partagerCode;
+  window.quitterFoyer = quitterFoyer;
+
+  // ================= SAISIE =================
+  function initSaisieDefaults() {
+    $('s-date').value = todayISO();
+    renderDateDisplay();
+    fillMagasinSelect($('s-magasin'), false);
+    const last = localStorage.getItem(LS.lastMag);
+    if (last && magById(last)) $('s-magasin').value = last;
+    renderCatsPicker();
+    setUnit('kg');
+  }
+
+  function fillMagasinSelect(sel, allowAllPrefix) {
+    if (!sel) return;
+    const cur = sel.value;
+    const mags = (window._magasins || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
+    let html = '';
+    if (allowAllPrefix) html += `<option value="">— choisir —</option>`;
+    else html += `<option value="">— magasin —</option>`;
+    html += mags.map(m => `<option value="${m.id}">${esc(m.nom)}</option>`).join('');
+    if (!allowAllPrefix) html += `<option value="__new__">＋ Nouveau magasin…</option>`;
+    sel.innerHTML = html;
+    if (cur && [...sel.options].some(o => o.value === cur)) sel.value = cur;
+  }
+
+  async function onMagasinChange() {
+    const sel = $('s-magasin');
+    if (sel.value === '__new__') {
+      const nom = prompt('Nom du magasin (ex. Leclerc Challans) :');
+      sel.value = '';
+      if (!nom || !nom.trim()) return;
+      try {
+        const ref = await CT.addDoc(CT.col('magasins'), { nom: nom.trim(), createdAt: Date.now() });
+        setTimeout(() => { fillMagasinSelect(sel, false); sel.value = ref.id; localStorage.setItem(LS.lastMag, ref.id); }, 250);
+        toast('🏪 Magasin ajouté');
+      } catch (e) { toast('❌ ' + e.message); }
+    } else if (sel.value) {
+      localStorage.setItem(LS.lastMag, sel.value);
+    }
+  }
+
+  function renderCatsPicker() {
+    $('s-cats').innerHTML = CATS.map(c =>
+      `<button type="button" class="chip" data-k="${c.k}" onclick="pickCat('${c.k}')">${c.em} ${c.nm}</button>`).join('');
+  }
+  function pickCat(k) {
+    S.newCat = k;
+    document.querySelectorAll('#s-cats .chip').forEach(b => b.classList.toggle('on', b.dataset.k === k));
+  }
+  function setUnit(u) {
+    S.unit = u;
+    document.querySelectorAll('#s-unit button').forEach(b => b.classList.toggle('on', b.dataset.u === u));
+    $('s-unitlabel').textContent = UNIT_LABEL[u];
+    $('s-calc-qtylabel').textContent = UNIT_QTY[u];
+    runCalc();
+  }
+  window.pickCat = pickCat;
+  window.setUnit = setUnit;
+
+  function onProduitInput() {
+    const q = norm($('s-produit').value);
+    const box = $('s-ac');
+    const exact = (window._produits || []).find(p => norm(p.nom) === q);
+    if (exact) selectProduit(exact, false);
+    else { S.produit = null; $('s-lockedmeta').style.display = 'none'; }
+
+    if (!q) { box.style.display = 'none'; $('s-newprod').style.display = 'none'; return; }
+    const matches = (window._produits || []).filter(p => norm(p.nom).includes(q)).slice(0, 6);
+    if (matches.length && !exact) {
+      box.innerHTML = matches.map(p => {
+        const c = catOf(p.categorie);
+        return `<div class="ac-item" onclick="chooseProduit('${p.id}')"><span class="em">${c.em}</span><span class="grow">${esc(p.nom)}</span><span class="tiny muted">${UNIT_LABEL[p.unite]}</span></div>`;
+      }).join('');
+      box.style.display = 'block';
+    } else box.style.display = 'none';
+
+    // produit vraiment inconnu (aucune correspondance) -> proposer la création
+    if (!exact && matches.length === 0) {
+      $('s-newprod').style.display = 'block';
+      S.newProd = true;
+      if (!S.newCat) pickCat('autre');
+    } else {
+      $('s-newprod').style.display = 'none';
+      S.newProd = false;
+    }
+  }
+  function chooseProduit(id) {
+    const p = prodById(id);
+    if (!p) return;
+    $('s-produit').value = p.nom;
+    $('s-ac').style.display = 'none';
+    selectProduit(p, true);
+  }
+  function selectProduit(p, fromClick) {
+    S.produit = p; S.newProd = false;
+    $('s-newprod').style.display = 'none';
+    $('s-ac').style.display = 'none';
+    setUnit(p.unite);
+    const c = catOf(p.categorie);
+    $('s-lockedmeta').style.display = 'block';
+    $('s-lockedmeta').innerHTML = `Produit connu · ${c.em} ${c.nm} · prix ${UNIT_LABEL[p.unite]}`;
+  }
+  window.onProduitInput = onProduitInput;
+  window.chooseProduit = chooseProduit;
+
+  function toggleCalc() { const e = $('s-calc'); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
+  function runCalc() {
+    const tot = parseFloat(($('s-calc-total').value || '').replace(',', '.'));
+    const qty = parseFloat(($('s-calc-qty').value || '').replace(',', '.'));
+    const out = $('s-calc-out');
+    if (tot > 0 && qty > 0) {
+      const u = tot / qty;
+      out.innerHTML = `→ <b>${fmtEuro(u)} ${UNIT_LABEL[S.unit]}</b> · <button type="button" class="link-btn" onclick="appliquerCalc(${u})">utiliser ce prix</button>`;
+    } else out.textContent = '—';
+  }
+  function appliquerCalc(u) { $('s-prix').value = (Math.round(u * 100) / 100); toast('Prix unitaire appliqué'); }
+  window.toggleCalc = toggleCalc; window.runCalc = runCalc; window.appliquerCalc = appliquerCalc;
+
+  function toggleDate() { const e = $('s-date'); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
+  function renderDateDisplay() {
+    const v = $('s-date').value || todayISO();
+    const j = daysSince(v);
+    $('s-date-display').textContent = j === 0 ? "📅 Aujourd'hui" : '📅 ' + fmtDateFR(v) + ` (il y a ${j} j)`;
+  }
+  window.toggleDate = toggleDate; window.renderDateDisplay = renderDateDisplay;
+  window.onMagasinChange = onMagasinChange;
+
+  async function enregistrerReleve() {
+    const magasinId = $('s-magasin').value;
+    const prix = parseFloat(($('s-prix').value || '').replace(',', '.'));
+    const date = $('s-date').value || todayISO();
+    const promo = $('s-promo').checked;
+    const nomProd = $('s-produit').value.trim();
+
+    if (!nomProd) return toast('⚠️ Indique le produit');
+    if (!magasinId || magasinId === '__new__') return toast('⚠️ Choisis un magasin');
+    if (!(prix > 0)) return toast('⚠️ Prix invalide');
+
+    try {
+      let produitId;
+      if (S.produit && norm(S.produit.nom) === norm(nomProd)) {
+        produitId = S.produit.id;
+      } else {
+        const existing = (window._produits || []).find(p => norm(p.nom) === norm(nomProd));
+        if (existing) produitId = existing.id;
+        else {
+          const ref = await CT.addDoc(CT.col('produits'), {
+            nom: nomProd, nomLower: norm(nomProd),
+            categorie: S.newCat || 'autre', unite: S.unit, createdAt: Date.now(),
+          });
+          produitId = ref.id;
+        }
+      }
+      await CT.addDoc(CT.col('releves'), {
+        produitId, magasinId, prix: Math.round(prix * 100) / 100, date, promo,
+        auteur: localStorage.getItem(LS.userNom) || '', createdAt: Date.now(),
+      });
+      localStorage.setItem(LS.lastMag, magasinId);
+      toast(promo ? '🏷️ Promo enregistrée' : '✅ Relevé enregistré');
+      // reset partiel
+      $('s-produit').value = ''; $('s-prix').value = '';
+      $('s-promo').checked = false;
+      $('s-calc-total').value = ''; $('s-calc-qty').value = ''; runCalc();
+      $('s-calc').style.display = 'none';
+      S.produit = null; S.newProd = false; S.newCat = null;
+      $('s-newprod').style.display = 'none'; $('s-lockedmeta').style.display = 'none';
+      $('s-date').value = todayISO(); renderDateDisplay();
+      $('s-produit').focus();
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.enregistrerReleve = enregistrerReleve;
+
+  function renderRecent() {
+    const box = $('s-recent');
+    const rs = (window._releves || []).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 6);
+    if (!rs.length) { box.innerHTML = `<div class="empty"><div class="em">🧾</div><p>Aucun relevé pour l'instant.</p></div>`; return; }
+    box.innerHTML = rs.map(r => {
+      const p = prodById(r.produitId), m = magById(r.magasinId);
+      const c = p ? catOf(p.categorie) : catOf('autre');
+      return `<div class="list-row">
+        <div class="lead">${c.em}</div>
+        <div class="grow">
+          <div class="ellipsis"><b>${esc(p ? p.nom : '?')}</b>${r.promo ? ' <span class="pill amber">promo</span>' : ''}</div>
+          <div class="tiny muted">${esc(m ? m.nom : '?')} · ${fmtDateFR(r.date)}</div>
+        </div>
+        <div class="center">
+          <div class="price-big">${fmtEuro(r.prix)}</div>
+          <div class="unit">${p ? UNIT_LABEL[p.unite] : ''}</div>
+        </div>
+        <button class="btn ghost small" onclick="supprReleve('${r.id}')">✕</button>
+      </div>`;
+    }).join('');
+  }
+
+  async function supprReleve(id) {
+    if (!confirm('Supprimer ce relevé ?')) return;
+    try { await CT.deleteDoc(CT.ref('releves', id)); toast('Supprimé'); } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.supprReleve = supprReleve;
+
+  // ================= PRODUITS =================
+  function renderProduits() {
+    const q = norm($('p-search').value);
+    const box = $('p-results');
+    const prods = window._produits || [];
+
+    if (q) {
+      const matches = prods.filter(p => norm(p.nom).includes(q))
+        .sort((a, b) => a.nom.localeCompare(b.nom));
+      box.innerHTML = matches.length
+        ? `<div class="card">${matches.map(rowProduit).join('')}</div>`
+        : `<div class="empty"><div class="em">🔍</div><p>Aucun produit trouvé.</p></div>`;
+      return;
+    }
+
+    const counts = {};
+    prods.forEach(p => { counts[p.categorie] = (counts[p.categorie] || 0) + 1; });
+    box.innerHTML = `<div class="cat-grid">` + CATS.map(c => {
+      const n = counts[c.k] || 0;
+      return `<button class="cat-tile" onclick="openCat('${c.k}')" ${n ? '' : 'style="opacity:.45"'}>
+        <div class="em">${c.em}</div><div class="nm">${c.nm}</div><div class="ct">${n ? n + ' produit' + (n > 1 ? 's' : '') : '—'}</div>
+      </button>`;
+    }).join('') + `</div>`;
+  }
+
+  function rowProduit(p) {
+    const c = catOf(p.categorie);
+    const best = meilleurPrix(p.id);
+    const mag = best ? magById(best.magasinId) : null;
+    const nbMags = new Set((window._releves || []).filter(r => r.produitId === p.id && !r.promo).map(r => r.magasinId)).size;
+    return `<div class="list-row" onclick="ouvrirFiche('${p.id}')">
+      <div class="lead">${c.em}</div>
+      <div class="grow">
+        <div class="ellipsis"><b>${esc(p.nom)}</b></div>
+        <div class="tiny muted">${nbMags ? nbMags + ' magasin' + (nbMags > 1 ? 's' : '') : 'aucun relevé'}</div>
+      </div>
+      <div class="center">
+        ${best ? `<div class="price-big">${fmtEuro(best.prix)}</div><div class="unit">${UNIT_LABEL[p.unite]}${mag ? ' · ' + esc(mag.nom) : ''}</div>` : '<span class="tiny muted">—</span>'}
+      </div>
+    </div>`;
+  }
+
+  function openCat(k) {
+    const prods = (window._produits || []).filter(p => p.categorie === k).sort((a, b) => a.nom.localeCompare(b.nom));
+    const c = catOf(k);
+    $('p-results').innerHTML = `
+      <button class="link-btn" onclick="renderProduits()" style="margin-bottom:10px">← Tous les rayons</button>
+      <div class="spread" style="margin-bottom:10px"><div style="font-weight:800">${c.em} ${c.nm}</div></div>
+      ${prods.length ? `<div class="card">${prods.map(rowProduit).join('')}</div>`
+        : `<div class="empty"><div class="em">${c.em}</div><p>Aucun produit dans ce rayon.</p></div>`}`;
+  }
+  window.renderProduits = renderProduits;
+  window.openCat = openCat;
+
+  // ================= FICHE PRODUIT =================
+  function ouvrirFiche(id) { window._ficheId = id; showPage('page-fiche'); renderFiche(id); }
+  window.ouvrirFiche = ouvrirFiche;
+
+  function renderFiche(id) {
+    const p = prodById(id);
+    const box = $('fiche-body');
+    if (!p) { box.innerHTML = `<div class="empty">Produit introuvable.</div>`; return; }
+    const c = catOf(p.categorie);
+    const best = meilleurPrix(p.id);
+    const bestMag = best ? magById(best.magasinId) : null;
+
+    // lignes magasins (prix actuel non-promo)
+    const rows = (window._magasins || []).map(m => {
+      const pa = prixActuel(p.id, m.id);
+      return pa ? { m, pa } : null;
+    }).filter(Boolean).sort((a, b) => a.pa.prix - b.pa.prix);
+
+    const promos = (window._releves || []).filter(r => r.produitId === p.id && r.promo)
+      .sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 5);
+
+    let html = `
+      <div class="page-title" style="margin-top:6px">${c.em} ${esc(p.nom)}</div>
+      <div class="page-sub">${c.nm} · prix ${UNIT_LABEL[p.unite]}</div>`;
+
+    if (best) {
+      html += `<div class="card pad" style="background:var(--green-soft);border-color:transparent;margin-bottom:14px">
+        <div class="tiny" style="font-weight:800;color:var(--green)">MEILLEUR PRIX</div>
+        <div style="font-size:22px;font-weight:800;margin-top:2px">${fmtEuro(best.prix)} <span class="unit">${UNIT_LABEL[p.unite]}</span></div>
+        <div class="tiny muted">${bestMag ? esc(bestMag.nom) : ''}</div>
+      </div>`;
+    }
+
+    html += rows.length ? `<div class="card">` + rows.map(({ m, pa }) => {
+      const pct = ecartPct(pa.prix, best);
+      const cls = classeEcart(pct);
+      const badge = Math.abs(pct) < 0.5 ? `<span class="pill green">le - cher</span>`
+        : `<span class="pill ${cls}">+${pct.toFixed(0)}%</span>`;
+      return `<div class="list-row">
+        <div class="grow">
+          <div class="ellipsis"><b>${esc(m.nom)}</b></div>
+          <div class="tiny ${pa.stale ? 'muted' : ''}">${pa.stale ? '⚠️ ' : ''}relevé le ${fmtDateFR(pa.date)}${pa.dead ? ' · périmé' : ''}</div>
+        </div>
+        <div class="center" style="min-width:96px">
+          <div class="price-big">${fmtEuro(pa.prix)}</div>
+          <div style="margin-top:2px">${badge}</div>
+        </div>
+      </div>`;
+    }).join('') + `</div>`
+      : `<div class="empty"><div class="em">🏷️</div><p>Aucun prix normal relevé.</p></div>`;
+
+    // sparkline (non-promo, tous magasins, chronologique)
+    const hist = (window._releves || []).filter(r => r.produitId === p.id && !r.promo)
+      .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    if (hist.length >= 2) html += sparkline(hist);
+
+    if (promos.length) {
+      html += `<div style="font-weight:800;margin:18px 0 8px">🏷️ Promos repérées</div><div class="card">` +
+        promos.map(r => {
+          const m = magById(r.magasinId);
+          return `<div class="list-row"><div class="grow"><b>${fmtEuro(r.prix)}</b> <span class="unit">${UNIT_LABEL[p.unite]}</span><div class="tiny muted">${esc(m ? m.nom : '?')} · ${fmtDateFR(r.date)}</div></div></div>`;
+        }).join('') + `</div>`;
+    }
+
+    html += `<button class="btn secondary" style="margin-top:18px" onclick="ficheAddReleve('${p.id}')">➕ Ajouter un relevé pour ce produit</button>`;
+    if (rows.length === 0 && promos.length === 0) {
+      html += `<button class="btn danger" style="margin-top:8px" onclick="supprProduit('${p.id}')">Supprimer ce produit</button>`;
+    }
+    box.innerHTML = html;
+  }
+
+  function sparkline(hist) {
+    const w = 320, h = 70, pad = 6;
+    const prices = hist.map(r => r.prix);
+    const min = Math.min(...prices), max = Math.max(...prices);
+    const span = max - min || 1;
+    const n = hist.length;
+    const pts = hist.map((r, i) => {
+      const x = pad + (n === 1 ? 0 : (i / (n - 1)) * (w - 2 * pad));
+      const y = pad + (1 - (r.prix - min) / span) * (h - 2 * pad);
+      return [x, y];
+    });
+    const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const dots = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="var(--accent-strong)"/>`).join('');
+    return `<div class="card pad" style="margin-top:14px">
+      <div class="tiny muted" style="margin-bottom:6px">Historique (${n} relevés) · de ${fmtEuro(min)} à ${fmtEuro(max)}</div>
+      <svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none">
+        <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
+        ${dots}
+      </svg>
+    </div>`;
+  }
+
+  function ficheAddReleve(pid) {
+    const p = prodById(pid);
+    if (!p) return;
+    showPage('page-saisie');
+    $('s-produit').value = p.nom;
+    selectProduit(p, true);
+    $('s-prix').focus();
+    toast('Complète le magasin et le prix');
+  }
+  window.ficheAddReleve = ficheAddReleve;
+
+  async function supprProduit(id) {
+    if (!confirm('Supprimer ce produit et tous ses relevés ?')) return;
+    try {
+      const rs = (window._releves || []).filter(r => r.produitId === id);
+      for (const r of rs) await CT.deleteDoc(CT.ref('releves', r.id));
+      const li = (window._liste || []).filter(x => x.produitId === id);
+      for (const x of li) await CT.deleteDoc(CT.ref('liste', x.id));
+      await CT.deleteDoc(CT.ref('produits', id));
+      toast('Produit supprimé');
+      showPage('page-produits');
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.supprProduit = supprProduit;
+
+  // ================= STATS =================
+  function renderStats() {
+    const box = $('stats-body');
+    const mags = window._magasins || [];
+    if (!mags.length) { box.innerHTML = `<div class="empty"><div class="em">📊</div><p>Ajoute des relevés dans plusieurs magasins pour voir les comparaisons.</p></div>`; return; }
+
+    const data = mags.map(m => ({ m, s: statsMagasin(m.id) }))
+      .sort((a, b) => {
+        if (a.s.moy == null) return 1; if (b.s.moy == null) return -1;
+        return a.s.moy - b.s.moy;
+      });
+
+    const maxMoy = Math.max(5, ...data.map(d => d.s.moy || 0));
+
+    box.innerHTML = data.map(({ m, s }, i) => {
+      if (s.moy == null) {
+        return `<div class="card pad stack">
+          <div class="spread"><div><b>${esc(m.nom)}</b></div><span class="pill grey">pas assez de données</span></div>
+          <div class="tiny muted">${s.nbReleves} relevé${s.nbReleves > 1 ? 's' : ''}${s.dernier ? ' · dernier passage ' + fmtDateFR(s.dernier) : ''}</div>
+        </div>`;
+      }
+      const cls = classeEcart(s.moy);
+      const col = cls === 'green' ? 'var(--green)' : cls === 'amber' ? 'var(--amber)' : 'var(--red)';
+      const sign = s.moy > 0.5 ? '+' : '';
+      return `<div class="card pad stack">
+        <div class="spread">
+          <div><b>${i === 0 ? '🥇 ' : ''}${esc(m.nom)}</b></div>
+          <div style="font-size:20px;font-weight:800;color:${col}">${sign}${s.moy.toFixed(1)}%</div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Math.max(3, (s.moy / maxMoy) * 100))}%;background:${col}"></div></div>
+        <div class="tiny muted">Moins cher sur ${s.moinsCher}/${s.comparables} produits comparés · ${s.nbReleves} relevés${s.dernier ? ' · vu le ' + fmtDateFR(s.dernier) : ''}</div>
+      </div>`;
+    }).join('');
+
+    const nbProd = (window._produits || []).length;
+    const nbRel = (window._releves || []).length;
+    box.innerHTML += `<div class="card pad" style="margin-top:14px">
+      <div class="spread tiny"><span class="muted">Produits suivis</span><b>${nbProd}</b></div>
+      <div class="divider"></div>
+      <div class="spread tiny"><span class="muted">Relevés enregistrés</span><b>${nbRel}</b></div>
+      <div class="divider"></div>
+      <div class="spread tiny"><span class="muted">Magasins</span><b>${mags.length}</b></div>
+    </div>
+    <p class="tiny muted center" style="margin-top:12px">Écart moyen vs le meilleur prix relevé, hors promos et hors relevés de plus de ${DEAD_DAYS} jours.</p>`;
+  }
+  window.renderStats = renderStats;
+
+  // ================= LISTE DE COURSES =================
+  function onListeInput() {
+    const q = norm($('l-add').value);
+    const box = $('l-ac');
+    if (!q) { box.style.display = 'none'; return; }
+    const matches = (window._produits || []).filter(p => norm(p.nom).includes(q)).slice(0, 6);
+    let html = matches.map(p => {
+      const c = catOf(p.categorie);
+      return `<div class="ac-item" onclick="ajoutListe('${p.id}')"><span class="em">${c.em}</span><span class="grow">${esc(p.nom)}</span></div>`;
+    }).join('');
+    html += `<div class="ac-item" onclick="ajoutListeLibre()"><span class="em">➕</span><span class="grow">Ajouter « ${esc($('l-add').value)} »</span></div>`;
+    box.innerHTML = html;
+    box.style.display = 'block';
+  }
+  async function ajoutListe(pid) {
+    $('l-add').value = ''; $('l-ac').style.display = 'none';
+    if ((window._liste || []).some(x => x.produitId === pid)) return toast('Déjà dans la liste');
+    try { await CT.addDoc(CT.col('liste'), { produitId: pid, qte: 1, coche: false, addedAt: Date.now() }); }
+    catch (e) { toast('❌ ' + e.message); }
+  }
+  async function ajoutListeLibre() {
+    const nom = $('l-add').value.trim();
+    if (!nom) return;
+    try {
+      const ref = await CT.addDoc(CT.col('produits'), { nom, nomLower: norm(nom), categorie: 'autre', unite: 'piece', createdAt: Date.now() });
+      $('l-add').value = ''; $('l-ac').style.display = 'none';
+      await CT.addDoc(CT.col('liste'), { produitId: ref.id, qte: 1, coche: false, addedAt: Date.now() });
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.onListeInput = onListeInput; window.ajoutListe = ajoutListe; window.ajoutListeLibre = ajoutListeLibre;
+
+  function coutItem(pid, qte, magasinId) {
+    const pa = magasinId ? prixActuel(pid, magasinId) : null;
+    if (pa && !pa.dead) return { c: pa.prix * qte, approx: false };
+    const best = meilleurPrix(pid);
+    if (best) return { c: best.prix * qte, approx: true };
+    return { c: 0, approx: true, unknown: true };
+  }
+
+  function renderListe() {
+    const box = $('liste-body');
+    const items = (window._liste || []).slice().sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
+    if (!items.length) { box.innerHTML = `<div class="empty"><div class="em">🛒</div><p>Liste vide. Ajoute des produits ci-dessus.</p></div>`; return; }
+
+    const magId = $('l-magasin').value;
+    let total = 0, approx = false;
+
+    const rowsHtml = items.map(it => {
+      const p = prodById(it.produitId);
+      const c = p ? catOf(p.categorie) : catOf('autre');
+      const qte = it.qte || 1;
+      const { c: cost, approx: ap, unknown } = coutItem(it.produitId, qte, magId);
+      if (!it.coche) { total += cost; if (ap) approx = true; }
+      return `<div class="list-row" style="${it.coche ? 'opacity:.45' : ''}">
+        <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onchange="toggleListe('${it.id}',this.checked)" />
+        <div class="lead">${c.em}</div>
+        <div class="grow">
+          <div class="ellipsis" style="${it.coche ? 'text-decoration:line-through' : ''}"><b>${esc(p ? p.nom : '?')}</b></div>
+          <div class="tiny muted">${qte > 1 ? '×' + qte + ' · ' : ''}${magId ? (unknown ? 'prix inconnu' : (ap ? '≈ ' : '') + fmtEuro(cost)) : ''}</div>
+        </div>
+        <button class="btn ghost small" onclick="qteListe('${it.id}',${qte + 1})">＋</button>
+        <button class="btn ghost small" onclick="supprListe('${it.id}')">✕</button>
+      </div>`;
+    }).join('');
+
+    let bandeau = '';
+    if (magId) {
+      // meilleur magasin pour toute la liste
+      let bestMag = null, bestTot = Infinity;
+      (window._magasins || []).forEach(m => {
+        let t = 0;
+        items.filter(x => !x.coche).forEach(x => { t += coutItem(x.produitId, x.qte || 1, m.id).c; });
+        if (t < bestTot) { bestTot = t; bestMag = m; }
+      });
+      const eco = total - bestTot;
+      bandeau = `<div class="card pad" style="margin-top:14px">
+        <div class="spread"><div class="grow"><div class="tiny muted">Total estimé</div><div style="font-size:22px;font-weight:800">${approx ? '≈ ' : ''}${fmtEuro(total)}</div></div></div>
+        ${bestMag && bestMag.id !== magId && eco > 0.05 ? `<div class="divider"></div><div class="tiny">💡 Chez <b>${esc(bestMag.nom)}</b> : ≈ ${fmtEuro(bestTot)} <span class="pill green">−${fmtEuro(eco)}</span></div>` : ''}
+        ${bestMag && bestMag.id === magId ? `<div class="divider"></div><div class="tiny">✅ C'est le magasin le moins cher pour cette liste.</div>` : ''}
+      </div>
+      <p class="tiny muted center" style="margin-top:8px">« ≈ » = prix estimé à partir du meilleur prix connu (pas de relevé récent dans ce magasin).</p>`;
+    } else {
+      bandeau = `<p class="tiny muted center" style="margin-top:12px">Choisis un magasin ci-dessus pour estimer le total.</p>`;
+    }
+
+    box.innerHTML = `<div class="card">${rowsHtml}</div>${bandeau}
+      <button class="btn ghost" style="margin-top:12px" onclick="viderCoches()">Retirer les articles cochés</button>`;
+  }
+
+  async function toggleListe(id, v) { try { await CT.updateDoc(CT.ref('liste', id), { coche: v }); } catch (e) {} }
+  async function qteListe(id, q) { try { await CT.updateDoc(CT.ref('liste', id), { qte: Math.max(1, q) }); } catch (e) {} }
+  async function supprListe(id) { try { await CT.deleteDoc(CT.ref('liste', id)); } catch (e) {} }
+  async function viderCoches() {
+    const done = (window._liste || []).filter(x => x.coche);
+    if (!done.length) return;
+    for (const x of done) await CT.deleteDoc(CT.ref('liste', x.id));
+    toast('Liste nettoyée');
+  }
+  window.renderListe = renderListe; window.toggleListe = toggleListe;
+  window.qteListe = qteListe; window.supprListe = supprListe; window.viderCoches = viderCoches;
+
+  // ================= RÉGLAGES =================
+  function renderReglages() {
+    $('r-version').textContent = 'Comparatom · version ' + APP_VERSION;
+    const foyerNom = localStorage.getItem(LS.foyerNom) || '';
+    const foyerId = localStorage.getItem(LS.foyerId);
+    const foyer = (window._foyers || []).find(f => f.id === foyerId);
+    const code = foyer ? foyer.code : '…';
+    const mags = (window._magasins || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
+    const prods = (window._produits || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
+    const userNom = localStorage.getItem(LS.userNom) || '';
+
+    $('reglages-body').innerHTML = `
+      <div class="card pad stack">
+        <div class="field-label">Foyer actuel</div>
+        <div class="spread"><div><b>${esc(foyerNom)}</b><div class="tiny muted" style="font-family:ui-monospace,monospace">${esc(code)}</div></div>
+          <button class="btn small" onclick="partagerCode('${esc(code)}','${esc(foyerNom)}')">📤 Inviter</button></div>
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">Mon prénom (auteur des relevés)</div>
+        <input type="text" id="r-user" value="${esc(userNom)}" placeholder="Ton prénom" onchange="saveUserNom(this.value)" />
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">Mes foyers</div>
+        ${mesFoyers().map(f => `<div class="spread">
+          <button class="link-btn" onclick="switchFoyer('${f.id}','${esc(f.nom)}')">${f.id === foyerId ? '● ' : '○ '}${esc(f.nom)}</button>
+          <button class="link-btn" style="color:var(--red)" onclick="quitterFoyer('${f.id}')">quitter</button>
+        </div>`).join('')}
+        <div class="divider"></div>
+        <input type="text" id="r-join-code" placeholder="Rejoindre un autre foyer (code)" style="text-transform:uppercase" />
+        <button class="btn secondary" onclick="rejoindreParCode()">Rejoindre</button>
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">Magasins (${mags.length})</div>
+        ${mags.map(m => {
+          const n = (window._releves || []).filter(r => r.magasinId === m.id).length;
+          return `<div class="spread">
+            <div class="grow ellipsis">${esc(m.nom)} <span class="tiny muted">${n} relevé${n > 1 ? 's' : ''}</span></div>
+            <button class="link-btn" onclick="renommerMagasin('${m.id}')">renommer</button>
+            <button class="link-btn" style="color:var(--red)" onclick="supprMagasin('${m.id}')">✕</button>
+          </div>`;
+        }).join('') || '<div class="tiny muted">Aucun magasin</div>'}
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">Produits (${prods.length})</div>
+        ${prods.slice(0, 60).map(p => {
+          const c = catOf(p.categorie);
+          return `<div class="spread">
+            <div class="grow ellipsis">${c.em} ${esc(p.nom)}</div>
+            <button class="link-btn" onclick="editProduit('${p.id}')">modifier</button>
+          </div>`;
+        }).join('') || '<div class="tiny muted">Aucun produit</div>'}
+        ${prods.length > 60 ? '<div class="tiny muted">… et ' + (prods.length - 60) + ' autres</div>' : ''}
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">Apparence</div>
+        <div class="seg" id="r-theme">
+          <button onclick="setTheme('auto')">Auto</button>
+          <button onclick="setTheme('light')">Clair</button>
+          <button onclick="setTheme('dark')">Sombre</button>
+        </div>
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">Données</div>
+        <button class="btn ghost" onclick="exportJSON()">⬇️ Exporter (JSON)</button>
+        <button class="btn ghost" onclick="verifierMAJ()">🔄 Rechercher une mise à jour</button>
+      </div>
+    `;
+    const th = localStorage.getItem(LS.theme) || 'auto';
+    document.querySelectorAll('#r-theme button').forEach((b, i) => b.classList.toggle('on', ['auto', 'light', 'dark'][i] === th));
+  }
+  window.renderReglages = renderReglages;
+
+  function saveUserNom(v) { localStorage.setItem(LS.userNom, v.trim()); toast('Enregistré'); }
+  function switchFoyer(id, nom) { entrerFoyer(id, nom); toast('Foyer : ' + nom); }
+  window.saveUserNom = saveUserNom; window.switchFoyer = switchFoyer;
+
+  async function renommerMagasin(id) {
+    const m = magById(id); if (!m) return;
+    const nom = prompt('Nouveau nom du magasin :', m.nom);
+    if (!nom || !nom.trim()) return;
+    try { await CT.updateDoc(CT.ref('magasins', id), { nom: nom.trim() }); toast('Renommé'); } catch (e) { toast('❌ ' + e.message); }
+  }
+  async function supprMagasin(id) {
+    const n = (window._releves || []).filter(r => r.magasinId === id).length;
+    if (n && !confirm(`Ce magasin a ${n} relevé(s). Les supprimer aussi ?`)) return;
+    if (!n && !confirm('Supprimer ce magasin ?')) return;
+    try {
+      for (const r of (window._releves || []).filter(r => r.magasinId === id)) await CT.deleteDoc(CT.ref('releves', r.id));
+      await CT.deleteDoc(CT.ref('magasins', id));
+      toast('Magasin supprimé');
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.renommerMagasin = renommerMagasin; window.supprMagasin = supprMagasin;
+
+  function editProduit(id) {
+    const p = prodById(id); if (!p) return;
+    openModal(`
+      <h3>Modifier « ${esc(p.nom)} »</h3>
+      <label class="field"><div class="field-label">Nom</div><input type="text" id="ep-nom" value="${esc(p.nom)}" /></label>
+      <div class="field-label" style="margin-top:12px">Catégorie</div>
+      <div id="ep-cats" style="display:flex;flex-wrap:wrap;gap:7px">
+        ${CATS.map(c => `<button type="button" class="chip ${c.k === p.categorie ? 'on' : ''}" data-k="${c.k}" onclick="epPickCat('${c.k}')">${c.em} ${c.nm}</button>`).join('')}
+      </div>
+      <div class="field-label" style="margin-top:12px">Unité</div>
+      <div class="seg" id="ep-unit">
+        ${['kg', 'piece', 'L'].map(u => `<button type="button" class="${u === p.unite ? 'on' : ''}" data-u="${u}" onclick="epPickUnit('${u}')">${UNIT_LABEL[u]}</button>`).join('')}
+      </div>
+      <button class="btn" style="margin-top:16px" onclick="saveProduit('${id}')">Enregistrer</button>
+      <button class="btn danger" style="margin-top:8px" onclick="supprProduit('${id}');closeModal()">Supprimer le produit</button>
+    `);
+    window._epCat = p.categorie; window._epUnit = p.unite;
+  }
+  window.editProduit = editProduit;
+  window.epPickCat = k => { window._epCat = k; document.querySelectorAll('#ep-cats .chip').forEach(b => b.classList.toggle('on', b.dataset.k === k)); };
+  window.epPickUnit = u => { window._epUnit = u; document.querySelectorAll('#ep-unit button').forEach(b => b.classList.toggle('on', b.dataset.u === u)); };
+  async function saveProduit(id) {
+    const nom = $('ep-nom').value.trim(); if (!nom) return toast('Nom vide');
+    try {
+      await CT.updateDoc(CT.ref('produits', id), { nom, nomLower: norm(nom), categorie: window._epCat, unite: window._epUnit });
+      closeModal(); toast('Enregistré');
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.saveProduit = saveProduit;
+
+  function setTheme(t) {
+    localStorage.setItem(LS.theme, t);
+    applyTheme();
+    document.querySelectorAll('#r-theme button').forEach((b, i) => b.classList.toggle('on', ['auto', 'light', 'dark'][i] === t));
+  }
+  function applyTheme() {
+    const t = localStorage.getItem(LS.theme) || 'auto';
+    if (t === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', t);
+  }
+  window.setTheme = setTheme;
+
+  function exportJSON() {
+    const data = {
+      exportedAt: new Date().toISOString(), foyer: localStorage.getItem(LS.foyerNom),
+      magasins: window._magasins, produits: window._produits, releves: window._releves, liste: window._liste,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'comparatom-' + todayISO() + '.json';
+    a.click();
+  }
+  window.exportJSON = exportJSON;
+
+  // ================= MISE À JOUR =================
+  let _lastMod = null;
+  async function verifierMAJ(manuel) {
+    try {
+      const r = await fetch('index.html?_=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+      const lm = r.headers.get('Last-Modified');
+      if (_lastMod && lm && lm !== _lastMod) {
+        if (confirm('Une nouvelle version est disponible. Recharger maintenant ?')) {
+          if ('serviceWorker' in navigator) {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(r => r.unregister()));
+          }
+          if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
+          location.reload(true);
+        }
+      } else if (manuel) toast('✅ Tu es à jour');
+      if (lm) _lastMod = lm;
+    } catch (e) { if (manuel) toast('Vérification impossible'); }
+  }
+  window.verifierMAJ = () => verifierMAJ(true);
+
+  // ferme les listes d'autocomplétion au clic extérieur
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.autocomplete')) {
+      const a = $('s-ac'), b = $('l-ac');
+      if (a) a.style.display = 'none';
+      if (b) b.style.display = 'none';
+    }
+  });
+
+  // ================= DÉMARRAGE =================
+  applyTheme();
+
+  function boot() {
+    if (!window.__CT_CONFIGURED) return; // écran config affiché par le module
+    const saved = localStorage.getItem(LS.foyerId);
+    if (saved) {
+      window._magasins = []; window._produits = []; window._releves = []; window._liste = [];
+      window.CT.start(saved);
+      $('app').style.display = 'block';
+      updateFoyerBadge();
+      initSaisieDefaults();
+      showPage('page-saisie');
+    } else {
+      $('screen-onboarding').classList.add('show');
+    }
+    verifierMAJ(false);
+    setInterval(() => verifierMAJ(false), 5 * 60 * 1000);
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  // le module Firebase (deferred) finit après ce script classique
+  if (window.CT) boot();
+  else window.onCTReady = boot;
+})();
+</script>
+</body>
+</html>
