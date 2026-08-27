@@ -252,26 +252,20 @@
   </div>
 </div>
 
-<!-- ============ ÉCRAN : ONBOARDING (créer / rejoindre foyer) ============ -->
+<!-- ============ ÉCRAN : ONBOARDING (choisir / créer un foyer) ============ -->
 <div id="screen-onboarding" class="fullscreen">
   <div class="fs-inner">
     <div class="brand" style="font-size:22px"><span class="dot">🏷️</span> Comparatom</div>
-    <p class="muted" style="margin:14px 0 26px;font-size:14px;line-height:1.6">
-      Le carnet de prix partagé de votre foyer. Relevez un prix en magasin, sachez tout de suite si c'est cher.
+    <p class="muted" style="margin:14px 0 22px;font-size:14px;line-height:1.6">
+      Le carnet de prix partagé. Relevez un prix en magasin, sachez tout de suite si c'est cher.
     </p>
 
-    <div class="card pad stack">
-      <div class="field-label">Créer un foyer</div>
-      <input type="text" id="ob-nom" placeholder="Nom du foyer (ex. Maison)" autocomplete="off" />
-      <button class="btn" onclick="creerFoyer()">Créer mon foyer</button>
-    </div>
-
-    <div class="center muted tiny" style="margin:18px 0">— ou —</div>
+    <div id="ob-list" class="stack" style="margin-bottom:16px"></div>
 
     <div class="card pad stack">
-      <div class="field-label">Rejoindre avec un code</div>
-      <input type="text" id="ob-code" placeholder="COMP-XXXX" autocomplete="off" style="text-transform:uppercase" />
-      <button class="btn secondary" onclick="rejoindreParCode()">Rejoindre</button>
+      <div class="field-label">Nouveau foyer</div>
+      <input type="text" id="ob-nom" placeholder="Nom (ex. Maison, Vacances…)" autocomplete="off" />
+      <button class="btn" onclick="creerFoyer()">Créer</button>
     </div>
   </div>
 </div>
@@ -501,7 +495,6 @@
   const LS = {
     foyerId: 'comparatom_foyer_id',
     foyerNom: 'comparatom_foyer_nom',
-    mesFoyers: 'comparatom_mes_foyers',
     lastMag: 'comparatom_last_magasin',
     userNom: 'comparatom_user_nom',
     theme: 'comparatom_theme',
@@ -633,16 +626,24 @@
   window.rerender = rerender;
 
   // ================= FOYER =================
-  function mesFoyers() { try { return JSON.parse(localStorage.getItem(LS.mesFoyers) || '[]'); } catch (e) { return []; } }
-  function addMonFoyer(id, nom) {
-    const l = mesFoyers().filter(f => f.id !== id);
-    l.unshift({ id, nom });
-    localStorage.setItem(LS.mesFoyers, JSON.stringify(l));
+  // Pas de code : tous les foyers sont visibles, on choisit dans la liste.
+  let _entered = false;
+
+  function foyersTries() {
+    return (window._foyers || []).slice().sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
   }
-  function genCode() {
-    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let s = ''; for (let i = 0; i < 4; i++) s += c[Math.floor(Math.random() * c.length)];
-    return 'COMP-' + s;
+
+  function renderOnboardingList() {
+    const box = $('ob-list');
+    if (!box) return;
+    const foyers = foyersTries();
+    if (!foyers.length) { box.innerHTML = ''; return; }
+    box.innerHTML = `<div class="field-label">Ouvrir un foyer</div><div class="card">` + foyers.map(f =>
+      `<div class="list-row" onclick="entrerFoyer('${f.id}')">
+        <div class="lead">🏠</div>
+        <div class="grow"><b>${esc(f.nom)}</b></div>
+        <div class="tiny muted">ouvrir →</div>
+      </div>`).join('') + `</div>`;
   }
 
   async function creerFoyer() {
@@ -650,37 +651,19 @@
     if (!nom) return toast('⚠️ Donne un nom au foyer');
     if (!window.CT) return toast('Chargement… réessaie');
     try {
-      const code = genCode();
-      const ref = await CT.addDoc(CT.collection(CT.db, 'foyers'), { nom, code, createdAt: Date.now() });
+      const ref = await CT.addDoc(CT.collection(CT.db, 'foyers'), { nom, createdAt: Date.now() });
+      $('ob-nom').value = '';
       entrerFoyer(ref.id, nom);
-      openModal(`
-        <h3>Foyer « ${esc(nom)} » créé 🎉</h3>
-        <p class="muted tiny" style="margin-bottom:10px">Partage ce code avec ta conjointe pour qu'elle rejoigne le même carnet.</p>
-        <div class="card pad center" style="background:var(--card2)">
-          <div class="field-label">Code du foyer</div>
-          <div style="font-size:26px;font-weight:800;font-family:ui-monospace,monospace;letter-spacing:2px">${esc(code)}</div>
-        </div>
-        <button class="btn" style="margin-top:14px" onclick="partagerCode('${esc(code)}','${esc(nom)}')">📤 Partager l'invitation</button>
-        <button class="btn ghost" style="margin-top:8px" onclick="closeModal()">Fermer</button>
-      `);
+      toast('🏠 Foyer « ' + nom + ' » créé');
     } catch (e) { toast('❌ ' + e.message); }
   }
 
-  function rejoindreParCode() {
-    const raw = ($('ob-code').value || $('r-join-code')?.value || '').trim().toUpperCase();
-    if (!raw) return toast('⚠️ Entre un code');
-    const code = raw.startsWith('COMP-') ? raw : 'COMP-' + raw;
-    const f = (window._foyers || []).find(x => (x.code || '').toUpperCase() === code);
-    if (!f) return toast('❌ Aucun foyer avec ce code');
-    entrerFoyer(f.id, f.nom);
-    toast('✅ Bienvenue dans « ' + f.nom +' »');
-    closeModal();
-  }
-
   function entrerFoyer(id, nom) {
+    const f = (window._foyers || []).find(x => x.id === id);
+    nom = nom || (f && f.nom) || '';
+    _entered = true;
     localStorage.setItem(LS.foyerId, id);
     localStorage.setItem(LS.foyerNom, nom);
-    addMonFoyer(id, nom);
     window._magasins = []; window._produits = []; window._releves = []; window._liste = [];
     window._ficheId = null;
     CT.start(id);
@@ -691,33 +674,65 @@
     showPage('page-saisie');
   }
 
-  function quitterFoyer(id) {
-    const l = mesFoyers().filter(f => f.id !== id);
-    localStorage.setItem(LS.mesFoyers, JSON.stringify(l));
-    if (localStorage.getItem(LS.foyerId) === id) {
-      localStorage.removeItem(LS.foyerId);
-      localStorage.removeItem(LS.foyerNom);
-      if (l[0]) entrerFoyer(l[0].id, l[0].nom);
-      else { $('app').style.display = 'none'; $('screen-onboarding').classList.add('show'); }
-    } else renderReglages();
+  async function supprimerFoyer(id) {
+    const f = (window._foyers || []).find(x => x.id === id);
+    if (!f) return;
+    if (!confirm(`Supprimer le foyer « ${f.nom} » et TOUTES ses données (relevés, produits, magasins) ? Irréversible.`)) return;
+    try {
+      for (const name of ['releves', 'liste', 'produits', 'magasins']) {
+        const snap = await CT.getDocs(CT.collection(CT.db, 'foyers', id, name));
+        for (const d of snap.docs) await CT.deleteDoc(CT.doc(CT.db, 'foyers', id, name, d.id));
+      }
+      await CT.deleteDoc(CT.doc(CT.db, 'foyers', id));
+      toast('Foyer supprimé');
+      if (localStorage.getItem(LS.foyerId) === id) {
+        localStorage.removeItem(LS.foyerId);
+        localStorage.removeItem(LS.foyerNom);
+        _entered = false;
+        const reste = (window._foyers || []).filter(x => x.id !== id);
+        if (reste.length === 1) entrerFoyer(reste[0].id, reste[0].nom);
+        else { $('app').style.display = 'none'; renderOnboardingList(); $('screen-onboarding').classList.add('show'); }
+      } else renderReglages();
+    } catch (e) { toast('❌ ' + e.message); }
   }
 
   function updateFoyerBadge() {
-    const nom = localStorage.getItem(LS.foyerNom) || '';
-    $('foyer-badge').textContent = nom;
+    $('foyer-badge').textContent = localStorage.getItem(LS.foyerNom) || '';
   }
 
-  async function partagerCode(code, nom) {
-    const txt = `Rejoins notre carnet de prix « ${nom} » sur Comparatom.\nCode : ${code}\nhttps://applicatom.github.io/Comparatom`;
-    try {
-      if (navigator.share) await navigator.share({ text: txt });
-      else { await navigator.clipboard.writeText(txt); toast('📋 Invitation copiée'); }
-    } catch (e) {}
+  // décide quoi afficher au démarrage une fois la liste des foyers connue
+  function decideEntree() {
+    if (_entered) return;
+    const saved = localStorage.getItem(LS.foyerId);
+    const foyers = window._foyers || [];
+    if (saved && foyers.some(f => f.id === saved)) return entrerFoyer(saved);
+    if (foyers.length === 1) return entrerFoyer(foyers[0].id);
+    renderOnboardingList();
+    $('screen-onboarding').classList.add('show');
   }
+
+  window.onFoyersLoaded = function () {
+    const saved = localStorage.getItem(LS.foyerId);
+    const foyers = window._foyers || [];
+    if (_entered && saved && !foyers.some(f => f.id === saved)) {
+      // le foyer courant a été supprimé ailleurs
+      _entered = false;
+      localStorage.removeItem(LS.foyerId);
+      localStorage.removeItem(LS.foyerNom);
+      $('app').style.display = 'none';
+    }
+    if (!_entered) { decideEntree(); return; }
+    const f = foyers.find(x => x.id === saved);
+    if (f && f.nom !== localStorage.getItem(LS.foyerNom)) {
+      localStorage.setItem(LS.foyerNom, f.nom); updateFoyerBadge();
+    }
+    renderOnboardingList();
+    if (document.querySelector('.page.active')?.id === 'page-reglages') renderReglages();
+  };
+
   window.creerFoyer = creerFoyer;
-  window.rejoindreParCode = rejoindreParCode;
-  window.partagerCode = partagerCode;
-  window.quitterFoyer = quitterFoyer;
+  window.entrerFoyer = entrerFoyer;
+  window.supprimerFoyer = supprimerFoyer;
 
   // ================= SAISIE =================
   function initSaisieDefaults() {
@@ -1241,35 +1256,29 @@
   // ================= RÉGLAGES =================
   function renderReglages() {
     $('r-version').textContent = 'Comparatom · version ' + APP_VERSION;
-    const foyerNom = localStorage.getItem(LS.foyerNom) || '';
     const foyerId = localStorage.getItem(LS.foyerId);
-    const foyer = (window._foyers || []).find(f => f.id === foyerId);
-    const code = foyer ? foyer.code : '…';
     const mags = (window._magasins || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
     const prods = (window._produits || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
     const userNom = localStorage.getItem(LS.userNom) || '';
 
     $('reglages-body').innerHTML = `
       <div class="card pad stack">
-        <div class="field-label">Foyer actuel</div>
-        <div class="spread"><div><b>${esc(foyerNom)}</b><div class="tiny muted" style="font-family:ui-monospace,monospace">${esc(code)}</div></div>
-          <button class="btn small" onclick="partagerCode('${esc(code)}','${esc(foyerNom)}')">📤 Inviter</button></div>
-      </div>
-
-      <div class="card pad stack">
         <div class="field-label">Mon prénom (auteur des relevés)</div>
         <input type="text" id="r-user" value="${esc(userNom)}" placeholder="Ton prénom" onchange="saveUserNom(this.value)" />
       </div>
 
       <div class="card pad stack">
-        <div class="field-label">Mes foyers</div>
-        ${mesFoyers().map(f => `<div class="spread">
-          <button class="link-btn" onclick="switchFoyer('${f.id}','${esc(f.nom)}')">${f.id === foyerId ? '● ' : '○ '}${esc(f.nom)}</button>
-          <button class="link-btn" style="color:var(--red)" onclick="quitterFoyer('${f.id}')">quitter</button>
+        <div class="field-label">Foyers</div>
+        ${foyersTries().map(f => `<div class="spread">
+          <button class="link-btn" onclick="switchFoyer('${f.id}')">${f.id === foyerId ? '● ' : '○ '}${esc(f.nom)}</button>
+          <span>
+            <button class="link-btn" onclick="renommerFoyer('${f.id}')">renommer</button>
+            <button class="link-btn" style="color:var(--red);margin-left:10px" onclick="supprimerFoyer('${f.id}')">✕</button>
+          </span>
         </div>`).join('')}
         <div class="divider"></div>
-        <input type="text" id="r-join-code" placeholder="Rejoindre un autre foyer (code)" style="text-transform:uppercase" />
-        <button class="btn secondary" onclick="rejoindreParCode()">Rejoindre</button>
+        <input type="text" id="r-new-foyer" placeholder="Nom d'un nouveau foyer" />
+        <button class="btn secondary" onclick="creerFoyerReglages()">Créer un foyer</button>
       </div>
 
       <div class="card pad stack">
@@ -1317,8 +1326,32 @@
   window.renderReglages = renderReglages;
 
   function saveUserNom(v) { localStorage.setItem(LS.userNom, v.trim()); toast('Enregistré'); }
-  function switchFoyer(id, nom) { entrerFoyer(id, nom); toast('Foyer : ' + nom); }
+  function switchFoyer(id) {
+    if (id === localStorage.getItem(LS.foyerId)) return;
+    entrerFoyer(id);
+    toast('Foyer : ' + (localStorage.getItem(LS.foyerNom) || ''));
+  }
+  async function renommerFoyer(id) {
+    const f = (window._foyers || []).find(x => x.id === id); if (!f) return;
+    const nom = prompt('Nouveau nom du foyer :', f.nom);
+    if (!nom || !nom.trim()) return;
+    try {
+      await CT.updateDoc(CT.doc(CT.db, 'foyers', id), { nom: nom.trim() });
+      if (id === localStorage.getItem(LS.foyerId)) { localStorage.setItem(LS.foyerNom, nom.trim()); updateFoyerBadge(); }
+      toast('Renommé');
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  async function creerFoyerReglages() {
+    const nom = ($('r-new-foyer').value || '').trim();
+    if (!nom) return toast('⚠️ Donne un nom');
+    try {
+      const ref = await CT.addDoc(CT.collection(CT.db, 'foyers'), { nom, createdAt: Date.now() });
+      entrerFoyer(ref.id, nom);
+      toast('🏠 Foyer « ' + nom + ' » créé');
+    } catch (e) { toast('❌ ' + e.message); }
+  }
   window.saveUserNom = saveUserNom; window.switchFoyer = switchFoyer;
+  window.renommerFoyer = renommerFoyer; window.creerFoyerReglages = creerFoyerReglages;
 
   async function renommerMagasin(id) {
     const m = magById(id); if (!m) return;
@@ -1429,16 +1462,8 @@
   function boot() {
     if (!window.__CT_CONFIGURED) return; // écran config affiché par le module
     const saved = localStorage.getItem(LS.foyerId);
-    if (saved) {
-      window._magasins = []; window._produits = []; window._releves = []; window._liste = [];
-      window.CT.start(saved);
-      $('app').style.display = 'block';
-      updateFoyerBadge();
-      initSaisieDefaults();
-      showPage('page-saisie');
-    } else {
-      $('screen-onboarding').classList.add('show');
-    }
+    if (saved) entrerFoyer(saved);            // entrée optimiste ; sinon on attend onFoyersLoaded
+    else if (window._foyers) decideEntree();
     verifierMAJ(false);
     setInterval(() => verifierMAJ(false), 5 * 60 * 1000);
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});

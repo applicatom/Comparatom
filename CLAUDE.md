@@ -46,7 +46,7 @@ Tant que les 6 valeurs contiennent `REMPLACE_MOI`, l'app n'affiche que l'écran 
 Tout dans `index.html` : CSS dans un `<style>`, markup, puis deux scripts en fin de body :
 - `<script type="module">` : init Firebase (import ESM depuis jsDelivr `firebase@10.12.0`),
   expose `window.CT` (helpers Firestore + `CT.start(foyerId)` qui pose les listeners
-  `onSnapshot`), écoute la collection racine `foyers` pour la résolution des codes.
+  `onSnapshot`), écoute la collection racine `foyers` (liste de tous les foyers).
 - `<script>` classique (IIFE) : toute la logique DOM, pas de framework, `document.getElementById`
   + `innerHTML`, fonctions exposées sur `window` pour les `onclick`.
 
@@ -59,7 +59,7 @@ Le script classique (parsing) s'exécute avant le module (deferred) : il pose
 ## Modèle de données (Firestore)
 
 ```
-foyers/{foyerId}                { nom, code, createdAt }
+foyers/{foyerId}                { nom, createdAt }
 foyers/{foyerId}/magasins/{id}  { nom, enseigne?, ville?, createdAt }
 foyers/{foyerId}/produits/{id}  { nom, nomLower, categorie, unite: 'kg'|'piece'|'L', createdAt }
 foyers/{foyerId}/releves/{id}   { produitId, magasinId, prix (€/unité), date 'YYYY-MM-DD',
@@ -68,7 +68,7 @@ foyers/{foyerId}/liste/{id}     { produitId, qte, coche (bool), addedAt }
 ```
 
 `window._magasins / _produits / _releves / _liste` : synchronisés en temps réel.
-`localStorage` : `comparatom_foyer_id`, `comparatom_foyer_nom`, `comparatom_mes_foyers`,
+`localStorage` : `comparatom_foyer_id`, `comparatom_foyer_nom`,
 `comparatom_last_magasin`, `comparatom_user_nom`, `comparatom_theme`.
 
 **Une seule unité par produit.** Un produit vendu au kg ET à la pièce → deux produits.
@@ -88,14 +88,17 @@ relevé périmé.
 
 ## Écrans
 
+Onboarding (choisir un foyer dans la liste, ou en créer un — **pas de code d'accès**,
+tous les foyers sont visibles ; au 1er lancement on entre direct si un seul foyer existe) ·
 Saisie (accueil) · Produits (rayons + recherche) · Fiche produit (comparatif magasins) ·
-Stats (mes magasins) · Liste de courses (partagée, estimation panier) · Réglages.
+Stats (mes magasins) · Liste de courses (partagée, estimation panier) · Réglages
+(prénom, gestion des foyers/magasins/produits, thème, export).
 
 ## Versioning / PWA
 
 `APP_VERSION` (constante) affichée dans Réglages. `verifierMAJ()` compare le `Last-Modified`
 du `index.html` en ligne et propose de recharger (purge SW + caches).
-`sw.js` : cache `comparatom-v1` — **bump `-vN`** quand on change les assets cachés ;
+`sw.js` : cache `comparatom-v2` — **bump `-vN`** quand on change les assets cachés ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 
