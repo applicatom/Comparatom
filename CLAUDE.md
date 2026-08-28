@@ -60,37 +60,69 @@ Le script classique (parsing) s'exécute avant le module (deferred) : il pose
 
 ```
 foyers/{foyerId}                { nom, createdAt }
+foyers/{foyerId}/categories/{id} { nom, nomEs?, emoji, ordre, createdAt }   (id = slug pour les 15 défauts)
 foyers/{foyerId}/magasins/{id}  { nom, enseigne?, ville?, createdAt }
-foyers/{foyerId}/produits/{id}  { nom, nomLower, categorie, unite: 'kg'|'piece'|'L', createdAt }
+foyers/{foyerId}/produits/{id}  { nom, nomLower, categorie (=id catégorie), unite: 'kg'|'piece'|'L',
+                                  thumb? (dataURL ~150px), codeBarres?, createdAt }
+foyers/{foyerId}/photos/{produitId} { data: dataURL jpeg ~1000px }   (lazy: getDoc, PAS de listener)
 foyers/{foyerId}/releves/{id}   { produitId, magasinId, prix (€/unité), date 'YYYY-MM-DD',
-                                  promo (bool), auteur?, createdAt }
+                                  promo (bool), marque?, origine?, note?, auteur?, createdAt }
 foyers/{foyerId}/liste/{id}     { produitId, qte, coche (bool), addedAt }
 ```
 
-`window._magasins / _produits / _releves / _liste` : synchronisés en temps réel.
+`window._magasins / _produits / _releves / _liste / _categories` : synchronisés en temps réel.
+`window._photoCache` : cache mémoire des grandes photos (getDoc à la demande).
 `localStorage` : `comparatom_foyer_id`, `comparatom_foyer_nom`,
-`comparatom_last_magasin`, `comparatom_user_nom`, `comparatom_theme`.
+`comparatom_last_magasin`, `comparatom_user_nom`, `comparatom_theme`, `comparatom_lang`.
 
 **Une seule unité par produit.** Un produit vendu au kg ET à la pièce → deux produits.
 
+**Catégories = données.** `CATS_DEFAUT` (15) seedées via `seedCategoriesIfEmpty()` au 1er
+passage sur un foyer, doc id = le slug (`viande`…) pour compat. CRUD complet dans Réglages
+(nom, emoji via `openEmojiPicker`, ordre, suppression → produits réaffectés à `autre`).
+`catOf(id)` lit `_categories` (fallback `CAT_FALLBACK`). `catLabel(c)` = FR ou ES.
+
+**i18n** : `I18N = { fr, es }` (~130 clés), `t(k, vars)`, `LANG` en localStorage.
+Chaînes statiques du HTML : attributs `data-i18n` / `data-i18n-html` / `data-i18n-ph` +
+`applyStaticI18n()`. Bascule FR/Español dans Réglages (`setLang`). ES = espagnol Mexique
+(séparateur décimal `.`, unité pièce = `pza`).
+
 ## Logique "cher ou pas cher" (`index.html`, section LOGIQUE PRIX)
 
-- `prixActuel(pid, mid)` = relevé **non-promo** le plus récent du couple.
-  `stale` si > `STALE_DAYS` (60 j), `dead` si > `DEAD_DAYS` (120 j, exclu des calculs).
-- `meilleurPrix(pid)` = min des `prixActuel` non-`dead`, tous magasins.
-- `ecartPct(prix, best)` en % ; `classeEcart` : ≤ +1 % vert · +1→+8 % ambre · > +8 % rouge.
-- `statsMagasin(mid)` : écart moyen sur les produits où ce magasin ET un autre ont un prix
-  actuel non-périmé, + nb de fois le moins cher, + nb relevés + dernier passage.
-- Les relevés `promo:true` ne comptent jamais : affichés à part sur la fiche produit.
+- **Marque au niveau du relevé** (`releve.marque`, optionnel). `marquesDe(pid)` = marques
+  distinctes vues (`''` = sans marque, en dernier).
+- `statCouple(pid, mid, marque)` = { actuelPrix, moy, min, max, n, dead… } d'un couple
+  (produit, magasin, marque). `relevesCouple` filtre non-promo.
+- `bestStatStore(pid, mid)` = la stat la moins chère parmi les marques du magasin.
+- `prixActuel(pid, mid)` = `bestStatStore` réduit ({prix, dead, marque}).
+  `stale` > `STALE_DAYS` (60 j), `dead` > `DEAD_DAYS` (120 j, exclu des calculs).
+- `meilleurPrix(pid)` = min des `prixActuel` non-`dead`, tous magasins (garde `marque`).
+- Fiche produit : si ≥ 2 marques → un bloc par marque ; sinon tableau plat. Chaque ligne
+  magasin montre prix actuel, écart coloré, moyenne, nb relevés, + sparkline si n ≥ 3.
+  Section "Historique complet" = tous les relevés (promo inclus) chronologiques.
+- `statsMagasin(mid)` : inchangé (raisonne au prix le plus bas du magasin, marque confondue).
+- `ecartPct` / `classeEcart` : ≤ +1 % vert · +1→+8 % ambre · > +8 % rouge.
+- Les relevés `promo:true` ne comptent jamais dans meilleurPrix ni les stats.
 
 Si tu touches ces fonctions, garde ces règles : pas de comparaison à une promo ni à un
 relevé périmé.
 
+## Photos
+
+`compressImage(file, maxPx, quality)` (canvas → dataURL jpeg). `setPhotoProduit` génère un
+`thumb` ~150px (dans le doc produit, sert les vignettes de listes via `vignette(p)`) + une
+photo pleine ~1000px dans `photos/{produitId}` (chargée à l'ouverture de la fiche par
+`loadPhoto`). Bouton 📷 = `<input type=file accept=image/*>` caché (`pickPhoto` /
+`onPhotoPicked`) → appareil ou bibliothèque au choix de l'OS. Firestore doc < 1 Mo : la
+compression descend la qualité si le dataURL dépasse ~350 000 caractères.
+
 ## Écrans
 
 Onboarding (choisir un foyer dans la liste, ou en créer un — **pas de code d'accès**,
-tous les foyers sont visibles ; au 1er lancement on entre direct si un seul foyer existe) ·
-Saisie (accueil) · Produits (rayons + recherche) · Fiche produit (comparatif magasins) ·
+tous les foyers sont visibles ; au 1er lancement on entre direct si un seul foyer existe ;
+bascule de langue) · Saisie (accueil ; produit, magasin, prix, marque/origine/note
+optionnels, photo à la création) · Produits (rayons dynamiques + recherche, vignettes photo) ·
+Fiche produit (comparatif par marque × magasin, moyennes, historique, photo) ·
 Stats (mes magasins) · Liste de courses (partagée, estimation panier) · Réglages
 (prénom, gestion des foyers/magasins/produits, thème, export).
 
@@ -98,7 +130,8 @@ Stats (mes magasins) · Liste de courses (partagée, estimation panier) · Régl
 
 `APP_VERSION` (constante) affichée dans Réglages. `verifierMAJ()` compare le `Last-Modified`
 du `index.html` en ligne et propose de recharger (purge SW + caches).
-`sw.js` : cache `comparatom-v2` — **bump `-vN`** quand on change les assets cachés ;
+Palette : **zinc + teal** (accent `#0d9488`), clair + sombre + `data-theme`.
+`sw.js` : cache `comparatom-v3` — **bump `-vN`** quand on change les assets cachés ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 

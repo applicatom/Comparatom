@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-<meta name="theme-color" content="#f59e0b" />
+<meta name="theme-color" content="#0d9488" />
 <title>Comparatom</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon.png" />
@@ -13,59 +13,59 @@
 <style>
   /* ===================== THÈME ===================== */
   :root {
-    --bg: #f4f5f7;
+    --bg: #f4f5f5;
     --card: #ffffff;
-    --card2: #f8f9fb;
-    --text: #1a1a1e;
-    --text2: #6b7280;
-    --text3: #9ca3af;
-    --border: #eceef1;
-    --border2: #dde0e5;
-    --accent: #f59e0b;
-    --accent-strong: #d97706;
-    --accent-soft: #fef3c7;
-    --btn-text: #3a2400;
-    --green: #16a34a;
-    --green-soft: #dcfce7;
-    --amber: #d97706;
-    --amber-soft: #fef3c7;
-    --red: #dc2626;
-    --red-soft: #fee2e2;
+    --card2: #f2f4f3;
+    --text: #172020;
+    --text2: #5b6663;
+    --text3: #97a09e;
+    --border: #e7eae9;
+    --border2: #d6dbd9;
+    --accent: #0d9488;
+    --accent-strong: #0f766e;
+    --accent-soft: #cdeee9;
+    --btn-text: #ffffff;
+    --green: #15803d;
+    --green-soft: #d9efe1;
+    --amber: #a16207;
+    --amber-soft: #f2ebd7;
+    --red: #b91c1c;
+    --red-soft: #f6dede;
     --radius: 16px;
     --radius-sm: 10px;
-    --shadow: 0 1px 2px rgba(17,24,39,.06), 0 1px 3px rgba(17,24,39,.05);
+    --shadow: 0 1px 2px rgba(17,24,24,.06), 0 1px 3px rgba(17,24,24,.05);
     --maxw: 620px;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #101216;
-      --card: #191c22;
-      --card2: #20242c;
-      --text: #f0f1f3;
-      --text2: #9aa0ab;
-      --text3: #6b7280;
-      --border: #282c34;
-      --border2: #353a45;
-      --accent: #f59e0b;
-      --accent-strong: #fbbf24;
-      --accent-soft: #3a2d12;
-      --btn-text: #241700;
+      --bg: #131615;
+      --card: #1b1f1e;
+      --card2: #232726;
+      --text: #eef1f0;
+      --text2: #9aa4a2;
+      --text3: #6b7573;
+      --border: #2a302e;
+      --border2: #383e3c;
+      --accent: #14b8a6;
+      --accent-strong: #2dd4bf;
+      --accent-soft: #0f2e2a;
+      --btn-text: #04211d;
       --green: #4ade80;
-      --green-soft: #14331f;
-      --amber: #fbbf24;
-      --amber-soft: #3a2d12;
+      --green-soft: #123021;
+      --amber: #d4a017;
+      --amber-soft: #2d2917;
       --red: #f87171;
-      --red-soft: #3a1a1a;
+      --red-soft: #3a1c1c;
       --shadow: 0 1px 3px rgba(0,0,0,.4);
     }
   }
   :root[data-theme="dark"] {
-    --bg: #101216; --card: #191c22; --card2: #20242c;
-    --text: #f0f1f3; --text2: #9aa0ab; --text3: #6b7280;
-    --border: #282c34; --border2: #353a45;
-    --accent: #f59e0b; --accent-strong: #fbbf24; --accent-soft: #3a2d12; --btn-text: #241700;
-    --green: #4ade80; --green-soft: #14331f; --amber: #fbbf24; --amber-soft: #3a2d12;
-    --red: #f87171; --red-soft: #3a1a1a; --shadow: 0 1px 3px rgba(0,0,0,.4);
+    --bg: #131615; --card: #1b1f1e; --card2: #232726;
+    --text: #eef1f0; --text2: #9aa4a2; --text3: #6b7573;
+    --border: #2a302e; --border2: #383e3c;
+    --accent: #14b8a6; --accent-strong: #2dd4bf; --accent-soft: #0f2e2a; --btn-text: #04211d;
+    --green: #4ade80; --green-soft: #123021; --amber: #d4a017; --amber-soft: #2d2917;
+    --red: #f87171; --red-soft: #3a1c1c; --shadow: 0 1px 3px rgba(0,0,0,.4);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -226,6 +226,15 @@
   .divider { height: 1px; background: var(--border); margin: 14px 0; }
   .link-btn { background: none; border: none; color: var(--accent-strong); font-weight: 700; font-size: 13px; padding: 0; width: auto; }
 
+  .list-row .lead.photo { padding: 0; overflow: hidden; }
+  .list-row .lead.photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  .fiche-head { display: flex; align-items: flex-start; gap: 12px; margin: 8px 0 4px; }
+  .fiche-vign { width: 52px; height: 52px; border-radius: 12px; background: var(--card2); display: grid; place-items: center; font-size: 26px; flex-shrink: 0; overflow: hidden; }
+  .fiche-vign img { width: 100%; height: 100%; object-fit: cover; }
+  .emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; font-size: 22px; }
+  .emoji-grid button { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 6px 0; width: auto; }
+
   /* Onboarding / warning plein écran */
   .fullscreen { position: fixed; inset: 0; z-index: 120; background: var(--bg); overflow-y: auto; display: none; }
   .fullscreen.show { display: block; }
@@ -256,16 +265,21 @@
 <div id="screen-onboarding" class="fullscreen">
   <div class="fs-inner">
     <div class="brand" style="font-size:22px"><span class="dot">🏷️</span> Comparatom</div>
-    <p class="muted" style="margin:14px 0 22px;font-size:14px;line-height:1.6">
+    <p class="muted" style="margin:14px 0 22px;font-size:14px;line-height:1.6" data-i18n="onb_tagline">
       Le carnet de prix partagé. Relevez un prix en magasin, sachez tout de suite si c'est cher.
     </p>
 
     <div id="ob-list" class="stack" style="margin-bottom:16px"></div>
 
     <div class="card pad stack">
-      <div class="field-label">Nouveau foyer</div>
-      <input type="text" id="ob-nom" placeholder="Nom (ex. Maison, Vacances…)" autocomplete="off" />
-      <button class="btn" onclick="creerFoyer()">Créer</button>
+      <div class="field-label" data-i18n="onb_new">Nouveau foyer</div>
+      <input type="text" id="ob-nom" placeholder="Nom (ex. Maison, Vacances…)" data-i18n-ph="onb_new_ph" autocomplete="off" />
+      <button class="btn" onclick="creerFoyer()" data-i18n="onb_create">Créer</button>
+    </div>
+
+    <div class="center" style="margin-top:18px">
+      <button class="link-btn" onclick="setLang('fr')" style="margin:0 8px">Français</button>
+      <button class="link-btn" onclick="setLang('es')" style="margin:0 8px">Español</button>
     </div>
   </div>
 </div>
@@ -284,104 +298,123 @@
 
       <!-- ---------- SAISIE ---------- -->
       <section id="page-saisie" class="page active">
-        <div class="page-title">Nouveau relevé</div>
-        <div class="page-sub">Ajoute un prix en quelques secondes.</div>
+        <div class="page-title" data-i18n="pg_saisie_t">Nouveau relevé</div>
+        <div class="page-sub" data-i18n="pg_saisie_s">Ajoute un prix en quelques secondes.</div>
 
         <div class="card pad stack">
           <label class="field autocomplete">
-            <div class="field-label">Produit</div>
-            <input type="text" id="s-produit" placeholder="Ex. Poulet, Lait 1L, Bananes…" autocomplete="off" oninput="onProduitInput()" onfocus="onProduitInput()" />
+            <div class="field-label" data-i18n="f_produit">Produit</div>
+            <input type="text" id="s-produit" placeholder="Ex. Poulet, Lait 1L, Bananes…" data-i18n-ph="f_produit_ph" autocomplete="off" oninput="onProduitInput()" onfocus="onProduitInput()" />
             <div id="s-ac" class="ac-list" style="display:none"></div>
           </label>
 
           <div id="s-newprod" style="display:none">
-            <div class="field-label">Nouveau produit — catégorie</div>
+            <div class="field-label" data-i18n="f_newprod_cat">Nouveau produit — catégorie</div>
             <div id="s-cats" style="display:flex;flex-wrap:wrap;gap:7px"></div>
-            <div class="field-label" style="margin-top:12px">Prix exprimé…</div>
+            <div class="field-label" style="margin-top:12px" data-i18n="f_price_as">Prix exprimé…</div>
             <div class="seg" id="s-unit">
-              <button type="button" data-u="kg" onclick="setUnit('kg')">au kilo</button>
-              <button type="button" data-u="piece" onclick="setUnit('piece')">à la pièce</button>
-              <button type="button" data-u="L" onclick="setUnit('L')">au litre</button>
+              <button type="button" data-u="kg" onclick="setUnit('kg')" data-i18n="f_u_kg">au kilo</button>
+              <button type="button" data-u="piece" onclick="setUnit('piece')" data-i18n="f_u_piece">à la pièce</button>
+              <button type="button" data-u="L" onclick="setUnit('L')" data-i18n="f_u_L">au litre</button>
             </div>
+            <div id="s-photo-prev"></div>
+            <button type="button" class="btn ghost small" style="margin-top:10px;width:100%" onclick="pickPhoto('new')" data-i18n="f_photo_add">📷 Ajouter une photo</button>
           </div>
 
           <div id="s-lockedmeta" class="tiny muted" style="display:none"></div>
 
           <label class="field">
-            <div class="field-label">Magasin</div>
+            <div class="field-label" data-i18n="f_magasin">Magasin</div>
             <select id="s-magasin" onchange="onMagasinChange()"></select>
           </label>
 
           <label class="field">
-            <div class="field-label">Prix <span id="s-unitlabel" class="unit"></span></div>
+            <div class="field-label"><span data-i18n="f_prix">Prix</span> <span id="s-unitlabel" class="unit"></span></div>
             <input type="number" id="s-prix" inputmode="decimal" step="0.01" min="0" placeholder="0,00" />
-            <button type="button" class="link-btn" style="margin-top:8px" onclick="toggleCalc()">🧮 J'ai payé un total pour plusieurs</button>
+            <button type="button" class="link-btn" style="margin-top:8px" onclick="toggleCalc()" data-i18n="f_calc_btn">🧮 J'ai payé un total pour plusieurs</button>
           </label>
 
           <div id="s-calc" class="card pad" style="display:none;background:var(--card2)">
             <div class="row">
-              <label class="field grow"><div class="field-label">Total payé (€)</div><input type="number" id="s-calc-total" inputmode="decimal" step="0.01" min="0" placeholder="0,00" oninput="runCalc()" /></label>
+              <label class="field grow"><div class="field-label" data-i18n="f_calc_total">Total payé</div><input type="number" id="s-calc-total" inputmode="decimal" step="0.01" min="0" placeholder="0,00" oninput="runCalc()" /></label>
               <label class="field grow"><div class="field-label" id="s-calc-qtylabel">Quantité</div><input type="number" id="s-calc-qty" inputmode="decimal" step="0.001" min="0" placeholder="0" oninput="runCalc()" /></label>
             </div>
             <div class="tiny muted" id="s-calc-out" style="margin-top:8px">—</div>
           </div>
 
+          <label class="field">
+            <div class="field-label" data-i18n="f_marque">Marque (optionnel)</div>
+            <input type="text" id="s-marque" list="dl-marques" autocomplete="off" placeholder="Ex. Happyvore, Marque repère…" data-i18n-ph="f_marque_ph" />
+          </label>
+          <datalist id="dl-marques"></datalist>
+
+          <label class="field">
+            <div class="field-label" data-i18n="f_origine">Origine (optionnel)</div>
+            <input type="text" id="s-origine" list="dl-origines" autocomplete="off" placeholder="Ex. Équateur, France…" data-i18n-ph="f_origine_ph" />
+          </label>
+          <datalist id="dl-origines"></datalist>
+
+          <label class="field">
+            <div class="field-label" data-i18n="f_note">Note (optionnel)</div>
+            <input type="text" id="s-note" autocomplete="off" placeholder="Ex. format familial, en promo jusqu'au 12…" data-i18n-ph="f_note_ph" />
+          </label>
+
           <div class="spread">
             <div class="tiny muted" id="s-date-display"></div>
-            <button type="button" class="link-btn" onclick="toggleDate()">modifier la date</button>
+            <button type="button" class="link-btn" onclick="toggleDate()" data-i18n="f_editdate">modifier la date</button>
           </div>
           <input type="date" id="s-date" style="display:none" onchange="renderDateDisplay()" />
 
           <label class="row" style="gap:10px">
             <input type="checkbox" id="s-promo" style="width:20px;height:20px" />
-            <span class="tiny">C'est un <b>prix promo</b> (exclu des comparaisons)</span>
+            <span class="tiny" data-i18n-html="f_promo">C'est un <b>prix promo</b> (exclu des comparaisons)</span>
           </label>
 
-          <button class="btn" onclick="enregistrerReleve()">Enregistrer le relevé</button>
+          <button class="btn" onclick="enregistrerReleve()" data-i18n="f_save_releve">Enregistrer le relevé</button>
         </div>
 
         <div class="spread" style="margin:22px 0 8px">
-          <div style="font-weight:800">Derniers relevés</div>
+          <div style="font-weight:800" data-i18n="f_recent">Derniers relevés</div>
         </div>
         <div id="s-recent" class="card"></div>
       </section>
 
       <!-- ---------- PRODUITS ---------- -->
       <section id="page-produits" class="page">
-        <div class="page-title">Produits</div>
-        <div class="page-sub">Parcours par rayon ou cherche un produit.</div>
-        <input type="search" id="p-search" placeholder="Rechercher un produit…" oninput="renderProduits()" style="margin-bottom:14px" />
+        <div class="page-title" data-i18n="pg_produits_t">Produits</div>
+        <div class="page-sub" data-i18n="pg_produits_s">Parcours par rayon ou cherche un produit.</div>
+        <input type="search" id="p-search" placeholder="Rechercher un produit…" data-i18n-ph="f_search_ph" oninput="renderProduits()" style="margin-bottom:14px" />
         <div id="p-results"></div>
       </section>
 
       <!-- ---------- FICHE PRODUIT ---------- -->
       <section id="page-fiche" class="page">
-        <button class="link-btn" onclick="showPage('page-produits')" style="margin:14px 0 4px">← Produits</button>
+        <button class="link-btn" onclick="showPage('page-produits')" style="margin:14px 0 4px" data-i18n="fiche_back">← Produits</button>
         <div id="fiche-body"></div>
       </section>
 
       <!-- ---------- STATS ---------- -->
       <section id="page-stats" class="page">
-        <div class="page-title">Mes magasins</div>
-        <div class="page-sub">Écart moyen vs le meilleur prix relevé.</div>
+        <div class="page-title" data-i18n="pg_stats_t">Mes magasins</div>
+        <div class="page-sub" data-i18n="pg_stats_s">Écart moyen vs le meilleur prix relevé.</div>
         <div id="stats-body"></div>
       </section>
 
       <!-- ---------- LISTE ---------- -->
       <section id="page-liste" class="page">
-        <div class="page-title">Liste de courses</div>
-        <div class="page-sub">Partagée dans le foyer.</div>
+        <div class="page-title" data-i18n="pg_liste_t">Liste de courses</div>
+        <div class="page-sub" data-i18n="pg_liste_s">Partagée dans le foyer.</div>
 
         <div class="card pad stack">
           <label class="field autocomplete">
-            <div class="field-label">Ajouter un produit</div>
-            <input type="text" id="l-add" placeholder="Nom du produit…" autocomplete="off" oninput="onListeInput()" onfocus="onListeInput()" />
+            <div class="field-label" data-i18n="liste_add">Ajouter un produit</div>
+            <input type="text" id="l-add" placeholder="Nom du produit…" data-i18n-ph="liste_add_ph" autocomplete="off" oninput="onListeInput()" onfocus="onListeInput()" />
             <div id="l-ac" class="ac-list" style="display:none"></div>
           </label>
         </div>
 
         <label class="field" style="margin:16px 0 6px">
-          <div class="field-label">Estimer le panier chez</div>
+          <div class="field-label" data-i18n="liste_estimate_at">Estimer le panier chez</div>
           <select id="l-magasin" onchange="renderListe()"></select>
         </label>
 
@@ -390,7 +423,7 @@
 
       <!-- ---------- RÉGLAGES ---------- -->
       <section id="page-reglages" class="page">
-        <div class="page-title">Réglages</div>
+        <div class="page-title" data-i18n="pg_reglages_t">Réglages</div>
         <div class="page-sub" id="r-version"></div>
         <div id="reglages-body" class="stack"></div>
       </section>
@@ -399,13 +432,15 @@
   </div>
 
   <nav class="bottom-nav">
-    <button data-page="page-saisie" onclick="showPage('page-saisie')"><span class="ic">➕</span>Saisie</button>
-    <button data-page="page-produits" onclick="showPage('page-produits')"><span class="ic">🗂️</span>Produits</button>
-    <button data-page="page-stats" onclick="showPage('page-stats')"><span class="ic">📊</span>Stats</button>
-    <button data-page="page-liste" onclick="showPage('page-liste')"><span class="ic">🛒</span>Liste</button>
-    <button data-page="page-reglages" onclick="showPage('page-reglages')"><span class="ic">⚙️</span>Réglages</button>
+    <button data-page="page-saisie" onclick="showPage('page-saisie')"><span class="ic">➕</span><span data-i18n="nav_saisie">Saisie</span></button>
+    <button data-page="page-produits" onclick="showPage('page-produits')"><span class="ic">🗂️</span><span data-i18n="nav_produits">Produits</span></button>
+    <button data-page="page-stats" onclick="showPage('page-stats')"><span class="ic">📊</span><span data-i18n="nav_stats">Stats</span></button>
+    <button data-page="page-liste" onclick="showPage('page-liste')"><span class="ic">🛒</span><span data-i18n="nav_liste">Liste</span></button>
+    <button data-page="page-reglages" onclick="showPage('page-reglages')"><span class="ic">⚙️</span><span data-i18n="nav_reglages">Réglages</span></button>
   </nav>
 </div>
+
+<input type="file" id="photo-input" accept="image/*" style="display:none" onchange="onPhotoPicked(this.files &amp;&amp; this.files[0])" />
 
 <div id="toast" class="toast"></div>
 
@@ -439,14 +474,14 @@
   } else {
     const { initializeApp } = await import('https://cdn.jsdelivr.net/npm/firebase@10.12.0/app/+esm');
     const {
-      getFirestore, collection, addDoc, onSnapshot, doc, setDoc, deleteDoc, updateDoc, getDocs
+      getFirestore, collection, addDoc, onSnapshot, doc, setDoc, deleteDoc, updateDoc, getDocs, getDoc
     } = await import('https://cdn.jsdelivr.net/npm/firebase@10.12.0/firestore/+esm');
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
     const CT = {
-      db, collection, addDoc, onSnapshot, doc, setDoc, deleteDoc, updateDoc, getDocs,
+      db, collection, addDoc, onSnapshot, doc, setDoc, deleteDoc, updateDoc, getDocs, getDoc,
       foyerId: null,
       unsub: [],
     };
@@ -477,6 +512,7 @@
       sub('produits', '_produits');
       sub('releves', '_releves');
       sub('liste', '_liste');
+      sub('categories', '_categories', () => window.onCategoriesLoaded && window.onCategoriesLoaded());
     };
 
     CT.col = (name) => collection(db, 'foyers', CT.foyerId, name);
@@ -498,30 +534,214 @@
     lastMag: 'comparatom_last_magasin',
     userNom: 'comparatom_user_nom',
     theme: 'comparatom_theme',
+    lang: 'comparatom_lang',
   };
 
-  const CATS = [
-    { k: 'viande', em: '🥩', nm: 'Viande' },
-    { k: 'poisson', em: '🐟', nm: 'Poisson' },
-    { k: 'legumes', em: '🥦', nm: 'Légumes' },
-    { k: 'fruits', em: '🍎', nm: 'Fruits' },
-    { k: 'cremerie', em: '🧀', nm: 'Crémerie' },
-    { k: 'boulangerie', em: '🥖', nm: 'Boulangerie' },
-    { k: 'epicerie-salee', em: '🥫', nm: 'Épicerie salée' },
-    { k: 'epicerie-sucree', em: '🍫', nm: 'Épicerie sucrée' },
-    { k: 'surgeles', em: '🧊', nm: 'Surgelés' },
-    { k: 'boissons', em: '🥤', nm: 'Boissons' },
-    { k: 'hygiene', em: '🧴', nm: 'Hygiène' },
-    { k: 'entretien', em: '🧽', nm: 'Entretien' },
-    { k: 'bebe', em: '👶', nm: 'Bébé' },
-    { k: 'animaux', em: '🐾', nm: 'Animaux' },
-    { k: 'autre', em: '📦', nm: 'Autre' },
+  // ================= I18N =================
+  let LANG = localStorage.getItem(LS.lang) || 'fr';
+  const I18N = {
+    fr: {
+      nav_saisie:'Saisie', nav_produits:'Produits', nav_stats:'Stats', nav_liste:'Liste', nav_reglages:'Réglages',
+      onb_tagline:"Le carnet de prix partagé. Relevez un prix en magasin, sachez tout de suite si c'est cher.",
+      onb_open:'Ouvrir un foyer', onb_new:'Nouveau foyer', onb_new_ph:'Nom (ex. Maison, Vacances…)', onb_create:'Créer', onb_open_arrow:'ouvrir →',
+      pg_saisie_t:'Nouveau relevé', pg_saisie_s:'Ajoute un prix en quelques secondes.',
+      pg_produits_t:'Produits', pg_produits_s:'Parcours par rayon ou cherche un produit.',
+      pg_stats_t:'Mes magasins', pg_stats_s:'Écart moyen vs le meilleur prix relevé.',
+      pg_liste_t:'Liste de courses', pg_liste_s:'Partagée dans le foyer.',
+      pg_reglages_t:'Réglages',
+      f_produit:'Produit', f_produit_ph:'Ex. Poulet, Lait 1L, Bananes…',
+      f_newprod_cat:'Nouveau produit — catégorie', f_price_as:'Prix exprimé…',
+      f_u_kg:'au kilo', f_u_piece:'à la pièce', f_u_L:'au litre',
+      f_magasin:'Magasin', f_mag_pick:'— magasin —', f_mag_choose:'— choisir —', f_mag_new:'＋ Nouveau magasin…',
+      f_prix:'Prix', f_calc_btn:"🧮 J'ai payé un total pour plusieurs",
+      f_calc_total:'Total payé', f_calc_use:'utiliser ce prix',
+      f_qty_kg:'Poids (kg)', f_qty_piece:'Nombre de pièces', f_qty_L:'Volume (L)',
+      f_editdate:'modifier la date',
+      f_promo:"C'est un <b>prix promo</b> (exclu des comparaisons)",
+      f_marque:'Marque (optionnel)', f_marque_ph:'Ex. Happyvore, Marque repère…',
+      f_origine:'Origine (optionnel)', f_origine_ph:'Ex. Équateur, France…',
+      f_note:'Note (optionnel)', f_note_ph:'Ex. format familial, en promo jusqu\'au 12…',
+      f_photo_add:'📷 Ajouter une photo', f_photo_change:'📷 Changer la photo', f_photo_remove:'Retirer la photo',
+      f_save_releve:'Enregistrer le relevé', f_recent:'Derniers relevés', f_search_ph:'Rechercher un produit…',
+      known_product:'Produit connu',
+      date_today:"Aujourd'hui", date_ago:'il y a {n} j',
+      releve_s:'relevé', releve_p:'relevés', magasin_s:'magasin', magasin_p:'magasins', produit_s:'produit', produit_p:'produits',
+      promo:'promo',
+      msg_foyer_name:'⚠️ Donne un nom au foyer', msg_loading:'Chargement… réessaie',
+      msg_foyer_created:'🏠 Foyer « {nom} » créé', msg_foyer_deleted:'Foyer supprimé',
+      msg_renamed:'Renommé', msg_saved:'Enregistré', msg_deleted:'Supprimé',
+      msg_prod_deleted:'Produit supprimé', msg_mag_added:'🏪 Magasin ajouté', msg_mag_deleted:'Magasin supprimé',
+      msg_releve_saved:'✅ Relevé enregistré', msg_promo_saved:'🏷️ Promo enregistrée',
+      msg_need_produit:'⚠️ Indique le produit', msg_need_magasin:'⚠️ Choisis un magasin', msg_bad_price:'⚠️ Prix invalide',
+      msg_already_list:'Déjà dans la liste', msg_list_cleaned:'Liste nettoyée', msg_unit_applied:'Prix unitaire appliqué',
+      msg_complete_price:'Complète le magasin et le prix', msg_uptodate:'✅ Tu es à jour', msg_checkfail:'Vérification impossible',
+      msg_new_version:'Une nouvelle version est disponible. Recharger maintenant ?',
+      msg_photo_proc:'Traitement de la photo…', msg_photo_saved:'📷 Photo enregistrée', msg_photo_removed:'Photo retirée',
+      msg_cat_created:'Catégorie créée', msg_cat_deleted:'Catégorie supprimée', msg_lang_set:'Langue : Français',
+      confirm_del_releve:'Supprimer ce relevé ?', confirm_del_prod:'Supprimer ce produit et tous ses relevés ?',
+      confirm_del_foyer:'Supprimer le foyer « {nom} » et TOUTES ses données ? Irréversible.',
+      confirm_del_mag_n:'Ce magasin a {n} relevé(s). Les supprimer aussi ?', confirm_del_mag:'Supprimer ce magasin ?',
+      confirm_del_cat:'Supprimer cette catégorie ? Les produits passeront dans « Autre ».',
+      prompt_mag_new:'Nom du magasin (ex. Leclerc Challans) :', prompt_mag_rename:'Nouveau nom du magasin :',
+      prompt_foyer_rename:'Nouveau nom du foyer :', prompt_cat_new:'Nom de la catégorie :', prompt_cat_rename:'Nouveau nom :',
+      fiche_back:'← Produits', fiche_best:'MEILLEUR PRIX MAINTENANT', fiche_best_simple:'MEILLEUR PRIX',
+      fiche_no_price:'Aucun prix normal relevé.', fiche_cheapest:'le - cher',
+      fiche_expired:'périmé', fiche_avg:'moy {p}', fiche_sansmarque:'Sans marque',
+      fiche_history:'Historique complet', fiche_promos:'🏷️ Promos repérées',
+      fiche_add_releve:'➕ Ajouter un relevé pour ce produit', fiche_edit_prod:'Modifier le produit',
+      fiche_del_prod:'Supprimer ce produit', fiche_not_found:'Produit introuvable.', fiche_barcode:'Code-barres',
+      prod_none_found:'Aucun produit trouvé.', prod_all_rayons:'← Tous les rayons', prod_none_in_cat:'Aucun produit dans ce rayon.',
+      prod_no_releve:'aucun relevé',
+      stats_need_data:'Ajoute des relevés dans plusieurs magasins pour voir les comparaisons.',
+      stats_notenough:'pas assez de données', stats_cheaper_on:'Moins cher sur {a}/{b} produits comparés',
+      stats_seen:'vu le {d}', stats_last_visit:'dernier passage {d}',
+      stats_prod_tracked:'Produits suivis', stats_rec_saved:'Relevés enregistrés', stats_magasins:'Magasins',
+      stats_foot:'Écart moyen vs le meilleur prix relevé, hors promos et hors relevés de plus de {n} jours.',
+      liste_add:'Ajouter un produit', liste_add_ph:'Nom du produit…', liste_add_free:'Ajouter « {q} »',
+      liste_estimate_at:'Estimer le panier chez', liste_empty:'Liste vide. Ajoute des produits ci-dessus.',
+      liste_total:'Total estimé', liste_at_store:'Chez <b>{nom}</b> : ≈ {t}', liste_is_cheapest:"✅ C'est le magasin le moins cher pour cette liste.",
+      liste_price_unknown:'prix inconnu',
+      liste_approx_foot:'« ≈ » = prix estimé à partir du meilleur prix connu (pas de relevé récent dans ce magasin).',
+      liste_pick_store:'Choisis un magasin ci-dessus pour estimer le total.', liste_remove_checked:'Retirer les articles cochés',
+      reg_user:'Mon prénom (auteur des relevés)', reg_user_ph:'Ton prénom',
+      reg_foyers:'Foyers', reg_foyer_new_ph:"Nom d'un nouveau foyer", reg_foyer_create:'Créer un foyer', reg_rename:'renommer',
+      reg_magasins:'Magasins', reg_no_mag:'Aucun magasin', reg_produits:'Produits', reg_no_prod:'Aucun produit',
+      reg_and_others:'… et {n} autres', reg_edit:'modifier',
+      reg_cats:'Catégories', reg_cat_new:'＋ Nouvelle catégorie',
+      reg_appearance:'Apparence', reg_theme_auto:'Auto', reg_theme_light:'Clair', reg_theme_dark:'Sombre',
+      reg_language:'Langue', reg_data:'Données', reg_export:'⬇️ Exporter (JSON)', reg_checkupdate:'🔄 Rechercher une mise à jour',
+      reg_version:'Comparatom · version {v}',
+      edit_prod_title:'Modifier « {nom} »', edit_nom:'Nom', edit_cat:'Catégorie', edit_unit:'Unité',
+      edit_barcode_ph:'Code-barres (optionnel)', edit_save:'Enregistrer', edit_del_prod:'Supprimer le produit',
+      edit_photo:'Photo',
+      emoji_pick_title:'Choisir un emoji', emoji_free_ph:'ou colle un emoji',
+      empty_no_releve:"Aucun relevé pour l'instant.",
+      u_piece:'pièce',
+    },
+    es: {
+      nav_saisie:'Registrar', nav_produits:'Productos', nav_stats:'Estadísticas', nav_liste:'Lista', nav_reglages:'Ajustes',
+      onb_tagline:'La libreta de precios compartida. Anota un precio en la tienda y sabe al instante si es caro.',
+      onb_open:'Abrir un hogar', onb_new:'Nuevo hogar', onb_new_ph:'Nombre (ej. Casa, Vacaciones…)', onb_create:'Crear', onb_open_arrow:'abrir →',
+      pg_saisie_t:'Nuevo registro', pg_saisie_s:'Agrega un precio en segundos.',
+      pg_produits_t:'Productos', pg_produits_s:'Explora por sección o busca un producto.',
+      pg_stats_t:'Mis tiendas', pg_stats_s:'Diferencia media vs el mejor precio registrado.',
+      pg_liste_t:'Lista de compras', pg_liste_s:'Compartida en el hogar.',
+      pg_reglages_t:'Ajustes',
+      f_produit:'Producto', f_produit_ph:'Ej. Pollo, Leche 1L, Plátano…',
+      f_newprod_cat:'Producto nuevo — categoría', f_price_as:'Precio expresado…',
+      f_u_kg:'por kilo', f_u_piece:'por pieza', f_u_L:'por litro',
+      f_magasin:'Tienda', f_mag_pick:'— tienda —', f_mag_choose:'— elegir —', f_mag_new:'＋ Nueva tienda…',
+      f_prix:'Precio', f_calc_btn:'🧮 Pagué un total por varias unidades',
+      f_calc_total:'Total pagado', f_calc_use:'usar este precio',
+      f_qty_kg:'Peso (kg)', f_qty_piece:'Número de piezas', f_qty_L:'Volumen (L)',
+      f_editdate:'cambiar la fecha',
+      f_promo:'Es un <b>precio de oferta</b> (excluido de las comparaciones)',
+      f_marque:'Marca (opcional)', f_marque_ph:'Ej. Happyvore, marca propia…',
+      f_origine:'Origen (opcional)', f_origine_ph:'Ej. Ecuador, México…',
+      f_note:'Nota (opcional)', f_note_ph:'Ej. tamaño familiar, en oferta hasta el 12…',
+      f_photo_add:'📷 Agregar una foto', f_photo_change:'📷 Cambiar la foto', f_photo_remove:'Quitar la foto',
+      f_save_releve:'Guardar el registro', f_recent:'Últimos registros', f_search_ph:'Buscar un producto…',
+      known_product:'Producto conocido',
+      date_today:'Hoy', date_ago:'hace {n} d',
+      releve_s:'registro', releve_p:'registros', magasin_s:'tienda', magasin_p:'tiendas', produit_s:'producto', produit_p:'productos',
+      promo:'oferta',
+      msg_foyer_name:'⚠️ Ponle un nombre al hogar', msg_loading:'Cargando… vuelve a intentar',
+      msg_foyer_created:'🏠 Hogar «{nom}» creado', msg_foyer_deleted:'Hogar eliminado',
+      msg_renamed:'Renombrado', msg_saved:'Guardado', msg_deleted:'Eliminado',
+      msg_prod_deleted:'Producto eliminado', msg_mag_added:'🏪 Tienda agregada', msg_mag_deleted:'Tienda eliminada',
+      msg_releve_saved:'✅ Registro guardado', msg_promo_saved:'🏷️ Oferta guardada',
+      msg_need_produit:'⚠️ Indica el producto', msg_need_magasin:'⚠️ Elige una tienda', msg_bad_price:'⚠️ Precio inválido',
+      msg_already_list:'Ya está en la lista', msg_list_cleaned:'Lista depurada', msg_unit_applied:'Precio unitario aplicado',
+      msg_complete_price:'Completa la tienda y el precio', msg_uptodate:'✅ Estás al día', msg_checkfail:'No se pudo verificar',
+      msg_new_version:'Hay una versión nueva. ¿Recargar ahora?',
+      msg_photo_proc:'Procesando la foto…', msg_photo_saved:'📷 Foto guardada', msg_photo_removed:'Foto quitada',
+      msg_cat_created:'Categoría creada', msg_cat_deleted:'Categoría eliminada', msg_lang_set:'Idioma: Español',
+      confirm_del_releve:'¿Eliminar este registro?', confirm_del_prod:'¿Eliminar este producto y todos sus registros?',
+      confirm_del_foyer:'¿Eliminar el hogar «{nom}» y TODOS sus datos? Irreversible.',
+      confirm_del_mag_n:'Esta tienda tiene {n} registro(s). ¿Eliminarlos también?', confirm_del_mag:'¿Eliminar esta tienda?',
+      confirm_del_cat:'¿Eliminar esta categoría? Los productos pasarán a «Otro».',
+      prompt_mag_new:'Nombre de la tienda (ej. Walmart Centro):', prompt_mag_rename:'Nuevo nombre de la tienda:',
+      prompt_foyer_rename:'Nuevo nombre del hogar:', prompt_cat_new:'Nombre de la categoría:', prompt_cat_rename:'Nuevo nombre:',
+      fiche_back:'← Productos', fiche_best:'MEJOR PRECIO AHORA', fiche_best_simple:'MEJOR PRECIO',
+      fiche_no_price:'Ningún precio normal registrado.', fiche_cheapest:'el + barato',
+      fiche_expired:'caducado', fiche_avg:'prom {p}', fiche_sansmarque:'Sin marca',
+      fiche_history:'Historial completo', fiche_promos:'🏷️ Ofertas detectadas',
+      fiche_add_releve:'➕ Agregar un registro para este producto', fiche_edit_prod:'Editar el producto',
+      fiche_del_prod:'Eliminar este producto', fiche_not_found:'Producto no encontrado.', fiche_barcode:'Código de barras',
+      prod_none_found:'Ningún producto encontrado.', prod_all_rayons:'← Todas las secciones', prod_none_in_cat:'Ningún producto en esta sección.',
+      prod_no_releve:'sin registros',
+      stats_need_data:'Agrega registros en varias tiendas para ver las comparaciones.',
+      stats_notenough:'datos insuficientes', stats_cheaper_on:'Más barato en {a}/{b} productos comparados',
+      stats_seen:'visto el {d}', stats_last_visit:'última visita {d}',
+      stats_prod_tracked:'Productos monitoreados', stats_rec_saved:'Registros guardados', stats_magasins:'Tiendas',
+      stats_foot:'Diferencia media vs el mejor precio registrado, sin ofertas y sin registros de más de {n} días.',
+      liste_add:'Agregar un producto', liste_add_ph:'Nombre del producto…', liste_add_free:'Agregar «{q}»',
+      liste_estimate_at:'Estimar la canasta en', liste_empty:'Lista vacía. Agrega productos arriba.',
+      liste_total:'Total estimado', liste_at_store:'En <b>{nom}</b>: ≈ {t}', liste_is_cheapest:'✅ Es la tienda más barata para esta lista.',
+      liste_price_unknown:'precio desconocido',
+      liste_approx_foot:'«≈» = precio estimado a partir del mejor precio conocido (sin registro reciente en esa tienda).',
+      liste_pick_store:'Elige una tienda arriba para estimar el total.', liste_remove_checked:'Quitar los artículos marcados',
+      reg_user:'Mi nombre (autor de los registros)', reg_user_ph:'Tu nombre',
+      reg_foyers:'Hogares', reg_foyer_new_ph:'Nombre de un nuevo hogar', reg_foyer_create:'Crear un hogar', reg_rename:'renombrar',
+      reg_magasins:'Tiendas', reg_no_mag:'Ninguna tienda', reg_produits:'Productos', reg_no_prod:'Ningún producto',
+      reg_and_others:'… y {n} más', reg_edit:'editar',
+      reg_cats:'Categorías', reg_cat_new:'＋ Nueva categoría',
+      reg_appearance:'Apariencia', reg_theme_auto:'Auto', reg_theme_light:'Claro', reg_theme_dark:'Oscuro',
+      reg_language:'Idioma', reg_data:'Datos', reg_export:'⬇️ Exportar (JSON)', reg_checkupdate:'🔄 Buscar una actualización',
+      reg_version:'Comparatom · versión {v}',
+      edit_prod_title:'Editar «{nom}»', edit_nom:'Nombre', edit_cat:'Categoría', edit_unit:'Unidad',
+      edit_barcode_ph:'Código de barras (opcional)', edit_save:'Guardar', edit_del_prod:'Eliminar el producto',
+      edit_photo:'Foto',
+      emoji_pick_title:'Elegir un emoji', emoji_free_ph:'o pega un emoji',
+      empty_no_releve:'Ningún registro por ahora.',
+      u_piece:'pza',
+    },
+  };
+  function t(k, vars) {
+    let s = (I18N[LANG] && I18N[LANG][k] != null) ? I18N[LANG][k] : (I18N.fr[k] != null ? I18N.fr[k] : k);
+    if (vars) for (const key in vars) s = s.split('{' + key + '}').join(vars[key]);
+    return s;
+  }
+  const plur = (n, s, p) => (n > 1 ? p : s);
+  function applyStaticI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.dataset.i18nPh)); });
+    document.documentElement.lang = LANG;
+  }
+
+  // ================= CATÉGORIES =================
+  const CATS_DEFAUT = [
+    { id: 'viande', emoji: '🥩', nom: 'Viande', nomEs: 'Carne' },
+    { id: 'poisson', emoji: '🐟', nom: 'Poisson', nomEs: 'Pescado' },
+    { id: 'legumes', emoji: '🥦', nom: 'Légumes', nomEs: 'Verduras' },
+    { id: 'fruits', emoji: '🍎', nom: 'Fruits', nomEs: 'Frutas' },
+    { id: 'cremerie', emoji: '🧀', nom: 'Crémerie', nomEs: 'Lácteos' },
+    { id: 'boulangerie', emoji: '🥖', nom: 'Boulangerie', nomEs: 'Panadería' },
+    { id: 'epicerie-salee', emoji: '🥫', nom: 'Épicerie salée', nomEs: 'Abarrotes salados' },
+    { id: 'epicerie-sucree', emoji: '🍫', nom: 'Épicerie sucrée', nomEs: 'Abarrotes dulces' },
+    { id: 'surgeles', emoji: '🧊', nom: 'Surgelés', nomEs: 'Congelados' },
+    { id: 'boissons', emoji: '🥤', nom: 'Boissons', nomEs: 'Bebidas' },
+    { id: 'hygiene', emoji: '🧴', nom: 'Hygiène', nomEs: 'Higiene' },
+    { id: 'entretien', emoji: '🧽', nom: 'Entretien', nomEs: 'Limpieza' },
+    { id: 'bebe', emoji: '👶', nom: 'Bébé', nomEs: 'Bebé' },
+    { id: 'animaux', emoji: '🐾', nom: 'Animaux', nomEs: 'Mascotas' },
+    { id: 'autre', emoji: '📦', nom: 'Autre', nomEs: 'Otro' },
   ];
-  const catOf = k => CATS.find(c => c.k === k) || CATS[CATS.length - 1];
-  const UNIT_LABEL = { kg: '€/kg', piece: '€/pièce', L: '€/L' };
-  const UNIT_QTY = { kg: 'Poids (kg)', piece: 'Nombre de pièces', L: 'Volume (L)' };
+  const CAT_FALLBACK = { id: 'autre', emoji: '📦', nom: 'Autre', nomEs: 'Otro' };
+  function catsSorted() {
+    return (window._categories || []).slice().sort((a, b) =>
+      ((a.ordre == null ? 99 : a.ordre) - (b.ordre == null ? 99 : b.ordre)) || ((a.createdAt || 0) - (b.createdAt || 0)));
+  }
+  const catOf = id => (window._categories || []).find(c => c.id === id) || CAT_FALLBACK;
+  const catLabel = c => (LANG === 'es' && c.nomEs) ? c.nomEs : (c.nom || c.nomEs || '');
+  const EMOJIS = ['🥩','🍗','🍖','🥓','🍔','🌭','🥪','🐟','🦐','🦑','🦀','🐙','🥦','🥬','🥕','🧅','🧄','🥔','🍅','🌽','🥒','🫑','🍄','🥗','🍎','🍌','🍓','🫐','🍇','🍊','🍋','🍑','🥝','🍒','🍉','🥭','🍍','🥥','🧀','🥛','🧈','🥚','🍳','🍦','🥖','🍞','🥐','🥨','🫓','🥫','🧂','🍝','🍚','🫘','🌾','🍫','🍪','🍬','🍭','🍯','🍰','🧁','☕','🍵','🧃','🥤','🧋','🍷','🍺','🍾','🧊','🍢','🧴','🧼','🧻','🪥','🧽','🧹','🧺','🪣','👶','🍼','🐾','🐕','🐈','🌿','📦','🛒','💊','🌶️','🥜','🍶','🧇'];
+
   const STALE_DAYS = 60;
   const DEAD_DAYS = 120;
+  function unitSuffix(u) { return u === 'piece' ? t('u_piece') : u; }
+  function unitLabel(u) { return '€/' + unitSuffix(u); }
+  function qtyLabel(u) { return t('f_qty_' + u); }
 
   // ---------- état écran saisie ----------
   const S = { produit: null, unit: 'kg', newProd: false };
@@ -530,11 +750,14 @@
   const $ = id => document.getElementById(id);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
-  const daysSince = iso => Math.floor((Date.now() - new Date(iso + 'T12:00:00').getTime()) / 86400000);
-  const fmtEuro = n => (Math.round(n * 100) / 100).toFixed(2).replace('.', ',') + ' €';
-  const fmtPrix = (n, unit) => fmtEuro(n) + (unit ? '/' + UNIT_LABEL[unit].slice(2) : '');
-  const fmtDateFR = iso => { const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y.slice(2); };
+  const daysSince = iso => { const a = new Date(iso + 'T00:00:00'); const b = new Date(); b.setHours(0, 0, 0, 0); return Math.round((b - a) / 86400000); };
+  const decSep = () => (LANG === 'es' ? '.' : ',');
+  const fmtEuro = n => (Math.round(n * 100) / 100).toFixed(2).replace('.', decSep()) + ' €';
+  const fmtDate = iso => { if (!iso) return ''; const [y, m, d] = iso.split('-'); return d + '/' + m + '/' + y.slice(2); };
   const norm = s => String(s || '').toLowerCase().trim().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const uniqueVals = field => [...new Set((window._releves || []).map(r => r[field]).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  function fillDatalist(id, vals) { const el = $(id); if (!el) return; el.innerHTML = vals.map(v => `<option value="${esc(v)}"></option>`).join(''); }
+  window._photoCache = window._photoCache || {};
 
   function toast(msg) {
     const t = $('toast'); t.textContent = msg; t.classList.add('show');
@@ -546,27 +769,63 @@
 
   const magById = id => (window._magasins || []).find(m => m.id === id);
   const prodById = id => (window._produits || []).find(p => p.id === id);
+  function vignette(p) {
+    if (p && p.thumb) return `<div class="lead photo"><img src="${p.thumb}" alt=""></div>`;
+    const c = p ? catOf(p.categorie) : CAT_FALLBACK;
+    return `<div class="lead">${c.emoji}</div>`;
+  }
 
   // ================= LOGIQUE PRIX =================
-  // relevés non-promo d'un couple (produit, magasin), triés par date décroissante
-  function relevesCouple(pid, mid, includePromo) {
-    return (window._releves || [])
-      .filter(r => r.produitId === pid && r.magasinId === mid && (includePromo || !r.promo))
-      .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  // marques distinctes vues (non-promo) pour un produit ; '' = sans marque, placé en dernier
+  function marquesDe(pid) {
+    const set = new Set((window._releves || []).filter(r => r.produitId === pid && !r.promo).map(r => r.marque || ''));
+    if (!set.size) return [''];
+    return [...set].sort((a, b) => (a === '' ? 1 : b === '' ? -1 : a.localeCompare(b)));
   }
-  // prix "actuel" = relevé non-promo le plus récent
+  // relevés non-promo d'un couple (produit, magasin[, marque]) triés par date croissante
+  function relevesCouple(pid, mid, marque) {
+    return (window._releves || []).filter(r =>
+      r.produitId === pid && r.magasinId === mid && !r.promo &&
+      (marque === undefined || (r.marque || '') === marque)
+    ).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  }
+  // stats d'un couple (produit, magasin, marque) : prix actuel, moyenne, min/max, historique
+  function statCouple(pid, mid, marque) {
+    const rs = relevesCouple(pid, mid, marque);
+    if (!rs.length) return null;
+    const last = rs[rs.length - 1];
+    const j = daysSince(last.date);
+    const recent = rs.filter(r => daysSince(r.date) <= DEAD_DAYS);
+    const pool = (recent.length ? recent : rs).map(r => r.prix);
+    return {
+      releves: rs, marque: marque || '',
+      actuelPrix: last.prix, actuelDate: last.date, jours: j,
+      stale: j > STALE_DAYS, dead: j > DEAD_DAYS,
+      moy: pool.reduce((a, b) => a + b, 0) / pool.length,
+      min: Math.min(...rs.map(r => r.prix)), max: Math.max(...rs.map(r => r.prix)), n: rs.length,
+    };
+  }
+  // meilleure (moins chère) stat parmi les marques d'un magasin
+  function bestStatStore(pid, mid) {
+    let best = null;
+    marquesDe(pid).forEach(mq => {
+      const s = statCouple(pid, mid, mq);
+      if (s && (!best || s.actuelPrix < best.actuelPrix)) best = s;
+    });
+    return best;
+  }
+  // prix "actuel" d'un magasin pour un produit = le moins cher parmi ses marques
   function prixActuel(pid, mid) {
-    const r = relevesCouple(pid, mid, false)[0];
-    if (!r) return null;
-    const j = daysSince(r.date);
-    return { prix: r.prix, date: r.date, jours: j, stale: j > STALE_DAYS, dead: j > DEAD_DAYS };
+    const s = bestStatStore(pid, mid);
+    if (!s) return null;
+    return { prix: s.actuelPrix, date: s.actuelDate, jours: s.jours, stale: s.stale, dead: s.dead, marque: s.marque };
   }
-  // meilleur prix d'un produit = min des prix actuels non-périmés
+  // meilleur prix d'un produit = min des prix actuels non-périmés, tous magasins
   function meilleurPrix(pid) {
     let best = null;
     (window._magasins || []).forEach(m => {
       const pa = prixActuel(pid, m.id);
-      if (pa && !pa.dead && (best == null || pa.prix < best.prix)) best = { prix: pa.prix, magasinId: m.id };
+      if (pa && !pa.dead && (best == null || pa.prix < best.prix)) best = { prix: pa.prix, magasinId: m.id, marque: pa.marque };
     });
     return best;
   }
@@ -603,13 +862,22 @@
     document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
     document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.page === id));
     window.scrollTo(0, 0);
-    if (id === 'page-saisie') renderRecent();
+    if (id === 'page-saisie') { refreshSaisieLabels(); renderRecent(); }
     if (id === 'page-produits') renderProduits();
+    if (id === 'page-fiche' && window._ficheId) renderFiche(window._ficheId);
     if (id === 'page-stats') renderStats();
     if (id === 'page-liste') { fillMagasinSelect($('l-magasin'), true); renderListe(); }
     if (id === 'page-reglages') renderReglages();
   }
   window.showPage = showPage;
+
+  function refreshSaisieLabels() {
+    setUnit(S.unit);
+    renderDateDisplay();
+    renderCatsPicker();
+    fillDatalist('dl-marques', uniqueVals('marque'));
+    fillDatalist('dl-origines', uniqueVals('origine'));
+  }
 
   function rerender() {
     const active = document.querySelector('.page.active');
@@ -628,6 +896,20 @@
   // ================= FOYER =================
   // Pas de code : tous les foyers sont visibles, on choisit dans la liste.
   let _entered = false;
+  let _catsSeeded = false;
+
+  async function seedCategoriesIfEmpty() {
+    if (_catsSeeded || !window.CT || !window._categories) return;
+    if (window._categories.length > 0) { _catsSeeded = true; return; }
+    _catsSeeded = true;
+    try {
+      for (let i = 0; i < CATS_DEFAUT.length; i++) {
+        const c = CATS_DEFAUT[i];
+        await CT.setDoc(CT.ref('categories', c.id), { nom: c.nom, nomEs: c.nomEs, emoji: c.emoji, ordre: i, createdAt: Date.now() });
+      }
+    } catch (e) { _catsSeeded = false; }
+  }
+  window.onCategoriesLoaded = seedCategoriesIfEmpty;
 
   function foyersTries() {
     return (window._foyers || []).slice().sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
@@ -638,23 +920,23 @@
     if (!box) return;
     const foyers = foyersTries();
     if (!foyers.length) { box.innerHTML = ''; return; }
-    box.innerHTML = `<div class="field-label">Ouvrir un foyer</div><div class="card">` + foyers.map(f =>
+    box.innerHTML = `<div class="field-label">${t('onb_open')}</div><div class="card">` + foyers.map(f =>
       `<div class="list-row" onclick="entrerFoyer('${f.id}')">
         <div class="lead">🏠</div>
         <div class="grow"><b>${esc(f.nom)}</b></div>
-        <div class="tiny muted">ouvrir →</div>
+        <div class="tiny muted">${t('onb_open_arrow')}</div>
       </div>`).join('') + `</div>`;
   }
 
   async function creerFoyer() {
     const nom = $('ob-nom').value.trim();
-    if (!nom) return toast('⚠️ Donne un nom au foyer');
-    if (!window.CT) return toast('Chargement… réessaie');
+    if (!nom) return toast(t('msg_foyer_name'));
+    if (!window.CT) return toast(t('msg_loading'));
     try {
       const ref = await CT.addDoc(CT.collection(CT.db, 'foyers'), { nom, createdAt: Date.now() });
       $('ob-nom').value = '';
       entrerFoyer(ref.id, nom);
-      toast('🏠 Foyer « ' + nom + ' » créé');
+      toast(t('msg_foyer_created', { nom }));
     } catch (e) { toast('❌ ' + e.message); }
   }
 
@@ -662,9 +944,11 @@
     const f = (window._foyers || []).find(x => x.id === id);
     nom = nom || (f && f.nom) || '';
     _entered = true;
+    _catsSeeded = false;
+    window._photoCache = {};
     localStorage.setItem(LS.foyerId, id);
     localStorage.setItem(LS.foyerNom, nom);
-    window._magasins = []; window._produits = []; window._releves = []; window._liste = [];
+    window._magasins = []; window._produits = []; window._releves = []; window._liste = []; window._categories = [];
     window._ficheId = null;
     CT.start(id);
     $('screen-onboarding').classList.remove('show');
@@ -677,14 +961,14 @@
   async function supprimerFoyer(id) {
     const f = (window._foyers || []).find(x => x.id === id);
     if (!f) return;
-    if (!confirm(`Supprimer le foyer « ${f.nom} » et TOUTES ses données (relevés, produits, magasins) ? Irréversible.`)) return;
+    if (!confirm(t('confirm_del_foyer', { nom: f.nom }))) return;
     try {
-      for (const name of ['releves', 'liste', 'produits', 'magasins']) {
+      for (const name of ['releves', 'liste', 'produits', 'magasins', 'categories', 'photos']) {
         const snap = await CT.getDocs(CT.collection(CT.db, 'foyers', id, name));
         for (const d of snap.docs) await CT.deleteDoc(CT.doc(CT.db, 'foyers', id, name, d.id));
       }
       await CT.deleteDoc(CT.doc(CT.db, 'foyers', id));
-      toast('Foyer supprimé');
+      toast(t('msg_foyer_deleted'));
       if (localStorage.getItem(LS.foyerId) === id) {
         localStorage.removeItem(LS.foyerId);
         localStorage.removeItem(LS.foyerNom);
@@ -742,6 +1026,8 @@
     const last = localStorage.getItem(LS.lastMag);
     if (last && magById(last)) $('s-magasin').value = last;
     renderCatsPicker();
+    fillDatalist('dl-marques', uniqueVals('marque'));
+    fillDatalist('dl-origines', uniqueVals('origine'));
     setUnit('kg');
   }
 
@@ -750,10 +1036,10 @@
     const cur = sel.value;
     const mags = (window._magasins || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
     let html = '';
-    if (allowAllPrefix) html += `<option value="">— choisir —</option>`;
-    else html += `<option value="">— magasin —</option>`;
+    if (allowAllPrefix) html += `<option value="">${t('f_mag_choose')}</option>`;
+    else html += `<option value="">${t('f_mag_pick')}</option>`;
     html += mags.map(m => `<option value="${m.id}">${esc(m.nom)}</option>`).join('');
-    if (!allowAllPrefix) html += `<option value="__new__">＋ Nouveau magasin…</option>`;
+    if (!allowAllPrefix) html += `<option value="__new__">${t('f_mag_new')}</option>`;
     sel.innerHTML = html;
     if (cur && [...sel.options].some(o => o.value === cur)) sel.value = cur;
   }
@@ -761,13 +1047,13 @@
   async function onMagasinChange() {
     const sel = $('s-magasin');
     if (sel.value === '__new__') {
-      const nom = prompt('Nom du magasin (ex. Leclerc Challans) :');
+      const nom = prompt(t('prompt_mag_new'));
       sel.value = '';
       if (!nom || !nom.trim()) return;
       try {
         const ref = await CT.addDoc(CT.col('magasins'), { nom: nom.trim(), createdAt: Date.now() });
         setTimeout(() => { fillMagasinSelect(sel, false); sel.value = ref.id; localStorage.setItem(LS.lastMag, ref.id); }, 250);
-        toast('🏪 Magasin ajouté');
+        toast(t('msg_mag_added'));
       } catch (e) { toast('❌ ' + e.message); }
     } else if (sel.value) {
       localStorage.setItem(LS.lastMag, sel.value);
@@ -775,8 +1061,9 @@
   }
 
   function renderCatsPicker() {
-    $('s-cats').innerHTML = CATS.map(c =>
-      `<button type="button" class="chip" data-k="${c.k}" onclick="pickCat('${c.k}')">${c.em} ${c.nm}</button>`).join('');
+    const cats = catsSorted();
+    $('s-cats').innerHTML = (cats.length ? cats : CATS_DEFAUT).map(c =>
+      `<button type="button" class="chip${S.newCat === c.id ? ' on' : ''}" data-k="${c.id}" onclick="pickCat('${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('');
   }
   function pickCat(k) {
     S.newCat = k;
@@ -785,8 +1072,8 @@
   function setUnit(u) {
     S.unit = u;
     document.querySelectorAll('#s-unit button').forEach(b => b.classList.toggle('on', b.dataset.u === u));
-    $('s-unitlabel').textContent = UNIT_LABEL[u];
-    $('s-calc-qtylabel').textContent = UNIT_QTY[u];
+    $('s-unitlabel').textContent = unitLabel(u);
+    $('s-calc-qtylabel').textContent = qtyLabel(u);
     runCalc();
   }
   window.pickCat = pickCat;
@@ -804,7 +1091,7 @@
     if (matches.length && !exact) {
       box.innerHTML = matches.map(p => {
         const c = catOf(p.categorie);
-        return `<div class="ac-item" onclick="chooseProduit('${p.id}')"><span class="em">${c.em}</span><span class="grow">${esc(p.nom)}</span><span class="tiny muted">${UNIT_LABEL[p.unite]}</span></div>`;
+        return `<div class="ac-item" onclick="chooseProduit('${p.id}')"><span class="em">${p.thumb ? `<img src="${p.thumb}" style="width:20px;height:20px;border-radius:5px;object-fit:cover;vertical-align:middle">` : c.emoji}</span><span class="grow">${esc(p.nom)}</span><span class="tiny muted">${unitLabel(p.unite)}</span></div>`;
       }).join('');
       box.style.display = 'block';
     } else box.style.display = 'none';
@@ -814,6 +1101,7 @@
       $('s-newprod').style.display = 'block';
       S.newProd = true;
       if (!S.newCat) pickCat('autre');
+      renderCatsPicker();
     } else {
       $('s-newprod').style.display = 'none';
       S.newProd = false;
@@ -833,7 +1121,7 @@
     setUnit(p.unite);
     const c = catOf(p.categorie);
     $('s-lockedmeta').style.display = 'block';
-    $('s-lockedmeta').innerHTML = `Produit connu · ${c.em} ${c.nm} · prix ${UNIT_LABEL[p.unite]}`;
+    $('s-lockedmeta').innerHTML = `${t('known_product')} · ${c.emoji} ${esc(catLabel(c))} · ${unitLabel(p.unite)}`;
   }
   window.onProduitInput = onProduitInput;
   window.chooseProduit = chooseProduit;
@@ -845,17 +1133,17 @@
     const out = $('s-calc-out');
     if (tot > 0 && qty > 0) {
       const u = tot / qty;
-      out.innerHTML = `→ <b>${fmtEuro(u)} ${UNIT_LABEL[S.unit]}</b> · <button type="button" class="link-btn" onclick="appliquerCalc(${u})">utiliser ce prix</button>`;
+      out.innerHTML = `→ <b>${fmtEuro(u)} ${unitLabel(S.unit)}</b> · <button type="button" class="link-btn" onclick="appliquerCalc(${u})">${t('f_calc_use')}</button>`;
     } else out.textContent = '—';
   }
-  function appliquerCalc(u) { $('s-prix').value = (Math.round(u * 100) / 100); toast('Prix unitaire appliqué'); }
+  function appliquerCalc(u) { $('s-prix').value = (Math.round(u * 100) / 100); toast(t('msg_unit_applied')); }
   window.toggleCalc = toggleCalc; window.runCalc = runCalc; window.appliquerCalc = appliquerCalc;
 
   function toggleDate() { const e = $('s-date'); e.style.display = e.style.display === 'none' ? 'block' : 'none'; }
   function renderDateDisplay() {
     const v = $('s-date').value || todayISO();
     const j = daysSince(v);
-    $('s-date-display').textContent = j === 0 ? "📅 Aujourd'hui" : '📅 ' + fmtDateFR(v) + ` (il y a ${j} j)`;
+    $('s-date-display').textContent = j <= 0 ? '📅 ' + t('date_today') : '📅 ' + fmtDate(v) + ' · ' + t('date_ago', { n: j });
   }
   window.toggleDate = toggleDate; window.renderDateDisplay = renderDateDisplay;
   window.onMagasinChange = onMagasinChange;
@@ -866,13 +1154,16 @@
     const date = $('s-date').value || todayISO();
     const promo = $('s-promo').checked;
     const nomProd = $('s-produit').value.trim();
+    const marque = ($('s-marque').value || '').trim();
+    const origine = ($('s-origine').value || '').trim();
+    const note = ($('s-note').value || '').trim();
 
-    if (!nomProd) return toast('⚠️ Indique le produit');
-    if (!magasinId || magasinId === '__new__') return toast('⚠️ Choisis un magasin');
-    if (!(prix > 0)) return toast('⚠️ Prix invalide');
+    if (!nomProd) return toast(t('msg_need_produit'));
+    if (!magasinId || magasinId === '__new__') return toast(t('msg_need_magasin'));
+    if (!(prix > 0)) return toast(t('msg_bad_price'));
 
     try {
-      let produitId;
+      let produitId, isNew = false;
       if (S.produit && norm(S.produit.nom) === norm(nomProd)) {
         produitId = S.produit.id;
       } else {
@@ -883,21 +1174,28 @@
             nom: nomProd, nomLower: norm(nomProd),
             categorie: S.newCat || 'autre', unite: S.unit, createdAt: Date.now(),
           });
-          produitId = ref.id;
+          produitId = ref.id; isNew = true;
         }
       }
-      await CT.addDoc(CT.col('releves'), {
+      const rel = {
         produitId, magasinId, prix: Math.round(prix * 100) / 100, date, promo,
         auteur: localStorage.getItem(LS.userNom) || '', createdAt: Date.now(),
-      });
+      };
+      if (marque) rel.marque = marque;
+      if (origine) rel.origine = origine;
+      if (note) rel.note = note;
+      await CT.addDoc(CT.col('releves'), rel);
+      if (isNew && S.photoFile) setPhotoProduit(produitId, S.photoFile);
       localStorage.setItem(LS.lastMag, magasinId);
-      toast(promo ? '🏷️ Promo enregistrée' : '✅ Relevé enregistré');
+      toast(promo ? t('msg_promo_saved') : t('msg_releve_saved'));
       // reset partiel
       $('s-produit').value = ''; $('s-prix').value = '';
+      $('s-marque').value = ''; $('s-origine').value = ''; $('s-note').value = '';
       $('s-promo').checked = false;
       $('s-calc-total').value = ''; $('s-calc-qty').value = ''; runCalc();
       $('s-calc').style.display = 'none';
-      S.produit = null; S.newProd = false; S.newCat = null;
+      S.produit = null; S.newProd = false; S.newCat = null; S.photoFile = null;
+      $('s-photo-prev').innerHTML = '';
       $('s-newprod').style.display = 'none'; $('s-lockedmeta').style.display = 'none';
       $('s-date').value = todayISO(); renderDateDisplay();
       $('s-produit').focus();
@@ -905,31 +1203,101 @@
   }
   window.enregistrerReleve = enregistrerReleve;
 
+  // ================= PHOTOS =================
+  function compressImage(file, maxPx, quality) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let w = img.naturalWidth, h = img.naturalHeight;
+        if (w >= h && w > maxPx) { h = Math.round(h * maxPx / w); w = maxPx; }
+        else if (h > w && h > maxPx) { w = Math.round(w * maxPx / h); h = maxPx; }
+        const cv = document.createElement('canvas');
+        cv.width = w; cv.height = h;
+        cv.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(cv.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+  async function setPhotoProduit(pid, file) {
+    if (!file) return;
+    toast(t('msg_photo_proc'));
+    try {
+      let q = 0.72;
+      let full = await compressImage(file, 1000, q);
+      while (full.length > 350000 && q > 0.4) { q -= 0.12; full = await compressImage(file, 1000, q); }
+      const thumb = await compressImage(file, 160, 0.6);
+      await CT.updateDoc(CT.ref('produits', pid), { thumb });
+      await CT.setDoc(CT.ref('photos', pid), { data: full });
+      window._photoCache[pid] = full;
+      toast(t('msg_photo_saved'));
+      rerender();
+      if (document.querySelector('.page.active')?.id === 'page-fiche' && window._ficheId === pid) renderFiche(pid);
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  async function retirerPhoto(pid) {
+    try {
+      await CT.updateDoc(CT.ref('produits', pid), { thumb: '' });
+      await CT.deleteDoc(CT.ref('photos', pid));
+      delete window._photoCache[pid];
+      toast(t('msg_photo_removed'));
+      closeModal(); rerender();
+      if (document.querySelector('.page.active')?.id === 'page-fiche') renderFiche(pid);
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  async function loadPhoto(pid) {
+    if (pid in window._photoCache) return window._photoCache[pid];
+    try {
+      const snap = await CT.getDoc(CT.ref('photos', pid));
+      const d = snap && snap.exists() ? snap.data().data : null;
+      window._photoCache[pid] = d;
+      return d;
+    } catch (e) { return null; }
+  }
+  function pickPhoto(target) { window._photoTarget = target; $('photo-input').click(); }
+  function onPhotoPicked(file) {
+    $('photo-input').value = '';
+    if (!file) return;
+    const tgt = window._photoTarget;
+    if (tgt === 'new') {
+      S.photoFile = file;
+      const rd = new FileReader();
+      rd.onload = () => { $('s-photo-prev').innerHTML = `<img src="${rd.result}" style="width:72px;height:72px;object-fit:cover;border-radius:10px;margin-top:10px">`; };
+      rd.readAsDataURL(file);
+    } else if (tgt) {
+      setPhotoProduit(tgt, file);
+    }
+  }
+  window.pickPhoto = pickPhoto; window.onPhotoPicked = onPhotoPicked; window.retirerPhoto = retirerPhoto;
+
   function renderRecent() {
     const box = $('s-recent');
     const rs = (window._releves || []).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 6);
-    if (!rs.length) { box.innerHTML = `<div class="empty"><div class="em">🧾</div><p>Aucun relevé pour l'instant.</p></div>`; return; }
+    if (!rs.length) { box.innerHTML = `<div class="empty"><div class="em">🧾</div><p>${t('empty_no_releve')}</p></div>`; return; }
     box.innerHTML = rs.map(r => {
       const p = prodById(r.produitId), m = magById(r.magasinId);
-      const c = p ? catOf(p.categorie) : catOf('autre');
-      return `<div class="list-row">
-        <div class="lead">${c.em}</div>
+      const sub = [esc(m ? m.nom : '?'), fmtDate(r.date), r.marque ? esc(r.marque) : '', r.note ? esc(r.note) : ''].filter(Boolean).join(' · ');
+      return `<div class="list-row" style="cursor:pointer" onclick="ouvrirFiche('${r.produitId}')">
+        ${vignette(p)}
         <div class="grow">
-          <div class="ellipsis"><b>${esc(p ? p.nom : '?')}</b>${r.promo ? ' <span class="pill amber">promo</span>' : ''}</div>
-          <div class="tiny muted">${esc(m ? m.nom : '?')} · ${fmtDateFR(r.date)}</div>
+          <div class="ellipsis"><b>${esc(p ? p.nom : '?')}</b>${r.promo ? ` <span class="pill amber">${t('promo')}</span>` : ''}</div>
+          <div class="tiny muted ellipsis">${sub}</div>
         </div>
         <div class="center">
           <div class="price-big">${fmtEuro(r.prix)}</div>
-          <div class="unit">${p ? UNIT_LABEL[p.unite] : ''}</div>
+          <div class="unit">${p ? unitLabel(p.unite) : ''}</div>
         </div>
-        <button class="btn ghost small" onclick="supprReleve('${r.id}')">✕</button>
+        <button class="btn ghost small" onclick="event.stopPropagation();supprReleve('${r.id}')">✕</button>
       </div>`;
     }).join('');
   }
 
   async function supprReleve(id) {
-    if (!confirm('Supprimer ce relevé ?')) return;
-    try { await CT.deleteDoc(CT.ref('releves', id)); toast('Supprimé'); } catch (e) { toast('❌ ' + e.message); }
+    if (!confirm(t('confirm_del_releve'))) return;
+    try { await CT.deleteDoc(CT.ref('releves', id)); toast(t('msg_deleted')); } catch (e) { toast('❌ ' + e.message); }
   }
   window.supprReleve = supprReleve;
 
@@ -944,33 +1312,33 @@
         .sort((a, b) => a.nom.localeCompare(b.nom));
       box.innerHTML = matches.length
         ? `<div class="card">${matches.map(rowProduit).join('')}</div>`
-        : `<div class="empty"><div class="em">🔍</div><p>Aucun produit trouvé.</p></div>`;
+        : `<div class="empty"><div class="em">🔍</div><p>${t('prod_none_found')}</p></div>`;
       return;
     }
 
     const counts = {};
     prods.forEach(p => { counts[p.categorie] = (counts[p.categorie] || 0) + 1; });
-    box.innerHTML = `<div class="cat-grid">` + CATS.map(c => {
-      const n = counts[c.k] || 0;
-      return `<button class="cat-tile" onclick="openCat('${c.k}')" ${n ? '' : 'style="opacity:.45"'}>
-        <div class="em">${c.em}</div><div class="nm">${c.nm}</div><div class="ct">${n ? n + ' produit' + (n > 1 ? 's' : '') : '—'}</div>
+    const cats = catsSorted();
+    box.innerHTML = `<div class="cat-grid">` + (cats.length ? cats : CATS_DEFAUT).map(c => {
+      const n = counts[c.id] || 0;
+      return `<button class="cat-tile" onclick="openCat('${c.id}')" ${n ? '' : 'style="opacity:.45"'}>
+        <div class="em">${c.emoji}</div><div class="nm">${esc(catLabel(c))}</div><div class="ct">${n ? n + ' ' + plur(n, t('produit_s'), t('produit_p')) : '—'}</div>
       </button>`;
     }).join('') + `</div>`;
   }
 
   function rowProduit(p) {
-    const c = catOf(p.categorie);
     const best = meilleurPrix(p.id);
     const mag = best ? magById(best.magasinId) : null;
     const nbMags = new Set((window._releves || []).filter(r => r.produitId === p.id && !r.promo).map(r => r.magasinId)).size;
-    return `<div class="list-row" onclick="ouvrirFiche('${p.id}')">
-      <div class="lead">${c.em}</div>
+    return `<div class="list-row" style="cursor:pointer" onclick="ouvrirFiche('${p.id}')">
+      ${vignette(p)}
       <div class="grow">
         <div class="ellipsis"><b>${esc(p.nom)}</b></div>
-        <div class="tiny muted">${nbMags ? nbMags + ' magasin' + (nbMags > 1 ? 's' : '') : 'aucun relevé'}</div>
+        <div class="tiny muted">${nbMags ? nbMags + ' ' + plur(nbMags, t('magasin_s'), t('magasin_p')) : t('prod_no_releve')}</div>
       </div>
       <div class="center">
-        ${best ? `<div class="price-big">${fmtEuro(best.prix)}</div><div class="unit">${UNIT_LABEL[p.unite]}${mag ? ' · ' + esc(mag.nom) : ''}</div>` : '<span class="tiny muted">—</span>'}
+        ${best ? `<div class="price-big">${fmtEuro(best.prix)}</div><div class="unit">${unitLabel(p.unite)}${mag ? ' · ' + esc(mag.nom) : ''}</div>` : '<span class="tiny muted">—</span>'}
       </div>
     </div>`;
   }
@@ -979,10 +1347,10 @@
     const prods = (window._produits || []).filter(p => p.categorie === k).sort((a, b) => a.nom.localeCompare(b.nom));
     const c = catOf(k);
     $('p-results').innerHTML = `
-      <button class="link-btn" onclick="renderProduits()" style="margin-bottom:10px">← Tous les rayons</button>
-      <div class="spread" style="margin-bottom:10px"><div style="font-weight:800">${c.em} ${c.nm}</div></div>
+      <button class="link-btn" onclick="renderProduits()" style="margin-bottom:10px">${t('prod_all_rayons')}</button>
+      <div class="spread" style="margin-bottom:10px"><div style="font-weight:800">${c.emoji} ${esc(catLabel(c))}</div></div>
       ${prods.length ? `<div class="card">${prods.map(rowProduit).join('')}</div>`
-        : `<div class="empty"><div class="em">${c.em}</div><p>Aucun produit dans ce rayon.</p></div>`}`;
+        : `<div class="empty"><div class="em">${c.emoji}</div><p>${t('prod_none_in_cat')}</p></div>`}`;
   }
   window.renderProduits = renderProduits;
   window.openCat = openCat;
@@ -991,93 +1359,120 @@
   function ouvrirFiche(id) { window._ficheId = id; showPage('page-fiche'); renderFiche(id); }
   window.ouvrirFiche = ouvrirFiche;
 
+  function storeRowFiche(p, best, m, s) {
+    const pct = ecartPct(s.actuelPrix, best);
+    const badge = Math.abs(pct) < 0.6 ? `<span class="pill green">${t('fiche_cheapest')}</span>`
+      : `<span class="pill ${classeEcart(pct)}">+${pct.toFixed(0)}%</span>`;
+    const spark = s.n >= 3 ? sparklineMag(s.releves) : '';
+    return `<div class="list-row">
+      <div class="grow">
+        <div class="ellipsis"><b>${esc(m.nom)}</b></div>
+        <div class="tiny muted">${t('fiche_avg', { p: fmtEuro(s.moy) })} · ${s.n} ${plur(s.n, t('releve_s'), t('releve_p'))} · ${fmtDate(s.actuelDate)}${s.stale ? ' ⚠️' : ''}${s.dead ? ' · ' + t('fiche_expired') : ''}</div>
+        ${spark}
+      </div>
+      <div class="center" style="min-width:88px">
+        <div class="price-big">${fmtEuro(s.actuelPrix)}</div>
+        <div style="margin-top:2px">${badge}</div>
+      </div>
+    </div>`;
+  }
+
   function renderFiche(id) {
     const p = prodById(id);
     const box = $('fiche-body');
-    if (!p) { box.innerHTML = `<div class="empty">Produit introuvable.</div>`; return; }
+    if (!p) { box.innerHTML = `<div class="empty">${t('fiche_not_found')}</div>`; return; }
     const c = catOf(p.categorie);
     const best = meilleurPrix(p.id);
     const bestMag = best ? magById(best.magasinId) : null;
+    const brands = marquesDe(p.id);
+    const named = brands.filter(b => b !== '');
+    const groupByBrand = named.length > 0 && brands.length > 1;
+    const allReleves = (window._releves || []).filter(r => r.produitId === p.id);
+    const promos = allReleves.filter(r => r.promo).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
-    // lignes magasins (prix actuel non-promo)
-    const rows = (window._magasins || []).map(m => {
-      const pa = prixActuel(p.id, m.id);
-      return pa ? { m, pa } : null;
-    }).filter(Boolean).sort((a, b) => a.pa.prix - b.pa.prix);
-
-    const promos = (window._releves || []).filter(r => r.produitId === p.id && r.promo)
-      .sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 5);
-
-    let html = `
-      <div class="page-title" style="margin-top:6px">${c.em} ${esc(p.nom)}</div>
-      <div class="page-sub">${c.nm} · prix ${UNIT_LABEL[p.unite]}</div>`;
+    let html = `<div class="fiche-head">
+      <div class="fiche-vign">${p.thumb ? `<img src="${p.thumb}" alt="">` : c.emoji}</div>
+      <div class="grow">
+        <div class="page-title" style="margin:0">${esc(p.nom)}</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <button class="chip" onclick="editProduit('${p.id}')">${c.emoji} ${esc(catLabel(c))} · ${unitLabel(p.unite)} ✏️</button>
+          <button class="chip" onclick="pickPhoto('${p.id}')">${p.thumb ? t('f_photo_change') : t('f_photo_add')}</button>
+        </div>
+        ${p.codeBarres ? `<div class="tiny muted" style="margin-top:6px">${t('fiche_barcode')} : ${esc(p.codeBarres)}</div>` : ''}
+      </div>
+    </div>
+    <div id="fiche-photo"></div>`;
 
     if (best) {
-      html += `<div class="card pad" style="background:var(--green-soft);border-color:transparent;margin-bottom:14px">
-        <div class="tiny" style="font-weight:800;color:var(--green)">MEILLEUR PRIX</div>
-        <div style="font-size:22px;font-weight:800;margin-top:2px">${fmtEuro(best.prix)} <span class="unit">${UNIT_LABEL[p.unite]}</span></div>
-        <div class="tiny muted">${bestMag ? esc(bestMag.nom) : ''}</div>
+      const line = [best.marque, bestMag && bestMag.nom].filter(Boolean).map(esc).join(' · ');
+      html += `<div class="card pad" style="background:var(--green-soft);border-color:transparent;margin:14px 0">
+        <div class="tiny" style="font-weight:800;color:var(--green)">${t(named.length ? 'fiche_best' : 'fiche_best_simple')}</div>
+        <div style="font-size:22px;font-weight:800;margin-top:2px">${fmtEuro(best.prix)} <span class="unit">${unitLabel(p.unite)}</span></div>
+        ${line ? `<div class="tiny muted">${line}</div>` : ''}
       </div>`;
     }
 
-    html += rows.length ? `<div class="card">` + rows.map(({ m, pa }) => {
-      const pct = ecartPct(pa.prix, best);
-      const cls = classeEcart(pct);
-      const badge = Math.abs(pct) < 0.5 ? `<span class="pill green">le - cher</span>`
-        : `<span class="pill ${cls}">+${pct.toFixed(0)}%</span>`;
-      return `<div class="list-row">
-        <div class="grow">
-          <div class="ellipsis"><b>${esc(m.nom)}</b></div>
-          <div class="tiny ${pa.stale ? 'muted' : ''}">${pa.stale ? '⚠️ ' : ''}relevé le ${fmtDateFR(pa.date)}${pa.dead ? ' · périmé' : ''}</div>
-        </div>
-        <div class="center" style="min-width:96px">
-          <div class="price-big">${fmtEuro(pa.prix)}</div>
-          <div style="margin-top:2px">${badge}</div>
-        </div>
-      </div>`;
-    }).join('') + `</div>`
-      : `<div class="empty"><div class="em">🏷️</div><p>Aucun prix normal relevé.</p></div>`;
-
-    // sparkline (non-promo, tous magasins, chronologique)
-    const hist = (window._releves || []).filter(r => r.produitId === p.id && !r.promo)
-      .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-    if (hist.length >= 2) html += sparkline(hist);
+    const groups = groupByBrand ? brands : [null];
+    let hadRows = false;
+    html += groups.map(mq => {
+      const rows = (window._magasins || []).map(m => {
+        const s = mq === null ? bestStatStore(p.id, m.id) : statCouple(p.id, m.id, mq);
+        return s ? { m, s } : null;
+      }).filter(Boolean).sort((a, b) => a.s.actuelPrix - b.s.actuelPrix);
+      if (!rows.length) return '';
+      hadRows = true;
+      const head = mq === null ? '' :
+        `<div style="font-weight:800;margin:16px 0 6px">${mq === '' ? t('fiche_sansmarque') : esc(mq)}</div>`;
+      return head + `<div class="card">` + rows.map(({ m, s }) => storeRowFiche(p, best, m, s)).join('') + `</div>`;
+    }).join('') || `<div class="empty"><div class="em">🏷️</div><p>${t('fiche_no_price')}</p></div>`;
 
     if (promos.length) {
-      html += `<div style="font-weight:800;margin:18px 0 8px">🏷️ Promos repérées</div><div class="card">` +
-        promos.map(r => {
+      html += `<div style="font-weight:800;margin:18px 0 8px">${t('fiche_promos')}</div><div class="card">` +
+        promos.slice(0, 6).map(r => {
           const m = magById(r.magasinId);
-          return `<div class="list-row"><div class="grow"><b>${fmtEuro(r.prix)}</b> <span class="unit">${UNIT_LABEL[p.unite]}</span><div class="tiny muted">${esc(m ? m.nom : '?')} · ${fmtDateFR(r.date)}</div></div></div>`;
+          const sub = [r.marque, m && m.nom, fmtDate(r.date)].filter(Boolean).map(esc).join(' · ');
+          return `<div class="list-row"><div class="grow"><b>${fmtEuro(r.prix)}</b> <span class="unit">${unitLabel(p.unite)}</span><div class="tiny muted">${sub}</div></div></div>`;
         }).join('') + `</div>`;
     }
 
-    html += `<button class="btn secondary" style="margin-top:18px" onclick="ficheAddReleve('${p.id}')">➕ Ajouter un relevé pour ce produit</button>`;
-    if (rows.length === 0 && promos.length === 0) {
-      html += `<button class="btn danger" style="margin-top:8px" onclick="supprProduit('${p.id}')">Supprimer ce produit</button>`;
+    const hist = allReleves.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || 0) - (a.createdAt || 0));
+    if (hist.length) {
+      html += `<div style="font-weight:800;margin:18px 0 8px">${t('fiche_history')} (${hist.length})</div>
+        <div class="card" style="max-height:340px;overflow-y:auto">` + hist.map(r => {
+        const m = magById(r.magasinId);
+        const sub = [r.marque, r.origine, r.note].filter(Boolean).map(esc).join(' · ');
+        return `<div class="list-row">
+          <div class="grow">
+            <div class="tiny"><b>${fmtDate(r.date)}</b> · ${esc(m ? m.nom : '?')}${r.promo ? ` <span class="pill amber">${t('promo')}</span>` : ''}</div>
+            ${sub ? `<div class="tiny muted">${sub}</div>` : ''}
+          </div>
+          <div class="price-big" style="font-size:16px">${fmtEuro(r.prix)}</div>
+        </div>`;
+      }).join('') + `</div>`;
     }
+
+    html += `<button class="btn secondary" style="margin-top:18px" onclick="ficheAddReleve('${p.id}')">${t('fiche_add_releve')}</button>`;
+    html += `<button class="btn ghost" style="margin-top:8px" onclick="editProduit('${p.id}')">${t('fiche_edit_prod')}</button>`;
     box.innerHTML = html;
+
+    loadPhoto(p.id).then(url => {
+      const el = $('fiche-photo'); if (!el) return;
+      const src = url || (p.thumb || '');
+      if (src) el.innerHTML = `<img src="${src}" alt="" style="width:100%;border-radius:var(--radius);margin-top:12px;display:block">`;
+    });
   }
 
-  function sparkline(hist) {
-    const w = 320, h = 70, pad = 6;
-    const prices = hist.map(r => r.prix);
-    const min = Math.min(...prices), max = Math.max(...prices);
-    const span = max - min || 1;
-    const n = hist.length;
-    const pts = hist.map((r, i) => {
-      const x = pad + (n === 1 ? 0 : (i / (n - 1)) * (w - 2 * pad));
-      const y = pad + (1 - (r.prix - min) / span) * (h - 2 * pad);
-      return [x, y];
-    });
-    const d = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
-    const dots = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="var(--accent-strong)"/>`).join('');
-    return `<div class="card pad" style="margin-top:14px">
-      <div class="tiny muted" style="margin-bottom:6px">Historique (${n} relevés) · de ${fmtEuro(min)} à ${fmtEuro(max)}</div>
-      <svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none">
-        <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
-        ${dots}
-      </svg>
-    </div>`;
+  function sparklineMag(releves) {
+    const rs = releves.slice().sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+    if (rs.length < 2) return '';
+    const w = 200, h = 34, pad = 3;
+    const pr = rs.map(r => r.prix), mn = Math.min(...pr), mx = Math.max(...pr), sp = mx - mn || 1;
+    const pts = rs.map((r, i) => [pad + (i / (rs.length - 1)) * (w - 2 * pad), pad + (1 - (r.prix - mn) / sp) * (h - 2 * pad)]);
+    const d = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' ');
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:130px;height:34px;margin-top:5px;display:block" preserveAspectRatio="none">
+      <path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+      ${pts.map(q => `<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="2" fill="var(--accent-strong)"/>`).join('')}
+    </svg>`;
   }
 
   function ficheAddReleve(pid) {
@@ -1087,19 +1482,20 @@
     $('s-produit').value = p.nom;
     selectProduit(p, true);
     $('s-prix').focus();
-    toast('Complète le magasin et le prix');
+    toast(t('msg_complete_price'));
   }
   window.ficheAddReleve = ficheAddReleve;
 
   async function supprProduit(id) {
-    if (!confirm('Supprimer ce produit et tous ses relevés ?')) return;
+    if (!confirm(t('confirm_del_prod'))) return;
     try {
-      const rs = (window._releves || []).filter(r => r.produitId === id);
-      for (const r of rs) await CT.deleteDoc(CT.ref('releves', r.id));
-      const li = (window._liste || []).filter(x => x.produitId === id);
-      for (const x of li) await CT.deleteDoc(CT.ref('liste', x.id));
+      for (const r of (window._releves || []).filter(r => r.produitId === id)) await CT.deleteDoc(CT.ref('releves', r.id));
+      for (const x of (window._liste || []).filter(x => x.produitId === id)) await CT.deleteDoc(CT.ref('liste', x.id));
+      try { await CT.deleteDoc(CT.ref('photos', id)); } catch (e) {}
       await CT.deleteDoc(CT.ref('produits', id));
-      toast('Produit supprimé');
+      delete window._photoCache[id];
+      toast(t('msg_prod_deleted'));
+      closeModal();
       showPage('page-produits');
     } catch (e) { toast('❌ ' + e.message); }
   }
@@ -1109,7 +1505,7 @@
   function renderStats() {
     const box = $('stats-body');
     const mags = window._magasins || [];
-    if (!mags.length) { box.innerHTML = `<div class="empty"><div class="em">📊</div><p>Ajoute des relevés dans plusieurs magasins pour voir les comparaisons.</p></div>`; return; }
+    if (!mags.length) { box.innerHTML = `<div class="empty"><div class="em">📊</div><p>${t('stats_need_data')}</p></div>`; return; }
 
     const data = mags.map(m => ({ m, s: statsMagasin(m.id) }))
       .sort((a, b) => {
@@ -1122,8 +1518,8 @@
     box.innerHTML = data.map(({ m, s }, i) => {
       if (s.moy == null) {
         return `<div class="card pad stack">
-          <div class="spread"><div><b>${esc(m.nom)}</b></div><span class="pill grey">pas assez de données</span></div>
-          <div class="tiny muted">${s.nbReleves} relevé${s.nbReleves > 1 ? 's' : ''}${s.dernier ? ' · dernier passage ' + fmtDateFR(s.dernier) : ''}</div>
+          <div class="spread"><div><b>${esc(m.nom)}</b></div><span class="pill grey">${t('stats_notenough')}</span></div>
+          <div class="tiny muted">${s.nbReleves} ${plur(s.nbReleves, t('releve_s'), t('releve_p'))}${s.dernier ? ' · ' + t('stats_last_visit', { d: fmtDate(s.dernier) }) : ''}</div>
         </div>`;
       }
       const cls = classeEcart(s.moy);
@@ -1135,20 +1531,20 @@
           <div style="font-size:20px;font-weight:800;color:${col}">${sign}${s.moy.toFixed(1)}%</div>
         </div>
         <div class="bar-track"><div class="bar-fill" style="width:${Math.min(100, Math.max(3, (s.moy / maxMoy) * 100))}%;background:${col}"></div></div>
-        <div class="tiny muted">Moins cher sur ${s.moinsCher}/${s.comparables} produits comparés · ${s.nbReleves} relevés${s.dernier ? ' · vu le ' + fmtDateFR(s.dernier) : ''}</div>
+        <div class="tiny muted">${t('stats_cheaper_on', { a: s.moinsCher, b: s.comparables })} · ${s.nbReleves} ${plur(s.nbReleves, t('releve_s'), t('releve_p'))}${s.dernier ? ' · ' + t('stats_seen', { d: fmtDate(s.dernier) }) : ''}</div>
       </div>`;
     }).join('');
 
     const nbProd = (window._produits || []).length;
     const nbRel = (window._releves || []).length;
     box.innerHTML += `<div class="card pad" style="margin-top:14px">
-      <div class="spread tiny"><span class="muted">Produits suivis</span><b>${nbProd}</b></div>
+      <div class="spread tiny"><span class="muted">${t('stats_prod_tracked')}</span><b>${nbProd}</b></div>
       <div class="divider"></div>
-      <div class="spread tiny"><span class="muted">Relevés enregistrés</span><b>${nbRel}</b></div>
+      <div class="spread tiny"><span class="muted">${t('stats_rec_saved')}</span><b>${nbRel}</b></div>
       <div class="divider"></div>
-      <div class="spread tiny"><span class="muted">Magasins</span><b>${mags.length}</b></div>
+      <div class="spread tiny"><span class="muted">${t('stats_magasins')}</span><b>${mags.length}</b></div>
     </div>
-    <p class="tiny muted center" style="margin-top:12px">Écart moyen vs le meilleur prix relevé, hors promos et hors relevés de plus de ${DEAD_DAYS} jours.</p>`;
+    <p class="tiny muted center" style="margin-top:12px">${t('stats_foot', { n: DEAD_DAYS })}</p>`;
   }
   window.renderStats = renderStats;
 
@@ -1160,15 +1556,16 @@
     const matches = (window._produits || []).filter(p => norm(p.nom).includes(q)).slice(0, 6);
     let html = matches.map(p => {
       const c = catOf(p.categorie);
-      return `<div class="ac-item" onclick="ajoutListe('${p.id}')"><span class="em">${c.em}</span><span class="grow">${esc(p.nom)}</span></div>`;
+      const ic = p.thumb ? `<img src="${p.thumb}" style="width:20px;height:20px;border-radius:5px;object-fit:cover;vertical-align:middle">` : c.emoji;
+      return `<div class="ac-item" onclick="ajoutListe('${p.id}')"><span class="em">${ic}</span><span class="grow">${esc(p.nom)}</span></div>`;
     }).join('');
-    html += `<div class="ac-item" onclick="ajoutListeLibre()"><span class="em">➕</span><span class="grow">Ajouter « ${esc($('l-add').value)} »</span></div>`;
+    html += `<div class="ac-item" onclick="ajoutListeLibre()"><span class="em">➕</span><span class="grow">${t('liste_add_free', { q: esc($('l-add').value) })}</span></div>`;
     box.innerHTML = html;
     box.style.display = 'block';
   }
   async function ajoutListe(pid) {
     $('l-add').value = ''; $('l-ac').style.display = 'none';
-    if ((window._liste || []).some(x => x.produitId === pid)) return toast('Déjà dans la liste');
+    if ((window._liste || []).some(x => x.produitId === pid)) return toast(t('msg_already_list'));
     try { await CT.addDoc(CT.col('liste'), { produitId: pid, qte: 1, coche: false, addedAt: Date.now() }); }
     catch (e) { toast('❌ ' + e.message); }
   }
@@ -1194,23 +1591,22 @@
   function renderListe() {
     const box = $('liste-body');
     const items = (window._liste || []).slice().sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
-    if (!items.length) { box.innerHTML = `<div class="empty"><div class="em">🛒</div><p>Liste vide. Ajoute des produits ci-dessus.</p></div>`; return; }
+    if (!items.length) { box.innerHTML = `<div class="empty"><div class="em">🛒</div><p>${t('liste_empty')}</p></div>`; return; }
 
     const magId = $('l-magasin').value;
     let total = 0, approx = false;
 
     const rowsHtml = items.map(it => {
       const p = prodById(it.produitId);
-      const c = p ? catOf(p.categorie) : catOf('autre');
       const qte = it.qte || 1;
       const { c: cost, approx: ap, unknown } = coutItem(it.produitId, qte, magId);
       if (!it.coche) { total += cost; if (ap) approx = true; }
       return `<div class="list-row" style="${it.coche ? 'opacity:.45' : ''}">
         <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onchange="toggleListe('${it.id}',this.checked)" />
-        <div class="lead">${c.em}</div>
+        ${vignette(p)}
         <div class="grow">
           <div class="ellipsis" style="${it.coche ? 'text-decoration:line-through' : ''}"><b>${esc(p ? p.nom : '?')}</b></div>
-          <div class="tiny muted">${qte > 1 ? '×' + qte + ' · ' : ''}${magId ? (unknown ? 'prix inconnu' : (ap ? '≈ ' : '') + fmtEuro(cost)) : ''}</div>
+          <div class="tiny muted">${qte > 1 ? '×' + qte + ' · ' : ''}${magId ? (unknown ? t('liste_price_unknown') : (ap ? '≈ ' : '') + fmtEuro(cost)) : ''}</div>
         </div>
         <button class="btn ghost small" onclick="qteListe('${it.id}',${qte + 1})">＋</button>
         <button class="btn ghost small" onclick="supprListe('${it.id}')">✕</button>
@@ -1219,26 +1615,25 @@
 
     let bandeau = '';
     if (magId) {
-      // meilleur magasin pour toute la liste
       let bestMag = null, bestTot = Infinity;
       (window._magasins || []).forEach(m => {
-        let t = 0;
-        items.filter(x => !x.coche).forEach(x => { t += coutItem(x.produitId, x.qte || 1, m.id).c; });
-        if (t < bestTot) { bestTot = t; bestMag = m; }
+        let tt = 0;
+        items.filter(x => !x.coche).forEach(x => { tt += coutItem(x.produitId, x.qte || 1, m.id).c; });
+        if (tt < bestTot) { bestTot = tt; bestMag = m; }
       });
       const eco = total - bestTot;
       bandeau = `<div class="card pad" style="margin-top:14px">
-        <div class="spread"><div class="grow"><div class="tiny muted">Total estimé</div><div style="font-size:22px;font-weight:800">${approx ? '≈ ' : ''}${fmtEuro(total)}</div></div></div>
-        ${bestMag && bestMag.id !== magId && eco > 0.05 ? `<div class="divider"></div><div class="tiny">💡 Chez <b>${esc(bestMag.nom)}</b> : ≈ ${fmtEuro(bestTot)} <span class="pill green">−${fmtEuro(eco)}</span></div>` : ''}
-        ${bestMag && bestMag.id === magId ? `<div class="divider"></div><div class="tiny">✅ C'est le magasin le moins cher pour cette liste.</div>` : ''}
+        <div class="spread"><div class="grow"><div class="tiny muted">${t('liste_total')}</div><div style="font-size:22px;font-weight:800">${approx ? '≈ ' : ''}${fmtEuro(total)}</div></div></div>
+        ${bestMag && bestMag.id !== magId && eco > 0.05 ? `<div class="divider"></div><div class="tiny">💡 ${t('liste_at_store', { nom: esc(bestMag.nom), t: fmtEuro(bestTot) })} <span class="pill green">−${fmtEuro(eco)}</span></div>` : ''}
+        ${bestMag && bestMag.id === magId ? `<div class="divider"></div><div class="tiny">${t('liste_is_cheapest')}</div>` : ''}
       </div>
-      <p class="tiny muted center" style="margin-top:8px">« ≈ » = prix estimé à partir du meilleur prix connu (pas de relevé récent dans ce magasin).</p>`;
+      <p class="tiny muted center" style="margin-top:8px">${t('liste_approx_foot')}</p>`;
     } else {
-      bandeau = `<p class="tiny muted center" style="margin-top:12px">Choisis un magasin ci-dessus pour estimer le total.</p>`;
+      bandeau = `<p class="tiny muted center" style="margin-top:12px">${t('liste_pick_store')}</p>`;
     }
 
     box.innerHTML = `<div class="card">${rowsHtml}</div>${bandeau}
-      <button class="btn ghost" style="margin-top:12px" onclick="viderCoches()">Retirer les articles cochés</button>`;
+      <button class="btn ghost" style="margin-top:12px" onclick="viderCoches()">${t('liste_remove_checked')}</button>`;
   }
 
   async function toggleListe(id, v) { try { await CT.updateDoc(CT.ref('liste', id), { coche: v }); } catch (e) {} }
@@ -1248,106 +1643,129 @@
     const done = (window._liste || []).filter(x => x.coche);
     if (!done.length) return;
     for (const x of done) await CT.deleteDoc(CT.ref('liste', x.id));
-    toast('Liste nettoyée');
+    toast(t('msg_list_cleaned'));
   }
   window.renderListe = renderListe; window.toggleListe = toggleListe;
   window.qteListe = qteListe; window.supprListe = supprListe; window.viderCoches = viderCoches;
 
   // ================= RÉGLAGES =================
   function renderReglages() {
-    $('r-version').textContent = 'Comparatom · version ' + APP_VERSION;
+    $('r-version').textContent = t('reg_version', { v: APP_VERSION });
     const foyerId = localStorage.getItem(LS.foyerId);
     const mags = (window._magasins || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
     const prods = (window._produits || []).slice().sort((a, b) => a.nom.localeCompare(b.nom));
+    const cats = catsSorted();
     const userNom = localStorage.getItem(LS.userNom) || '';
+    const theme = localStorage.getItem(LS.theme) || 'auto';
 
     $('reglages-body').innerHTML = `
       <div class="card pad stack">
-        <div class="field-label">Mon prénom (auteur des relevés)</div>
-        <input type="text" id="r-user" value="${esc(userNom)}" placeholder="Ton prénom" onchange="saveUserNom(this.value)" />
-      </div>
-
-      <div class="card pad stack">
-        <div class="field-label">Foyers</div>
-        ${foyersTries().map(f => `<div class="spread">
-          <button class="link-btn" onclick="switchFoyer('${f.id}')">${f.id === foyerId ? '● ' : '○ '}${esc(f.nom)}</button>
-          <span>
-            <button class="link-btn" onclick="renommerFoyer('${f.id}')">renommer</button>
-            <button class="link-btn" style="color:var(--red);margin-left:10px" onclick="supprimerFoyer('${f.id}')">✕</button>
-          </span>
-        </div>`).join('')}
-        <div class="divider"></div>
-        <input type="text" id="r-new-foyer" placeholder="Nom d'un nouveau foyer" />
-        <button class="btn secondary" onclick="creerFoyerReglages()">Créer un foyer</button>
-      </div>
-
-      <div class="card pad stack">
-        <div class="field-label">Magasins (${mags.length})</div>
-        ${mags.map(m => {
-          const n = (window._releves || []).filter(r => r.magasinId === m.id).length;
-          return `<div class="spread">
-            <div class="grow ellipsis">${esc(m.nom)} <span class="tiny muted">${n} relevé${n > 1 ? 's' : ''}</span></div>
-            <button class="link-btn" onclick="renommerMagasin('${m.id}')">renommer</button>
-            <button class="link-btn" style="color:var(--red)" onclick="supprMagasin('${m.id}')">✕</button>
-          </div>`;
-        }).join('') || '<div class="tiny muted">Aucun magasin</div>'}
-      </div>
-
-      <div class="card pad stack">
-        <div class="field-label">Produits (${prods.length})</div>
-        ${prods.slice(0, 60).map(p => {
-          const c = catOf(p.categorie);
-          return `<div class="spread">
-            <div class="grow ellipsis">${c.em} ${esc(p.nom)}</div>
-            <button class="link-btn" onclick="editProduit('${p.id}')">modifier</button>
-          </div>`;
-        }).join('') || '<div class="tiny muted">Aucun produit</div>'}
-        ${prods.length > 60 ? '<div class="tiny muted">… et ' + (prods.length - 60) + ' autres</div>' : ''}
-      </div>
-
-      <div class="card pad stack">
-        <div class="field-label">Apparence</div>
-        <div class="seg" id="r-theme">
-          <button onclick="setTheme('auto')">Auto</button>
-          <button onclick="setTheme('light')">Clair</button>
-          <button onclick="setTheme('dark')">Sombre</button>
+        <div class="field-label">${t('reg_language')}</div>
+        <div class="seg" id="r-lang">
+          <button onclick="setLang('fr')" class="${LANG === 'fr' ? 'on' : ''}">Français</button>
+          <button onclick="setLang('es')" class="${LANG === 'es' ? 'on' : ''}">Español</button>
         </div>
       </div>
 
       <div class="card pad stack">
-        <div class="field-label">Données</div>
-        <button class="btn ghost" onclick="exportJSON()">⬇️ Exporter (JSON)</button>
-        <button class="btn ghost" onclick="verifierMAJ()">🔄 Rechercher une mise à jour</button>
+        <div class="field-label">${t('reg_user')}</div>
+        <input type="text" id="r-user" value="${esc(userNom)}" placeholder="${t('reg_user_ph')}" onchange="saveUserNom(this.value)" />
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">${t('reg_foyers')}</div>
+        ${foyersTries().map(f => `<div class="spread">
+          <button class="link-btn" onclick="switchFoyer('${f.id}')">${f.id === foyerId ? '● ' : '○ '}${esc(f.nom)}</button>
+          <span>
+            <button class="link-btn" onclick="renommerFoyer('${f.id}')">${t('reg_rename')}</button>
+            <button class="link-btn" style="color:var(--red);margin-left:10px" onclick="supprimerFoyer('${f.id}')">✕</button>
+          </span>
+        </div>`).join('')}
+        <div class="divider"></div>
+        <input type="text" id="r-new-foyer" placeholder="${t('reg_foyer_new_ph')}" />
+        <button class="btn secondary" onclick="creerFoyerReglages()">${t('reg_foyer_create')}</button>
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">${t('reg_cats')} (${cats.length})</div>
+        ${cats.map((c, i) => `<div class="spread">
+          <button class="link-btn" onclick="changerEmojiCategorie('${c.id}')" style="font-size:18px">${c.emoji}</button>
+          <div class="grow ellipsis">${esc(catLabel(c))}</div>
+          <span style="white-space:nowrap">
+            <button class="link-btn" ${i === 0 ? 'style="opacity:.3"' : ''} onclick="deplacerCategorie('${c.id}',-1)">↑</button>
+            <button class="link-btn" ${i === cats.length - 1 ? 'style="opacity:.3"' : ''} onclick="deplacerCategorie('${c.id}',1)" style="margin-left:6px">↓</button>
+            <button class="link-btn" onclick="renommerCategorie('${c.id}')" style="margin-left:8px">${t('reg_rename')}</button>
+            ${c.id === 'autre' ? '' : `<button class="link-btn" style="color:var(--red);margin-left:8px" onclick="supprimerCategorie('${c.id}')">✕</button>`}
+          </span>
+        </div>`).join('') || `<div class="tiny muted">—</div>`}
+        <div class="divider"></div>
+        <button class="btn secondary" onclick="nouvelleCategorie()">${t('reg_cat_new')}</button>
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">${t('reg_magasins')} (${mags.length})</div>
+        ${mags.map(m => {
+          const n = (window._releves || []).filter(r => r.magasinId === m.id).length;
+          return `<div class="spread">
+            <div class="grow ellipsis">${esc(m.nom)} <span class="tiny muted">${n} ${plur(n, t('releve_s'), t('releve_p'))}</span></div>
+            <button class="link-btn" onclick="renommerMagasin('${m.id}')">${t('reg_rename')}</button>
+            <button class="link-btn" style="color:var(--red)" onclick="supprMagasin('${m.id}')">✕</button>
+          </div>`;
+        }).join('') || `<div class="tiny muted">${t('reg_no_mag')}</div>`}
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">${t('reg_produits')} (${prods.length})</div>
+        ${prods.slice(0, 60).map(p => {
+          const c = catOf(p.categorie);
+          return `<div class="spread">
+            <div class="grow ellipsis">${p.thumb ? '📷' : c.emoji} ${esc(p.nom)}</div>
+            <button class="link-btn" onclick="editProduit('${p.id}')">${t('reg_edit')}</button>
+          </div>`;
+        }).join('') || `<div class="tiny muted">${t('reg_no_prod')}</div>`}
+        ${prods.length > 60 ? `<div class="tiny muted">${t('reg_and_others', { n: prods.length - 60 })}</div>` : ''}
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">${t('reg_appearance')}</div>
+        <div class="seg" id="r-theme">
+          <button onclick="setTheme('auto')" class="${theme === 'auto' ? 'on' : ''}">${t('reg_theme_auto')}</button>
+          <button onclick="setTheme('light')" class="${theme === 'light' ? 'on' : ''}">${t('reg_theme_light')}</button>
+          <button onclick="setTheme('dark')" class="${theme === 'dark' ? 'on' : ''}">${t('reg_theme_dark')}</button>
+        </div>
+      </div>
+
+      <div class="card pad stack">
+        <div class="field-label">${t('reg_data')}</div>
+        <button class="btn ghost" onclick="exportJSON()">${t('reg_export')}</button>
+        <button class="btn ghost" onclick="verifierMAJ()">${t('reg_checkupdate')}</button>
       </div>
     `;
-    const th = localStorage.getItem(LS.theme) || 'auto';
-    document.querySelectorAll('#r-theme button').forEach((b, i) => b.classList.toggle('on', ['auto', 'light', 'dark'][i] === th));
   }
   window.renderReglages = renderReglages;
 
-  function saveUserNom(v) { localStorage.setItem(LS.userNom, v.trim()); toast('Enregistré'); }
+  function saveUserNom(v) { localStorage.setItem(LS.userNom, v.trim()); toast(t('msg_saved')); }
   function switchFoyer(id) {
     if (id === localStorage.getItem(LS.foyerId)) return;
     entrerFoyer(id);
-    toast('Foyer : ' + (localStorage.getItem(LS.foyerNom) || ''));
   }
   async function renommerFoyer(id) {
     const f = (window._foyers || []).find(x => x.id === id); if (!f) return;
-    const nom = prompt('Nouveau nom du foyer :', f.nom);
+    const nom = prompt(t('prompt_foyer_rename'), f.nom);
     if (!nom || !nom.trim()) return;
     try {
       await CT.updateDoc(CT.doc(CT.db, 'foyers', id), { nom: nom.trim() });
       if (id === localStorage.getItem(LS.foyerId)) { localStorage.setItem(LS.foyerNom, nom.trim()); updateFoyerBadge(); }
-      toast('Renommé');
+      toast(t('msg_renamed'));
     } catch (e) { toast('❌ ' + e.message); }
   }
   async function creerFoyerReglages() {
     const nom = ($('r-new-foyer').value || '').trim();
-    if (!nom) return toast('⚠️ Donne un nom');
+    if (!nom) return toast(t('msg_foyer_name'));
     try {
       const ref = await CT.addDoc(CT.collection(CT.db, 'foyers'), { nom, createdAt: Date.now() });
       entrerFoyer(ref.id, nom);
-      toast('🏠 Foyer « ' + nom + ' » créé');
+      toast(t('msg_foyer_created', { nom }));
     } catch (e) { toast('❌ ' + e.message); }
   }
   window.saveUserNom = saveUserNom; window.switchFoyer = switchFoyer;
@@ -1355,37 +1773,97 @@
 
   async function renommerMagasin(id) {
     const m = magById(id); if (!m) return;
-    const nom = prompt('Nouveau nom du magasin :', m.nom);
+    const nom = prompt(t('prompt_mag_rename'), m.nom);
     if (!nom || !nom.trim()) return;
-    try { await CT.updateDoc(CT.ref('magasins', id), { nom: nom.trim() }); toast('Renommé'); } catch (e) { toast('❌ ' + e.message); }
+    try { await CT.updateDoc(CT.ref('magasins', id), { nom: nom.trim() }); toast(t('msg_renamed')); } catch (e) { toast('❌ ' + e.message); }
   }
   async function supprMagasin(id) {
     const n = (window._releves || []).filter(r => r.magasinId === id).length;
-    if (n && !confirm(`Ce magasin a ${n} relevé(s). Les supprimer aussi ?`)) return;
-    if (!n && !confirm('Supprimer ce magasin ?')) return;
+    if (n && !confirm(t('confirm_del_mag_n', { n }))) return;
+    if (!n && !confirm(t('confirm_del_mag'))) return;
     try {
       for (const r of (window._releves || []).filter(r => r.magasinId === id)) await CT.deleteDoc(CT.ref('releves', r.id));
       await CT.deleteDoc(CT.ref('magasins', id));
-      toast('Magasin supprimé');
+      toast(t('msg_mag_deleted'));
     } catch (e) { toast('❌ ' + e.message); }
   }
   window.renommerMagasin = renommerMagasin; window.supprMagasin = supprMagasin;
 
+  // ---------- catégories ----------
+  async function nouvelleCategorie() {
+    const nom = prompt(t('prompt_cat_new'));
+    if (!nom || !nom.trim()) return;
+    const ord = 1 + Math.max(0, ...catsSorted().map(c => (c.ordre == null ? 0 : c.ordre)));
+    try {
+      await CT.addDoc(CT.col('categories'), { nom: nom.trim(), nomEs: nom.trim(), emoji: '🏷️', ordre: ord, createdAt: Date.now() });
+      toast(t('msg_cat_created'));
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  async function renommerCategorie(id) {
+    const c = catOf(id);
+    const nom = prompt(t('prompt_cat_rename'), catLabel(c));
+    if (!nom || !nom.trim()) return;
+    const patch = LANG === 'es' ? { nomEs: nom.trim() } : { nom: nom.trim() };
+    try { await CT.updateDoc(CT.ref('categories', id), patch); } catch (e) { toast('❌ ' + e.message); }
+  }
+  function changerEmojiCategorie(id) {
+    openEmojiPicker(async em => { try { await CT.updateDoc(CT.ref('categories', id), { emoji: em }); } catch (e) {} });
+  }
+  async function deplacerCategorie(id, dir) {
+    const arr = catsSorted();
+    const i = arr.findIndex(c => c.id === id), j = i + dir;
+    if (i < 0 || j < 0 || j >= arr.length) return;
+    const a = arr[i], b = arr[j];
+    try {
+      await CT.updateDoc(CT.ref('categories', a.id), { ordre: (b.ordre == null ? j : b.ordre) });
+      await CT.updateDoc(CT.ref('categories', b.id), { ordre: (a.ordre == null ? i : a.ordre) });
+    } catch (e) {}
+  }
+  async function supprimerCategorie(id) {
+    if (id === 'autre') return;
+    if (!confirm(t('confirm_del_cat'))) return;
+    try {
+      for (const p of (window._produits || []).filter(p => p.categorie === id)) await CT.updateDoc(CT.ref('produits', p.id), { categorie: 'autre' });
+      await CT.deleteDoc(CT.ref('categories', id));
+      toast(t('msg_cat_deleted'));
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.nouvelleCategorie = nouvelleCategorie; window.renommerCategorie = renommerCategorie;
+  window.changerEmojiCategorie = changerEmojiCategorie; window.deplacerCategorie = deplacerCategorie;
+  window.supprimerCategorie = supprimerCategorie;
+
+  function openEmojiPicker(cb) {
+    window.__emojiCb = cb;
+    openModal(`<h3>${t('emoji_pick_title')}</h3>
+      <div class="emoji-grid">${EMOJIS.map(e => `<button type="button" onclick="__emojiPicked('${e}')">${e}</button>`).join('')}</div>
+      <input type="text" id="emoji-free" maxlength="4" placeholder="${t('emoji_free_ph')}" style="margin-top:12px" onchange="if(this.value.trim())__emojiPicked(this.value.trim())" />`);
+  }
+  window.__emojiPicked = e => { closeModal(); if (window.__emojiCb) window.__emojiCb(e); };
+
+  // ---------- édition produit ----------
   function editProduit(id) {
     const p = prodById(id); if (!p) return;
+    const cats = catsSorted();
     openModal(`
-      <h3>Modifier « ${esc(p.nom)} »</h3>
-      <label class="field"><div class="field-label">Nom</div><input type="text" id="ep-nom" value="${esc(p.nom)}" /></label>
-      <div class="field-label" style="margin-top:12px">Catégorie</div>
+      <h3>${t('edit_prod_title', { nom: esc(p.nom) })}</h3>
+      <label class="field"><div class="field-label">${t('edit_nom')}</div><input type="text" id="ep-nom" value="${esc(p.nom)}" /></label>
+      <label class="field" style="margin-top:12px"><div class="field-label">${t('fiche_barcode')}</div><input type="text" id="ep-cb" value="${esc(p.codeBarres || '')}" placeholder="${t('edit_barcode_ph')}" /></label>
+      <div class="field-label" style="margin-top:12px">${t('edit_photo')}</div>
+      <div class="row">
+        ${p.thumb ? `<div class="lead photo" style="width:48px;height:48px"><img src="${p.thumb}" alt=""></div>` : ''}
+        <button class="btn ghost small" onclick="pickPhoto('${id}')">${p.thumb ? t('f_photo_change') : t('f_photo_add')}</button>
+        ${p.thumb ? `<button class="btn ghost small" style="color:var(--red)" onclick="retirerPhoto('${id}')">${t('f_photo_remove')}</button>` : ''}
+      </div>
+      <div class="field-label" style="margin-top:12px">${t('edit_cat')}</div>
       <div id="ep-cats" style="display:flex;flex-wrap:wrap;gap:7px">
-        ${CATS.map(c => `<button type="button" class="chip ${c.k === p.categorie ? 'on' : ''}" data-k="${c.k}" onclick="epPickCat('${c.k}')">${c.em} ${c.nm}</button>`).join('')}
+        ${(cats.length ? cats : CATS_DEFAUT).map(c => `<button type="button" class="chip ${c.id === p.categorie ? 'on' : ''}" data-k="${c.id}" onclick="epPickCat('${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('')}
       </div>
-      <div class="field-label" style="margin-top:12px">Unité</div>
+      <div class="field-label" style="margin-top:12px">${t('edit_unit')}</div>
       <div class="seg" id="ep-unit">
-        ${['kg', 'piece', 'L'].map(u => `<button type="button" class="${u === p.unite ? 'on' : ''}" data-u="${u}" onclick="epPickUnit('${u}')">${UNIT_LABEL[u]}</button>`).join('')}
+        ${['kg', 'piece', 'L'].map(u => `<button type="button" class="${u === p.unite ? 'on' : ''}" data-u="${u}" onclick="epPickUnit('${u}')">${unitLabel(u)}</button>`).join('')}
       </div>
-      <button class="btn" style="margin-top:16px" onclick="saveProduit('${id}')">Enregistrer</button>
-      <button class="btn danger" style="margin-top:8px" onclick="supprProduit('${id}');closeModal()">Supprimer le produit</button>
+      <button class="btn" style="margin-top:16px" onclick="saveProduit('${id}')">${t('edit_save')}</button>
+      <button class="btn danger" style="margin-top:8px" onclick="supprProduit('${id}')">${t('edit_del_prod')}</button>
     `);
     window._epCat = p.categorie; window._epUnit = p.unite;
   }
@@ -1393,30 +1871,45 @@
   window.epPickCat = k => { window._epCat = k; document.querySelectorAll('#ep-cats .chip').forEach(b => b.classList.toggle('on', b.dataset.k === k)); };
   window.epPickUnit = u => { window._epUnit = u; document.querySelectorAll('#ep-unit button').forEach(b => b.classList.toggle('on', b.dataset.u === u)); };
   async function saveProduit(id) {
-    const nom = $('ep-nom').value.trim(); if (!nom) return toast('Nom vide');
+    const nom = $('ep-nom').value.trim(); if (!nom) return toast(t('msg_need_produit'));
+    const cb = ($('ep-cb').value || '').trim();
     try {
-      await CT.updateDoc(CT.ref('produits', id), { nom, nomLower: norm(nom), categorie: window._epCat, unite: window._epUnit });
-      closeModal(); toast('Enregistré');
+      await CT.updateDoc(CT.ref('produits', id), { nom, nomLower: norm(nom), categorie: window._epCat, unite: window._epUnit, codeBarres: cb });
+      closeModal(); toast(t('msg_saved'));
     } catch (e) { toast('❌ ' + e.message); }
   }
   window.saveProduit = saveProduit;
 
-  function setTheme(t) {
-    localStorage.setItem(LS.theme, t);
+  function setTheme(mode) {
+    localStorage.setItem(LS.theme, mode);
     applyTheme();
-    document.querySelectorAll('#r-theme button').forEach((b, i) => b.classList.toggle('on', ['auto', 'light', 'dark'][i] === t));
+    document.querySelectorAll('#r-theme button').forEach((b, i) => b.classList.toggle('on', ['auto', 'light', 'dark'][i] === mode));
   }
   function applyTheme() {
-    const t = localStorage.getItem(LS.theme) || 'auto';
-    if (t === 'auto') document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', t);
+    const mode = localStorage.getItem(LS.theme) || 'auto';
+    if (mode === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', mode);
   }
   window.setTheme = setTheme;
+
+  function setLang(l) {
+    LANG = (l === 'es') ? 'es' : 'fr';
+    localStorage.setItem(LS.lang, LANG);
+    applyStaticI18n();
+    if (document.querySelector('.page.active')) {
+      refreshSaisieLabels();
+      rerender();
+    }
+    renderOnboardingList();
+    toast(t('msg_lang_set'));
+  }
+  window.setLang = setLang;
 
   function exportJSON() {
     const data = {
       exportedAt: new Date().toISOString(), foyer: localStorage.getItem(LS.foyerNom),
-      magasins: window._magasins, produits: window._produits, releves: window._releves, liste: window._liste,
+      categories: window._categories, magasins: window._magasins, produits: window._produits,
+      releves: window._releves, liste: window._liste,
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
@@ -1433,7 +1926,7 @@
       const r = await fetch('index.html?_=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
       const lm = r.headers.get('Last-Modified');
       if (_lastMod && lm && lm !== _lastMod) {
-        if (confirm('Une nouvelle version est disponible. Recharger maintenant ?')) {
+        if (confirm(t('msg_new_version'))) {
           if ('serviceWorker' in navigator) {
             const regs = await navigator.serviceWorker.getRegistrations();
             await Promise.all(regs.map(r => r.unregister()));
@@ -1441,9 +1934,9 @@
           if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
           location.reload(true);
         }
-      } else if (manuel) toast('✅ Tu es à jour');
+      } else if (manuel) toast(t('msg_uptodate'));
       if (lm) _lastMod = lm;
-    } catch (e) { if (manuel) toast('Vérification impossible'); }
+    } catch (e) { if (manuel) toast(t('msg_checkfail')); }
   }
   window.verifierMAJ = () => verifierMAJ(true);
 
@@ -1458,9 +1951,11 @@
 
   // ================= DÉMARRAGE =================
   applyTheme();
+  applyStaticI18n();
 
   function boot() {
     if (!window.__CT_CONFIGURED) return; // écran config affiché par le module
+    applyStaticI18n();
     const saved = localStorage.getItem(LS.foyerId);
     if (saved) entrerFoyer(saved);            // entrée optimiste ; sinon on attend onFoyersLoaded
     else if (window._foyers) decideEntree();
