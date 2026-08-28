@@ -587,6 +587,8 @@
       fiche_back:'← Produits', fiche_best:'MEILLEUR PRIX MAINTENANT', fiche_best_simple:'MEILLEUR PRIX',
       fiche_no_price:'Aucun prix normal relevé.', fiche_cheapest:'le - cher',
       fiche_expired:'périmé', fiche_avg:'moy {p}', fiche_sansmarque:'Sans marque',
+      fiche_sansorigine:'Origine non précisée',
+      er_title:'Modifier le relevé', er_date:'Date', er_delete:'Supprimer ce relevé', f_promo_short:'Prix promo',
       fiche_history:'Historique complet', fiche_promos:'🏷️ Promos repérées',
       fiche_add_releve:'➕ Ajouter un relevé pour ce produit', fiche_edit_prod:'Modifier le produit',
       fiche_del_prod:'Supprimer ce produit', fiche_not_found:'Produit introuvable.', fiche_barcode:'Code-barres',
@@ -665,6 +667,8 @@
       fiche_back:'← Productos', fiche_best:'MEJOR PRECIO AHORA', fiche_best_simple:'MEJOR PRECIO',
       fiche_no_price:'Ningún precio normal registrado.', fiche_cheapest:'el + barato',
       fiche_expired:'caducado', fiche_avg:'prom {p}', fiche_sansmarque:'Sin marca',
+      fiche_sansorigine:'Origen no indicado',
+      er_title:'Editar el registro', er_date:'Fecha', er_delete:'Eliminar este registro', f_promo_short:'Precio de oferta',
       fiche_history:'Historial completo', fiche_promos:'🏷️ Ofertas detectadas',
       fiche_add_releve:'➕ Agregar un registro para este producto', fiche_edit_prod:'Editar el producto',
       fiche_del_prod:'Eliminar este producto', fiche_not_found:'Producto no encontrado.', fiche_barcode:'Código de barras',
@@ -776,58 +780,80 @@
   }
 
   // ================= LOGIQUE PRIX =================
-  // marques distinctes vues (non-promo) pour un produit ; '' = sans marque, placé en dernier
-  function marquesDe(pid) {
-    const set = new Set((window._releves || []).filter(r => r.produitId === pid && !r.promo).map(r => r.marque || ''));
-    if (!set.size) return [''];
-    return [...set].sort((a, b) => (a === '' ? 1 : b === '' ? -1 : a.localeCompare(b)));
+  // une "variante" d'un produit = un couple { marque, origine } ('' = non précisé).
+  // On compare les variantes entre elles (ex. Bananes France vs Équateur).
+  const vKey = v => ((v && v.marque) || '') + '\x00' + ((v && v.origine) || '');
+  const vIsEmpty = v => !(v && (v.marque || v.origine));
+  // variantes distinctes vues (non-promo) pour un produit ; la variante vide en dernier
+  function variantesDe(pid) {
+    const map = new Map();
+    (window._releves || []).filter(r => r.produitId === pid && !r.promo).forEach(r => {
+      const v = { marque: r.marque || '', origine: r.origine || '' };
+      map.set(vKey(v), v);
+    });
+    if (!map.size) return [{ marque: '', origine: '' }];
+    return [...map.values()].sort((a, b) => {
+      if (vIsEmpty(a) !== vIsEmpty(b)) return vIsEmpty(a) ? 1 : -1;
+      return (a.marque || a.origine).localeCompare(b.marque || b.origine)
+        || a.origine.localeCompare(b.origine);
+    });
   }
-  // relevés non-promo d'un couple (produit, magasin[, marque]) triés par date croissante
-  function relevesCouple(pid, mid, marque) {
+  // relevés non-promo d'un couple (produit, magasin[, variante]) triés par date croissante
+  function relevesCouple(pid, mid, v) {
     return (window._releves || []).filter(r =>
       r.produitId === pid && r.magasinId === mid && !r.promo &&
-      (marque === undefined || (r.marque || '') === marque)
+      (v === undefined ||
+        ((r.marque || '') === (v.marque || '') && (r.origine || '') === (v.origine || '')))
     ).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
   }
-  // stats d'un couple (produit, magasin, marque) : prix actuel, moyenne, min/max, historique
-  function statCouple(pid, mid, marque) {
-    const rs = relevesCouple(pid, mid, marque);
+  // stats d'un couple (produit, magasin, variante) : prix actuel, moyenne, min/max, historique
+  function statCouple(pid, mid, v) {
+    const rs = relevesCouple(pid, mid, v);
     if (!rs.length) return null;
     const last = rs[rs.length - 1];
     const j = daysSince(last.date);
     const recent = rs.filter(r => daysSince(r.date) <= DEAD_DAYS);
     const pool = (recent.length ? recent : rs).map(r => r.prix);
     return {
-      releves: rs, marque: marque || '',
+      releves: rs, marque: (v && v.marque) || '', origine: (v && v.origine) || '',
       actuelPrix: last.prix, actuelDate: last.date, jours: j,
       stale: j > STALE_DAYS, dead: j > DEAD_DAYS,
       moy: pool.reduce((a, b) => a + b, 0) / pool.length,
       min: Math.min(...rs.map(r => r.prix)), max: Math.max(...rs.map(r => r.prix)), n: rs.length,
     };
   }
-  // meilleure (moins chère) stat parmi les marques d'un magasin
+  // meilleure (moins chère) stat parmi les variantes d'un magasin
   function bestStatStore(pid, mid) {
     let best = null;
-    marquesDe(pid).forEach(mq => {
-      const s = statCouple(pid, mid, mq);
+    variantesDe(pid).forEach(v => {
+      const s = statCouple(pid, mid, v);
       if (s && (!best || s.actuelPrix < best.actuelPrix)) best = s;
     });
     return best;
   }
-  // prix "actuel" d'un magasin pour un produit = le moins cher parmi ses marques
+  // prix "actuel" d'un magasin pour un produit = le moins cher parmi ses variantes
   function prixActuel(pid, mid) {
     const s = bestStatStore(pid, mid);
     if (!s) return null;
-    return { prix: s.actuelPrix, date: s.actuelDate, jours: s.jours, stale: s.stale, dead: s.dead, marque: s.marque };
+    return { prix: s.actuelPrix, date: s.actuelDate, jours: s.jours, stale: s.stale, dead: s.dead, marque: s.marque, origine: s.origine };
   }
   // meilleur prix d'un produit = min des prix actuels non-périmés, tous magasins
   function meilleurPrix(pid) {
     let best = null;
     (window._magasins || []).forEach(m => {
       const pa = prixActuel(pid, m.id);
-      if (pa && !pa.dead && (best == null || pa.prix < best.prix)) best = { prix: pa.prix, magasinId: m.id, marque: pa.marque };
+      if (pa && !pa.dead && (best == null || pa.prix < best.prix)) best = { prix: pa.prix, magasinId: m.id, marque: pa.marque, origine: pa.origine };
     });
     return best;
+  }
+  // meilleur prix d'une variante précise, tous magasins (non périmé) — réf. intra-variante
+  function meilleurPrixVariante(pid, v) {
+    let best = null;
+    (window._magasins || []).forEach(m => {
+      const s = statCouple(pid, m.id, v);
+      if (s && !s.dead && (best == null || s.actuelPrix < best)) best = s.actuelPrix;
+    });
+    return best == null ? null : { prix: best };
   }
   function ecartPct(prix, best) { return best && best.prix > 0 ? (prix / best.prix - 1) * 100 : 0; }
   function classeEcart(pct) { return pct <= 1 ? 'green' : pct <= 8 ? 'amber' : 'red'; }
@@ -1301,6 +1327,60 @@
   }
   window.supprReleve = supprReleve;
 
+  // ---------- édition d'un relevé ----------
+  function editReleve(id) {
+    const r = (window._releves || []).find(x => x.id === id);
+    if (!r) return;
+    const p = prodById(r.produitId);
+    const u = p ? p.unite : 'kg';
+    const opts = (window._magasins || []).map(m =>
+      `<option value="${m.id}"${m.id === r.magasinId ? ' selected' : ''}>${esc(m.nom)}</option>`).join('');
+    openModal(`
+      <h3>${t('er_title')}</h3>
+      <label class="field"><div class="field-label">${t('f_prix')} <span class="unit">${unitLabel(u)}</span></div>
+        <input type="number" id="er-prix" inputmode="decimal" step="0.01" min="0" value="${r.prix}" /></label>
+      <label class="field" style="margin-top:12px"><div class="field-label">${t('f_magasin')}</div>
+        <select id="er-magasin">${opts}</select></label>
+      <label class="field" style="margin-top:12px"><div class="field-label">${t('er_date')}</div>
+        <input type="date" id="er-date" value="${esc(r.date || todayISO())}" /></label>
+      <label class="field" style="margin-top:12px"><div class="field-label">${t('f_marque')}</div>
+        <input type="text" id="er-marque" list="dl-marques" value="${esc(r.marque || '')}" /></label>
+      <label class="field" style="margin-top:12px"><div class="field-label">${t('f_origine')}</div>
+        <input type="text" id="er-origine" list="dl-origines" value="${esc(r.origine || '')}" /></label>
+      <label class="field" style="margin-top:12px"><div class="field-label">${t('f_note')}</div>
+        <input type="text" id="er-note" value="${esc(r.note || '')}" /></label>
+      <label class="row" style="gap:10px;margin-top:12px">
+        <input type="checkbox" id="er-promo" style="width:20px;height:20px"${r.promo ? ' checked' : ''} />
+        <span class="tiny">${t('f_promo_short')}</span></label>
+      <button class="btn" style="margin-top:16px" onclick="saveReleve('${id}')">${t('edit_save')}</button>
+      <button class="btn danger" style="margin-top:8px" onclick="closeModal();supprReleve('${id}')">${t('er_delete')}</button>
+    `);
+    fillDatalist('dl-marques', uniqueVals('marque'));
+    fillDatalist('dl-origines', uniqueVals('origine'));
+  }
+  window.editReleve = editReleve;
+
+  async function saveReleve(id) {
+    const prix = parseFloat(($('er-prix').value || '').replace(',', '.'));
+    if (!(prix > 0)) return toast(t('msg_bad_price'));
+    const magasinId = $('er-magasin').value;
+    if (!magasinId) return toast(t('msg_need_magasin'));
+    try {
+      await CT.updateDoc(CT.ref('releves', id), {
+        prix: Math.round(prix * 100) / 100,
+        magasinId,
+        date: $('er-date').value || todayISO(),
+        promo: $('er-promo').checked,
+        marque: ($('er-marque').value || '').trim(),
+        origine: ($('er-origine').value || '').trim(),
+        note: ($('er-note').value || '').trim(),
+      });
+      toast(t('msg_saved'));
+      closeModal();
+    } catch (e) { toast('❌ ' + e.message); }
+  }
+  window.saveReleve = saveReleve;
+
   // ================= PRODUITS =================
   function renderProduits() {
     const q = norm($('p-search').value);
@@ -1384,9 +1464,14 @@
     const c = catOf(p.categorie);
     const best = meilleurPrix(p.id);
     const bestMag = best ? magById(best.magasinId) : null;
-    const brands = marquesDe(p.id);
-    const named = brands.filter(b => b !== '');
-    const groupByBrand = named.length > 0 && brands.length > 1;
+    const variantes = variantesDe(p.id);
+    const hasNamed = variantes.some(v => v.marque !== '' || v.origine !== '');
+    const anyMarque = variantes.some(v => v.marque !== '');
+    const groupByVar = hasNamed && variantes.length > 1;
+    const varLabel = v => {
+      const parts = [v.marque, v.origine].filter(Boolean).map(esc);
+      return parts.length ? parts.join(' · ') : (anyMarque ? t('fiche_sansmarque') : t('fiche_sansorigine'));
+    };
     const allReleves = (window._releves || []).filter(r => r.produitId === p.id);
     const promos = allReleves.filter(r => r.promo).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
@@ -1404,34 +1489,33 @@
     <div id="fiche-photo"></div>`;
 
     if (best) {
-      const line = [best.marque, bestMag && bestMag.nom].filter(Boolean).map(esc).join(' · ');
+      const line = [best.marque, best.origine, bestMag && bestMag.nom].filter(Boolean).map(esc).join(' · ');
       html += `<div class="card pad" style="background:var(--green-soft);border-color:transparent;margin:14px 0">
-        <div class="tiny" style="font-weight:800;color:var(--green)">${t(named.length ? 'fiche_best' : 'fiche_best_simple')}</div>
+        <div class="tiny" style="font-weight:800;color:var(--green)">${t(hasNamed ? 'fiche_best' : 'fiche_best_simple')}</div>
         <div style="font-size:22px;font-weight:800;margin-top:2px">${fmtEuro(best.prix)} <span class="unit">${unitLabel(p.unite)}</span></div>
         ${line ? `<div class="tiny muted">${line}</div>` : ''}
       </div>`;
     }
 
-    const groups = groupByBrand ? brands : [null];
-    let hadRows = false;
-    html += groups.map(mq => {
+    const groups = groupByVar ? variantes : [null];
+    html += groups.map(v => {
       const rows = (window._magasins || []).map(m => {
-        const s = mq === null ? bestStatStore(p.id, m.id) : statCouple(p.id, m.id, mq);
+        const s = v === null ? bestStatStore(p.id, m.id) : statCouple(p.id, m.id, v);
         return s ? { m, s } : null;
       }).filter(Boolean).sort((a, b) => a.s.actuelPrix - b.s.actuelPrix);
       if (!rows.length) return '';
-      hadRows = true;
-      const head = mq === null ? '' :
-        `<div style="font-weight:800;margin:16px 0 6px">${mq === '' ? t('fiche_sansmarque') : esc(mq)}</div>`;
-      return head + `<div class="card">` + rows.map(({ m, s }) => storeRowFiche(p, best, m, s)).join('') + `</div>`;
+      const ref = v === null ? best : meilleurPrixVariante(p.id, v);
+      const head = v === null ? '' :
+        `<div style="font-weight:800;margin:16px 0 6px">${varLabel(v)}</div>`;
+      return head + `<div class="card">` + rows.map(({ m, s }) => storeRowFiche(p, ref, m, s)).join('') + `</div>`;
     }).join('') || `<div class="empty"><div class="em">🏷️</div><p>${t('fiche_no_price')}</p></div>`;
 
     if (promos.length) {
       html += `<div style="font-weight:800;margin:18px 0 8px">${t('fiche_promos')}</div><div class="card">` +
         promos.slice(0, 6).map(r => {
           const m = magById(r.magasinId);
-          const sub = [r.marque, m && m.nom, fmtDate(r.date)].filter(Boolean).map(esc).join(' · ');
-          return `<div class="list-row"><div class="grow"><b>${fmtEuro(r.prix)}</b> <span class="unit">${unitLabel(p.unite)}</span><div class="tiny muted">${sub}</div></div></div>`;
+          const sub = [r.marque, r.origine, m && m.nom, fmtDate(r.date)].filter(Boolean).map(esc).join(' · ');
+          return `<div class="list-row" style="cursor:pointer" onclick="editReleve('${r.id}')"><div class="grow"><b>${fmtEuro(r.prix)}</b> <span class="unit">${unitLabel(p.unite)}</span><div class="tiny muted">${sub}</div></div></div>`;
         }).join('') + `</div>`;
     }
 
@@ -1441,9 +1525,9 @@
         <div class="card" style="max-height:340px;overflow-y:auto">` + hist.map(r => {
         const m = magById(r.magasinId);
         const sub = [r.marque, r.origine, r.note].filter(Boolean).map(esc).join(' · ');
-        return `<div class="list-row">
+        return `<div class="list-row" style="cursor:pointer" onclick="editReleve('${r.id}')">
           <div class="grow">
-            <div class="tiny"><b>${fmtDate(r.date)}</b> · ${esc(m ? m.nom : '?')}${r.promo ? ` <span class="pill amber">${t('promo')}</span>` : ''}</div>
+            <div class="tiny"><b>${fmtDate(r.date)}</b> · ${esc(m ? m.nom : '?')}${r.promo ? ` <span class="pill amber">${t('promo')}</span>` : ''} ✏️</div>
             ${sub ? `<div class="tiny muted">${sub}</div>` : ''}
           </div>
           <div class="price-big" style="font-size:16px">${fmtEuro(r.prix)}</div>
