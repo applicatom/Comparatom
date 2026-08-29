@@ -576,6 +576,7 @@
       msg_already_list:'Déjà dans la liste', msg_list_cleaned:'Liste nettoyée', msg_unit_applied:'Prix unitaire appliqué',
       msg_complete_price:'Complète le magasin et le prix', msg_uptodate:'✅ Tu es à jour', msg_checkfail:'Vérification impossible',
       msg_new_version:'Une nouvelle version est disponible. Recharger maintenant ?',
+      msg_force_reload:'Forcer la mise à jour ?\n\nÇa vide le cache et recharge la dernière version.',
       msg_photo_proc:'Traitement de la photo…', msg_photo_saved:'📷 Photo enregistrée', msg_photo_removed:'Photo retirée',
       msg_cat_created:'Catégorie créée', msg_cat_deleted:'Catégorie supprimée', msg_lang_set:'Langue : Français',
       confirm_del_releve:'Supprimer ce relevé ?', confirm_del_prod:'Supprimer ce produit et tous ses relevés ?',
@@ -614,7 +615,7 @@
       reg_and_others:'… et {n} autres', reg_edit:'modifier',
       reg_cats:'Catégories', reg_cat_new:'＋ Nouvelle catégorie',
       reg_appearance:'Apparence', reg_theme_auto:'Auto', reg_theme_light:'Clair', reg_theme_dark:'Sombre',
-      reg_language:'Langue', reg_data:'Données', reg_export:'⬇️ Exporter (JSON)', reg_checkupdate:'🔄 Rechercher une mise à jour',
+      reg_language:'Langue', reg_data:'Données', reg_export:'⬇️ Exporter (JSON)', reg_checkupdate:'🔄 Forcer la mise à jour',
       reg_version:'Comparatom · version {v}',
       edit_prod_title:'Modifier « {nom} »', edit_nom:'Nom', edit_cat:'Catégorie', edit_unit:'Unité',
       edit_barcode_ph:'Code-barres (optionnel)', edit_save:'Enregistrer', edit_del_prod:'Supprimer le produit',
@@ -659,6 +660,7 @@
       msg_already_list:'Ya está en la lista', msg_list_cleaned:'Lista depurada', msg_unit_applied:'Precio unitario aplicado',
       msg_complete_price:'Completa la tienda y el precio', msg_uptodate:'✅ Estás al día', msg_checkfail:'No se pudo verificar',
       msg_new_version:'Hay una versión nueva. ¿Recargar ahora?',
+      msg_force_reload:'¿Forzar la actualización?\n\nBorra la caché y recarga la última versión.',
       msg_photo_proc:'Procesando la foto…', msg_photo_saved:'📷 Foto guardada', msg_photo_removed:'Foto quitada',
       msg_cat_created:'Categoría creada', msg_cat_deleted:'Categoría eliminada', msg_lang_set:'Idioma: Español',
       confirm_del_releve:'¿Eliminar este registro?', confirm_del_prod:'¿Eliminar este producto y todos sus registros?',
@@ -697,7 +699,7 @@
       reg_and_others:'… y {n} más', reg_edit:'editar',
       reg_cats:'Categorías', reg_cat_new:'＋ Nueva categoría',
       reg_appearance:'Apariencia', reg_theme_auto:'Auto', reg_theme_light:'Claro', reg_theme_dark:'Oscuro',
-      reg_language:'Idioma', reg_data:'Datos', reg_export:'⬇️ Exportar (JSON)', reg_checkupdate:'🔄 Buscar una actualización',
+      reg_language:'Idioma', reg_data:'Datos', reg_export:'⬇️ Exportar (JSON)', reg_checkupdate:'🔄 Forzar la actualización',
       reg_version:'Comparatom · versión {v}',
       edit_prod_title:'Editar «{nom}»', edit_nom:'Nombre', edit_cat:'Categoría', edit_unit:'Unidad',
       edit_barcode_ph:'Código de barras (opcional)', edit_save:'Guardar', edit_del_prod:'Eliminar el producto',
@@ -2101,22 +2103,30 @@
 
   // ================= MISE À JOUR =================
   let _lastMod = null;
-  async function verifierMAJ(manuel) {
+  async function hardReload() {
     try {
-      const r = await fetch('index.html?_=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+      if ('serviceWorker' in navigator) {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map(r => r.unregister()));
+      }
+      if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
+    } catch (e) {}
+    location.replace('index.html?maj=' + Date.now());
+  }
+  async function verifierMAJ(manuel) {
+    if (manuel) { if (confirm(t('msg_force_reload'))) await hardReload(); return; }
+    try {
+      const r = await fetch('index.html?_=' + Date.now(), { cache: 'no-store' });
       const lm = r.headers.get('Last-Modified');
-      if (_lastMod && lm && lm !== _lastMod) {
-        if (confirm(t('msg_new_version'))) {
-          if ('serviceWorker' in navigator) {
-            const regs = await navigator.serviceWorker.getRegistrations();
-            await Promise.all(regs.map(r => r.unregister()));
-          }
-          if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); }
-          location.reload(true);
-        }
-      } else if (manuel) toast(t('msg_uptodate'));
+      // version en cours réellement chargée (utile si servie par le cache du SW)
+      const localT = new Date(document.lastModified).getTime();
+      const remoteT = lm ? new Date(lm).getTime() : 0;
+      const stale = remoteT && localT && (remoteT - localT > 3000);
+      if (stale || (_lastMod && lm && lm !== _lastMod)) {
+        if (confirm(t('msg_new_version'))) await hardReload();
+      }
       if (lm) _lastMod = lm;
-    } catch (e) { if (manuel) toast(t('msg_checkfail')); }
+    } catch (e) {}
   }
   window.verifierMAJ = () => verifierMAJ(true);
 
