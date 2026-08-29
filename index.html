@@ -599,12 +599,15 @@
       stats_seen:'vu le {d}', stats_last_visit:'dernier passage {d}',
       stats_prod_tracked:'Produits suivis', stats_rec_saved:'Relevés enregistrés', stats_magasins:'Magasins',
       stats_foot:'Écart moyen vs le meilleur prix relevé, hors promos et hors relevés de plus de {n} jours.',
-      liste_add:'Ajouter un produit', liste_add_ph:'Nom du produit…', liste_add_free:'Ajouter « {q} »',
-      liste_estimate_at:'Estimer le panier chez', liste_empty:'Liste vide. Ajoute des produits ci-dessus.',
+      liste_add:'Ajouter un produit', liste_add_ph:'Nom du produit…', liste_add_free:'Ajouter « {q} » (juste dans la liste)',
+      liste_estimate_at:'Mon panier chez', liste_empty:'Liste vide. Ajoute des produits ci-dessus.',
       liste_total:'Total estimé', liste_at_store:'Chez <b>{nom}</b> : ≈ {t}', liste_is_cheapest:"✅ C'est le magasin le moins cher pour cette liste.",
       liste_price_unknown:'prix inconnu',
       liste_approx_foot:'« ≈ » = prix estimé à partir du meilleur prix connu (pas de relevé récent dans ce magasin).',
       liste_pick_store:'Choisis un magasin ci-dessus pour estimer le total.', liste_remove_checked:'Retirer les articles cochés',
+      liste_opti:'Où acheter', liste_one_store:'Tout au même endroit',
+      liste_split_on:'Réparti sur {n} magasins', liste_show_split:'voir la répartition',
+      liste_tosee:'À voir sur place (prix inconnu)',
       reg_user:'Mon prénom (auteur des relevés)', reg_user_ph:'Ton prénom',
       reg_foyers:'Foyers', reg_foyer_new_ph:"Nom d'un nouveau foyer", reg_foyer_create:'Créer un foyer', reg_rename:'renommer',
       reg_magasins:'Magasins', reg_no_mag:'Aucun magasin', reg_produits:'Produits', reg_no_prod:'Aucun produit',
@@ -679,12 +682,15 @@
       stats_seen:'visto el {d}', stats_last_visit:'última visita {d}',
       stats_prod_tracked:'Productos monitoreados', stats_rec_saved:'Registros guardados', stats_magasins:'Tiendas',
       stats_foot:'Diferencia media vs el mejor precio registrado, sin ofertas y sin registros de más de {n} días.',
-      liste_add:'Agregar un producto', liste_add_ph:'Nombre del producto…', liste_add_free:'Agregar «{q}»',
-      liste_estimate_at:'Estimar la canasta en', liste_empty:'Lista vacía. Agrega productos arriba.',
+      liste_add:'Agregar un producto', liste_add_ph:'Nombre del producto…', liste_add_free:'Agregar «{q}» (solo a la lista)',
+      liste_estimate_at:'Mi canasta en', liste_empty:'Lista vacía. Agrega productos arriba.',
       liste_total:'Total estimado', liste_at_store:'En <b>{nom}</b>: ≈ {t}', liste_is_cheapest:'✅ Es la tienda más barata para esta lista.',
       liste_price_unknown:'precio desconocido',
       liste_approx_foot:'«≈» = precio estimado a partir del mejor precio conocido (sin registro reciente en esa tienda).',
       liste_pick_store:'Elige una tienda arriba para estimar el total.', liste_remove_checked:'Quitar los artículos marcados',
+      liste_opti:'Dónde comprar', liste_one_store:'Todo en un solo lugar',
+      liste_split_on:'Repartido en {n} tiendas', liste_show_split:'ver el reparto',
+      liste_tosee:'Ver en la tienda (precio desconocido)',
       reg_user:'Mi nombre (autor de los registros)', reg_user_ph:'Tu nombre',
       reg_foyers:'Hogares', reg_foyer_new_ph:'Nombre de un nuevo hogar', reg_foyer_create:'Crear un hogar', reg_rename:'renombrar',
       reg_magasins:'Tiendas', reg_no_mag:'Ninguna tienda', reg_produits:'Productos', reg_no_prod:'Ningún producto',
@@ -1537,6 +1543,7 @@
 
     html += `<button class="btn secondary" style="margin-top:18px" onclick="ficheAddReleve('${p.id}')">${t('fiche_add_releve')}</button>`;
     html += `<button class="btn ghost" style="margin-top:8px" onclick="editProduit('${p.id}')">${t('fiche_edit_prod')}</button>`;
+    html += `<button class="btn danger" style="margin-top:8px" onclick="supprProduit('${p.id}')">${t('fiche_del_prod')}</button>`;
     box.innerHTML = html;
 
     loadPhoto(p.id).then(url => {
@@ -1653,23 +1660,63 @@
     try { await CT.addDoc(CT.col('liste'), { produitId: pid, qte: 1, coche: false, addedAt: Date.now() }); }
     catch (e) { toast('❌ ' + e.message); }
   }
+  // Article "libre" : juste du texte dans la liste, ne crée PAS de produit ni de relevé
   async function ajoutListeLibre() {
     const nom = $('l-add').value.trim();
     if (!nom) return;
-    try {
-      const ref = await CT.addDoc(CT.col('produits'), { nom, nomLower: norm(nom), categorie: 'autre', unite: 'piece', createdAt: Date.now() });
-      $('l-add').value = ''; $('l-ac').style.display = 'none';
-      await CT.addDoc(CT.col('liste'), { produitId: ref.id, qte: 1, coche: false, addedAt: Date.now() });
-    } catch (e) { toast('❌ ' + e.message); }
+    $('l-add').value = ''; $('l-ac').style.display = 'none';
+    if ((window._liste || []).some(x => x.libre && norm(x.libre) === norm(nom))) return toast(t('msg_already_list'));
+    try { await CT.addDoc(CT.col('liste'), { libre: nom, qte: 1, coche: false, addedAt: Date.now() }); }
+    catch (e) { toast('❌ ' + e.message); }
   }
   window.onListeInput = onListeInput; window.ajoutListe = ajoutListe; window.ajoutListeLibre = ajoutListeLibre;
 
-  function coutItem(pid, qte, magasinId) {
-    const pa = magasinId ? prixActuel(pid, magasinId) : null;
+  const itemNom = it => it.libre ? it.libre : (prodById(it.produitId) ? prodById(it.produitId).nom : '?');
+  // coût d'un item de liste dans un magasin ; {c, approx, unknown}
+  function coutItemL(it, magasinId) {
+    if (it.libre || !it.produitId) return { c: 0, approx: false, unknown: true };
+    const qte = it.qte || 1;
+    const pa = magasinId ? prixActuel(it.produitId, magasinId) : null;
     if (pa && !pa.dead) return { c: pa.prix * qte, approx: false };
-    const best = meilleurPrix(pid);
+    const best = meilleurPrix(it.produitId);
     if (best) return { c: best.prix * qte, approx: true };
-    return { c: 0, approx: true, unknown: true };
+    return { c: 0, approx: false, unknown: true };
+  }
+
+  // suggestions "où acheter" à partir des relevés
+  function optiPanier(actifs) {
+    const mags = window._magasins || [];
+    // 1) meilleur magasin unique : on privilégie la couverture (nb d'articles réellement
+    //    relevés dans ce magasin), puis le total. Les articles non relevés là-bas sont
+    //    estimés au meilleur prix connu (estimation basse).
+    let single = null;
+    mags.forEach(m => {
+      let sum = 0, cov = 0, any = false;
+      actifs.forEach(it => {
+        if (!it.produitId) return;
+        const b = meilleurPrix(it.produitId);
+        if (!b) return;
+        any = true;
+        const qte = it.qte || 1;
+        const pa = prixActuel(it.produitId, m.id);
+        if (pa && !pa.dead) { sum += pa.prix * qte; cov++; }
+        else sum += b.prix * qte;
+      });
+      if (any && (!single || cov > single.cov || (cov === single.cov && sum < single.total)))
+        single = { mag: m, total: sum, cov: cov };
+    });
+    // 2) panier réparti : chaque article chez son magasin le moins cher
+    const groups = {}; let splitTotal = 0; const inconnus = [];
+    actifs.forEach(it => {
+      const b = it.produitId ? meilleurPrix(it.produitId) : null;
+      if (!b) { inconnus.push(it); return; }
+      const qte = it.qte || 1;
+      (groups[b.magasinId] = groups[b.magasinId] || { items: [], total: 0 });
+      groups[b.magasinId].items.push(it);
+      groups[b.magasinId].total += b.prix * qte;
+      splitTotal += b.prix * qte;
+    });
+    return { single, groups, splitTotal, nStores: Object.keys(groups).length, inconnus };
   }
 
   function renderListe() {
@@ -1678,45 +1725,68 @@
     if (!items.length) { box.innerHTML = `<div class="empty"><div class="em">🛒</div><p>${t('liste_empty')}</p></div>`; return; }
 
     const magId = $('l-magasin').value;
+    const actifs = items.filter(x => !x.coche);
     let total = 0, approx = false;
 
     const rowsHtml = items.map(it => {
-      const p = prodById(it.produitId);
+      const p = it.libre ? null : prodById(it.produitId);
       const qte = it.qte || 1;
-      const { c: cost, approx: ap, unknown } = coutItem(it.produitId, qte, magId);
-      if (!it.coche) { total += cost; if (ap) approx = true; }
+      const { c: cost, approx: ap, unknown } = coutItemL(it, magId);
+      if (!it.coche && !unknown) { total += cost; if (ap) approx = true; }
+      const lead = it.libre ? '' : vignette(p);
+      const priceLine = magId ? (unknown ? (it.libre ? '' : t('liste_price_unknown')) : (ap ? '≈ ' : '') + fmtEuro(cost)) : '';
       return `<div class="list-row" style="${it.coche ? 'opacity:.45' : ''}">
         <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onchange="toggleListe('${it.id}',this.checked)" />
-        ${vignette(p)}
+        ${lead}
         <div class="grow">
-          <div class="ellipsis" style="${it.coche ? 'text-decoration:line-through' : ''}"><b>${esc(p ? p.nom : '?')}</b></div>
-          <div class="tiny muted">${qte > 1 ? '×' + qte + ' · ' : ''}${magId ? (unknown ? t('liste_price_unknown') : (ap ? '≈ ' : '') + fmtEuro(cost)) : ''}</div>
+          <div class="ellipsis" style="${it.coche ? 'text-decoration:line-through' : ''}">${it.libre ? esc(it.libre) : `<b>${esc(p ? p.nom : '?')}</b>`}</div>
+          <div class="tiny muted">${qte > 1 ? '×' + qte + (priceLine ? ' · ' : '') : ''}${priceLine}</div>
         </div>
         <button class="btn ghost small" onclick="qteListe('${it.id}',${qte + 1})">＋</button>
         <button class="btn ghost small" onclick="supprListe('${it.id}')">✕</button>
       </div>`;
     }).join('');
 
+    // total pour le magasin choisi
     let bandeau = '';
     if (magId) {
-      let bestMag = null, bestTot = Infinity;
-      (window._magasins || []).forEach(m => {
-        let tt = 0;
-        items.filter(x => !x.coche).forEach(x => { tt += coutItem(x.produitId, x.qte || 1, m.id).c; });
-        if (tt < bestTot) { bestTot = tt; bestMag = m; }
-      });
-      const eco = total - bestTot;
       bandeau = `<div class="card pad" style="margin-top:14px">
-        <div class="spread"><div class="grow"><div class="tiny muted">${t('liste_total')}</div><div style="font-size:22px;font-weight:800">${approx ? '≈ ' : ''}${fmtEuro(total)}</div></div></div>
-        ${bestMag && bestMag.id !== magId && eco > 0.05 ? `<div class="divider"></div><div class="tiny">💡 ${t('liste_at_store', { nom: esc(bestMag.nom), t: fmtEuro(bestTot) })} <span class="pill green">−${fmtEuro(eco)}</span></div>` : ''}
-        ${bestMag && bestMag.id === magId ? `<div class="divider"></div><div class="tiny">${t('liste_is_cheapest')}</div>` : ''}
-      </div>
-      <p class="tiny muted center" style="margin-top:8px">${t('liste_approx_foot')}</p>`;
+        <div class="tiny muted">${t('liste_total')}</div>
+        <div style="font-size:22px;font-weight:800">${approx ? '≈ ' : ''}${fmtEuro(total)}</div>
+      </div>`;
     } else {
       bandeau = `<p class="tiny muted center" style="margin-top:12px">${t('liste_pick_store')}</p>`;
     }
 
-    box.innerHTML = `<div class="card">${rowsHtml}</div>${bandeau}
+    // carte "où acheter"
+    const o = optiPanier(actifs);
+    let opti = '';
+    if (o.single) {
+      const split = o.nStores >= 2 && (o.single.total - o.splitTotal) > 0.5;
+      opti = `<div class="card pad stack" style="margin-top:14px">
+        <div class="field-label">${t('liste_opti')}</div>
+        <div class="spread">
+          <div class="grow"><div class="tiny muted">🏆 ${t('liste_one_store')}</div><div><b>${esc(o.single.mag.nom)}</b> · ≈ ${fmtEuro(o.single.total)}</div></div>
+        </div>`;
+      if (split) {
+        const rows = Object.entries(o.groups)
+          .map(([mid, g]) => ({ m: magById(mid), g }))
+          .filter(x => x.m)
+          .sort((a, b) => a.m.nom.localeCompare(b.m.nom))
+          .map(({ m, g }) => `<div style="margin-top:8px"><b>${esc(m.nom)}</b> · ≈ ${fmtEuro(g.total)}<div class="tiny muted">${g.items.map(itemNom).map(esc).join(' · ')}</div></div>`)
+          .join('');
+        opti += `<div class="divider"></div>
+          <div class="spread"><div class="grow"><div class="tiny muted">✂️ ${t('liste_split_on', { n: o.nStores })}</div><div>≈ ${fmtEuro(o.splitTotal)} <span class="pill green">−${fmtEuro(o.single.total - o.splitTotal)}</span></div></div></div>
+          <details style="margin-top:2px"><summary class="link-btn" style="cursor:pointer">${t('liste_show_split')}</summary>${rows}</details>`;
+      }
+      if (o.inconnus.length) {
+        opti += `<div class="divider"></div><div class="tiny muted">${t('liste_tosee')} : ${o.inconnus.map(itemNom).map(esc).join(', ')}</div>`;
+      }
+      opti += `</div>`;
+    }
+
+    box.innerHTML = `<div class="card">${rowsHtml}</div>${bandeau}${opti}
+      <p class="tiny muted center" style="margin-top:8px">${t('liste_approx_foot')}</p>
       <button class="btn ghost" style="margin-top:12px" onclick="viderCoches()">${t('liste_remove_checked')}</button>`;
   }
 

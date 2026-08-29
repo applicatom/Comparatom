@@ -68,6 +68,8 @@ foyers/{foyerId}/photos/{produitId} { data: dataURL jpeg ~1000px }   (lazy: getD
 foyers/{foyerId}/releves/{id}   { produitId, magasinId, prix (€/unité), date 'YYYY-MM-DD',
                                   promo (bool), marque?, origine?, note?, auteur?, createdAt }
 foyers/{foyerId}/liste/{id}     { produitId, qte, coche (bool), addedAt }
+                               OU { libre: "texte", qte, coche, addedAt }  (article libre :
+                               ne crée NI produit NI relevé ; pas de prix, pas d'emoji)
 ```
 
 `window._magasins / _produits / _releves / _liste / _categories` : synchronisés en temps réel.
@@ -123,7 +125,9 @@ tous les foyers sont visibles ; au 1er lancement on entre direct si un seul foye
 bascule de langue) · Saisie (accueil ; produit, magasin, prix, marque/origine/note
 optionnels, photo à la création) · Produits (rayons dynamiques + recherche, vignettes photo) ·
 Fiche produit (comparatif par marque × magasin, moyennes, historique, photo) ·
-Stats (mes magasins) · Liste de courses (partagée, estimation panier) · Réglages
+Stats (mes magasins) · Liste de courses (partagée ; articles réels OU libres ; carte
+« Où acheter » = `optiPanier` : meilleur magasin unique par couverture, ou panier réparti
+par article le moins cher) · Réglages
 (prénom, gestion des foyers/magasins/produits, thème, export).
 
 ## Versioning / PWA
@@ -131,7 +135,7 @@ Stats (mes magasins) · Liste de courses (partagée, estimation panier) · Régl
 `APP_VERSION` (constante) affichée dans Réglages. `verifierMAJ()` compare le `Last-Modified`
 du `index.html` en ligne et propose de recharger (purge SW + caches).
 Palette : **zinc + teal** (accent `#0d9488`), clair + sombre + `data-theme`.
-`sw.js` : cache `comparatom-v3` — **bump `-vN`** quand on change les assets cachés ;
+`sw.js` : cache `comparatom-v5` — **bump `-vN`** quand on change les assets cachés ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 
