@@ -607,7 +607,7 @@
       liste_pick_store:'Choisis un magasin ci-dessus pour estimer le total.', liste_remove_checked:'Retirer les articles cochés',
       liste_opti:'Où acheter', liste_one_store:'Tout au même endroit',
       liste_split_on:'Réparti sur {n} magasins', liste_show_split:'voir la répartition',
-      liste_tosee:'À voir sur place (prix inconnu)',
+      liste_tosee:'À voir sur place (prix inconnu)', liste_tap_price:'toucher pour relever le prix',
       reg_user:'Mon prénom (auteur des relevés)', reg_user_ph:'Ton prénom',
       reg_foyers:'Foyers', reg_foyer_new_ph:"Nom d'un nouveau foyer", reg_foyer_create:'Créer un foyer', reg_rename:'renommer',
       reg_magasins:'Magasins', reg_no_mag:'Aucun magasin', reg_produits:'Produits', reg_no_prod:'Aucun produit',
@@ -690,7 +690,7 @@
       liste_pick_store:'Elige una tienda arriba para estimar el total.', liste_remove_checked:'Quitar los artículos marcados',
       liste_opti:'Dónde comprar', liste_one_store:'Todo en un solo lugar',
       liste_split_on:'Repartido en {n} tiendas', liste_show_split:'ver el reparto',
-      liste_tosee:'Ver en la tienda (precio desconocido)',
+      liste_tosee:'Ver en la tienda (precio desconocido)', liste_tap_price:'toca para anotar el precio',
       reg_user:'Mi nombre (autor de los registros)', reg_user_ph:'Tu nombre',
       reg_foyers:'Hogares', reg_foyer_new_ph:'Nombre de un nuevo hogar', reg_foyer_create:'Crear un hogar', reg_rename:'renombrar',
       reg_magasins:'Tiendas', reg_no_mag:'Ninguna tienda', reg_produits:'Productos', reg_no_prod:'Ningún producto',
@@ -894,7 +894,7 @@
     document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
     document.querySelectorAll('.bottom-nav button').forEach(b => b.classList.toggle('active', b.dataset.page === id));
     window.scrollTo(0, 0);
-    if (id === 'page-saisie') { refreshSaisieLabels(); renderRecent(); }
+    if (id === 'page-saisie') { S.listeItemToLink = null; refreshSaisieLabels(); renderRecent(); }
     if (id === 'page-produits') renderProduits();
     if (id === 'page-fiche' && window._ficheId) renderFiche(window._ficheId);
     if (id === 'page-stats') renderStats();
@@ -1218,6 +1218,10 @@
       if (note) rel.note = note;
       await CT.addDoc(CT.col('releves'), rel);
       if (isNew && S.photoFile) setPhotoProduit(produitId, S.photoFile);
+      // article libre de la liste -> le lier au produit maintenant qu'il existe
+      if (S.listeItemToLink) {
+        try { await CT.updateDoc(CT.ref('liste', S.listeItemToLink), { produitId, libre: '' }); } catch (e) {}
+      }
       localStorage.setItem(LS.lastMag, magasinId);
       toast(promo ? t('msg_promo_saved') : t('msg_releve_saved'));
       // reset partiel
@@ -1226,7 +1230,7 @@
       $('s-promo').checked = false;
       $('s-calc-total').value = ''; $('s-calc-qty').value = ''; runCalc();
       $('s-calc').style.display = 'none';
-      S.produit = null; S.newProd = false; S.newCat = null; S.photoFile = null;
+      S.produit = null; S.newProd = false; S.newCat = null; S.photoFile = null; S.listeItemToLink = null;
       $('s-photo-prev').innerHTML = '';
       $('s-newprod').style.display = 'none'; $('s-lockedmeta').style.display = 'none';
       $('s-date').value = todayISO(); renderDateDisplay();
@@ -1671,6 +1675,26 @@
   }
   window.onListeInput = onListeInput; window.ajoutListe = ajoutListe; window.ajoutListeLibre = ajoutListeLibre;
 
+  // toucher un article de la liste -> pré-remplir la saisie d'un relevé (utile en magasin)
+  function listeRowTap(id) {
+    const it = (window._liste || []).find(x => x.id === id);
+    if (!it) return;
+    showPage('page-saisie');
+    const nom = it.libre ? it.libre : (prodById(it.produitId) ? prodById(it.produitId).nom : '');
+    if (!nom) return;
+    $('s-produit').value = nom;
+    if (it.libre) {
+      S.listeItemToLink = id;
+      onProduitInput();               // affiche le formulaire "nouveau produit" si inconnu
+    } else {
+      const p = prodById(it.produitId);
+      if (p) selectProduit(p, true);
+    }
+    $('s-prix').focus();
+    toast(t('msg_complete_price'));
+  }
+  window.listeRowTap = listeRowTap;
+
   const itemNom = it => it.libre ? it.libre : (prodById(it.produitId) ? prodById(it.produitId).nom : '?');
   // coût d'un item de liste dans un magasin ; {c, approx, unknown}
   function coutItemL(it, magasinId) {
@@ -1735,15 +1759,17 @@
       if (!it.coche && !unknown) { total += cost; if (ap) approx = true; }
       const lead = it.libre ? '' : vignette(p);
       const priceLine = magId ? (unknown ? (it.libre ? '' : t('liste_price_unknown')) : (ap ? '≈ ' : '') + fmtEuro(cost)) : '';
-      return `<div class="list-row" style="${it.coche ? 'opacity:.45' : ''}">
-        <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onchange="toggleListe('${it.id}',this.checked)" />
+      const sub = [(qte > 1 ? '×' + qte : ''), priceLine, (it.libre ? t('liste_tap_price') : '')].filter(Boolean).join(' · ');
+      return `<div class="list-row" style="cursor:pointer;${it.coche ? 'opacity:.45' : ''}" onclick="listeRowTap('${it.id}')">
+        <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onclick="event.stopPropagation()" onchange="toggleListe('${it.id}',this.checked)" />
         ${lead}
         <div class="grow">
           <div class="ellipsis" style="${it.coche ? 'text-decoration:line-through' : ''}">${it.libre ? esc(it.libre) : `<b>${esc(p ? p.nom : '?')}</b>`}</div>
-          <div class="tiny muted">${qte > 1 ? '×' + qte + (priceLine ? ' · ' : '') : ''}${priceLine}</div>
+          ${sub ? `<div class="tiny muted ellipsis">${sub}</div>` : ''}
         </div>
-        <button class="btn ghost small" onclick="qteListe('${it.id}',${qte + 1})">＋</button>
-        <button class="btn ghost small" onclick="supprListe('${it.id}')">✕</button>
+        ${qte > 1 ? `<button class="btn ghost small" onclick="event.stopPropagation();qteListe('${it.id}',${qte - 1})">−</button>` : ''}
+        <button class="btn ghost small" onclick="event.stopPropagation();qteListe('${it.id}',${qte + 1})">＋</button>
+        <button class="btn ghost small" onclick="event.stopPropagation();supprListe('${it.id}')">✕</button>
       </div>`;
     }).join('');
 
