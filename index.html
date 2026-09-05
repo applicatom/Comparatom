@@ -13,14 +13,14 @@
 <style>
   /* ===================== THÈME ===================== */
   :root {
-    --bg: #f4f5f5;
+    --bg: #e7eceb;
     --card: #ffffff;
-    --card2: #f2f4f3;
+    --card2: #eef2f1;
     --text: #172020;
     --text2: #5b6663;
     --text3: #97a09e;
-    --border: #e7eae9;
-    --border2: #d6dbd9;
+    --border: #dfe4e2;
+    --border2: #c7d0cd;
     --accent: #0d9488;
     --accent-strong: #0f766e;
     --accent-soft: #cdeee9;
@@ -33,19 +33,28 @@
     --red-soft: #f6dede;
     --radius: 16px;
     --radius-sm: 10px;
-    --shadow: 0 1px 2px rgba(17,24,24,.06), 0 1px 3px rgba(17,24,24,.05);
+    --shadow: 0 1px 2px rgba(17,24,24,.07), 0 3px 8px rgba(17,24,24,.07);
     --maxw: 620px;
+    /* palette de catégories (blocs de couleur distincts, famille froide) */
+    --cat0-bg:#cfece6; --cat0-fg:#0f6d63;
+    --cat1-bg:#d6e6fb; --cat1-fg:#2563a8;
+    --cat2-bg:#e3ddf6; --cat2-fg:#6449a8;
+    --cat3-bg:#dbe3e8; --cat3-fg:#3c5a6b;
+    --cat4-bg:#dbeedd; --cat4-fg:#3f7a52;
+    --cat5-bg:#ecddf1; --cat5-fg:#82499c;
+    --cat6-bg:#f1dbe4; --cat6-fg:#a1466c;
+    --cat7-bg:#d3edf0; --cat7-fg:#1c7a86;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #131615;
-      --card: #1b1f1e;
-      --card2: #232726;
+      --bg: #101312;
+      --card: #1c201f;
+      --card2: #262b2a;
       --text: #eef1f0;
       --text2: #9aa4a2;
       --text3: #6b7573;
-      --border: #2a302e;
-      --border2: #383e3c;
+      --border: #2c3231;
+      --border2: #3a413f;
       --accent: #14b8a6;
       --accent-strong: #2dd4bf;
       --accent-soft: #0f2e2a;
@@ -56,16 +65,32 @@
       --amber-soft: #2d2917;
       --red: #f87171;
       --red-soft: #3a1c1c;
-      --shadow: 0 1px 3px rgba(0,0,0,.4);
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 4px 10px rgba(0,0,0,.3);
+      --cat0-bg:#11332e; --cat0-fg:#5eead4;
+      --cat1-bg:#142a42; --cat1-fg:#7db6f0;
+      --cat2-bg:#241f3a; --cat2-fg:#b6a6ec;
+      --cat3-bg:#1c2729; --cat3-fg:#a1b7c2;
+      --cat4-bg:#15331e; --cat4-fg:#7fd39a;
+      --cat5-bg:#2b1e37; --cat5-fg:#d3a8ee;
+      --cat6-bg:#33202a; --cat6-fg:#ea9fb8;
+      --cat7-bg:#12323a; --cat7-fg:#6fd3e0;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #131615; --card: #1b1f1e; --card2: #232726;
+    --bg: #101312; --card: #1c201f; --card2: #262b2a;
     --text: #eef1f0; --text2: #9aa4a2; --text3: #6b7573;
-    --border: #2a302e; --border2: #383e3c;
+    --border: #2c3231; --border2: #3a413f;
     --accent: #14b8a6; --accent-strong: #2dd4bf; --accent-soft: #0f2e2a; --btn-text: #04211d;
     --green: #4ade80; --green-soft: #123021; --amber: #d4a017; --amber-soft: #2d2917;
-    --red: #f87171; --red-soft: #3a1c1c; --shadow: 0 1px 3px rgba(0,0,0,.4);
+    --red: #f87171; --red-soft: #3a1c1c; --shadow: 0 1px 2px rgba(0,0,0,.35), 0 4px 10px rgba(0,0,0,.3);
+    --cat0-bg:#11332e; --cat0-fg:#5eead4;
+    --cat1-bg:#142a42; --cat1-fg:#7db6f0;
+    --cat2-bg:#241f3a; --cat2-fg:#b6a6ec;
+    --cat3-bg:#1c2729; --cat3-fg:#a1b7c2;
+    --cat4-bg:#15331e; --cat4-fg:#7fd39a;
+    --cat5-bg:#2b1e37; --cat5-fg:#d3a8ee;
+    --cat6-bg:#33202a; --cat6-fg:#ea9fb8;
+    --cat7-bg:#12323a; --cat7-fg:#6fd3e0;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -88,9 +113,9 @@
   /* ===================== EN-TÊTE ===================== */
   .topbar {
     position: sticky; top: 0; z-index: 40;
-    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1.5px solid var(--border2);
   }
   .topbar-inner { max-width: var(--maxw); margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
   .brand { font-weight: 800; letter-spacing: -.02em; font-size: 17px; display: flex; align-items: center; gap: 8px; }
@@ -102,9 +127,9 @@
   /* ===================== NAV BASSE ===================== */
   .bottom-nav {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-    background: color-mix(in srgb, var(--card) 92%, transparent);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
     backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid var(--border);
+    border-top: 1.5px solid var(--border2);
     display: flex; padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
   }
   .bottom-nav button {
@@ -113,11 +138,12 @@
     color: var(--text3); font-size: 10px; font-weight: 600; border-radius: 12px;
   }
   .bottom-nav button .ic { font-size: 19px; line-height: 1; }
-  .bottom-nav button.active { color: var(--accent-strong); }
+  .bottom-nav button.active { color: var(--accent-strong); background: var(--accent-soft); }
   .app-scroll { padding-bottom: 96px; min-height: 100%; }
 
+
   /* ===================== CARTES / COMPOSANTS ===================== */
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .card { background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--radius); box-shadow: var(--shadow); }
   .card.pad { padding: 16px; }
   .stack > * + * { margin-top: 12px; }
   .muted { color: var(--text2); }
@@ -145,24 +171,34 @@
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     padding: 14px 18px; border-radius: var(--radius-sm); border: none;
     background: var(--accent); color: var(--btn-text); font-weight: 800; font-size: 15px;
-    width: 100%;
+    width: 100%; box-shadow: 0 3px 0 color-mix(in srgb, var(--accent) 55%, black);
+    transition: transform .08s, box-shadow .08s;
   }
-  .btn:active { transform: translateY(1px); }
-  .btn.secondary { background: var(--card2); color: var(--text); border: 1.5px solid var(--border2); }
-  .btn.ghost { background: none; color: var(--text2); border: 1.5px solid var(--border2); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 0 0 color-mix(in srgb, var(--accent) 55%, black); }
+  .btn.secondary {
+    background: var(--accent-soft); color: var(--accent-strong); border: none;
+    box-shadow: 0 3px 0 color-mix(in srgb, var(--accent-soft) 55%, black);
+  }
+  .btn.secondary:active { box-shadow: 0 0 0 color-mix(in srgb, var(--accent-soft) 55%, black); }
+  .btn.ghost {
+    background: var(--card2); color: var(--text); border: 1.5px solid var(--border2);
+    box-shadow: 0 2px 0 var(--border2);
+  }
+  .btn.ghost:active { box-shadow: none; }
   .btn.small { padding: 9px 12px; font-size: 13px; width: auto; }
-  .btn.danger { background: var(--red-soft); color: var(--red); }
+  .btn.danger { background: var(--red-soft); color: var(--red); box-shadow: 0 3px 0 color-mix(in srgb, var(--red) 35%, transparent); }
+  .btn.danger:active { box-shadow: 0 0 0 color-mix(in srgb, var(--red) 35%, transparent); }
 
   .chip {
     display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px;
-    border-radius: 999px; border: 1.5px solid var(--border2); background: var(--card2);
-    font-size: 13px; font-weight: 600; color: var(--text2);
+    border-radius: 999px; border: 1.5px solid transparent; background: var(--card2);
+    font-size: 13px; font-weight: 700; color: var(--text2);
   }
-  .chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); }
+  .chip.on { border-color: currentColor; box-shadow: inset 0 0 0 1.5px currentColor; }
 
   .seg { display: flex; gap: 6px; background: var(--card2); border: 1.5px solid var(--border2); border-radius: var(--radius-sm); padding: 4px; }
   .seg button { flex: 1; background: none; border: none; padding: 9px 6px; border-radius: 7px; font-weight: 700; font-size: 13px; color: var(--text2); }
-  .seg button.on { background: var(--accent); color: var(--btn-text); }
+  .seg button.on { background: var(--accent); color: var(--btn-text); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
 
   .pill { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; }
   .pill.green { background: var(--green-soft); color: var(--green); }
@@ -172,12 +208,12 @@
 
   .list-row { display: flex; align-items: center; gap: 12px; padding: 13px 14px; }
   .list-row + .list-row { border-top: 1px solid var(--border); }
-  .list-row .lead { width: 34px; height: 34px; border-radius: 9px; background: var(--card2); display: grid; place-items: center; font-size: 17px; flex-shrink: 0; }
+  .list-row .lead { width: 36px; height: 36px; border-radius: 10px; background: var(--card2); color: var(--text2); display: grid; place-items: center; font-size: 17px; flex-shrink: 0; }
 
   .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .cat-tile { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 10px; text-align: center; box-shadow: var(--shadow); }
-  .cat-tile .em { font-size: 24px; }
-  .cat-tile .nm { font-size: 12px; font-weight: 700; margin-top: 6px; }
+  .cat-tile { background: var(--card); border: 1.5px solid var(--border2); border-radius: var(--radius); padding: 14px 10px; text-align: center; box-shadow: var(--shadow); }
+  .cat-tile .em { width: 44px; height: 44px; margin: 0 auto; border-radius: 12px; background: var(--card2); color: var(--text2); display: grid; place-items: center; font-size: 22px; }
+  .cat-tile .nm { font-size: 12px; font-weight: 700; margin-top: 8px; }
   .cat-tile .ct { font-size: 11px; color: var(--text3); }
 
   .price-big { font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
@@ -230,7 +266,7 @@
   .list-row .lead.photo img { width: 100%; height: 100%; object-fit: cover; }
 
   .fiche-head { display: flex; align-items: flex-start; gap: 12px; margin: 8px 0 4px; }
-  .fiche-vign { width: 52px; height: 52px; border-radius: 12px; background: var(--card2); display: grid; place-items: center; font-size: 26px; flex-shrink: 0; overflow: hidden; }
+  .fiche-vign { width: 52px; height: 52px; border-radius: 14px; background: var(--card2); color: var(--text2); display: grid; place-items: center; font-size: 26px; flex-shrink: 0; overflow: hidden; }
   .fiche-vign img { width: 100%; height: 100%; object-fit: cover; }
   .emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; font-size: 22px; }
   .emoji-grid button { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 6px 0; width: auto; }
@@ -239,6 +275,19 @@
   .fullscreen { position: fixed; inset: 0; z-index: 120; background: var(--bg); overflow-y: auto; display: none; }
   .fullscreen.show { display: block; }
   .fs-inner { max-width: 440px; margin: 0 auto; padding: 48px 22px calc(40px + env(safe-area-inset-bottom)); }
+
+  /* ===================== CATÉGORIES (blocs de couleur) ===================== */
+  /* Sélecteurs composés pour l'emporter sur les fonds par défaut de .lead/.em/.chip/.fiche-vign */
+  .list-row .lead.catcol-0, .cat-tile .em.catcol-0, .fiche-vign.catcol-0, .chip.catcol-0 { background: var(--cat0-bg); color: var(--cat0-fg); }
+  .list-row .lead.catcol-1, .cat-tile .em.catcol-1, .fiche-vign.catcol-1, .chip.catcol-1 { background: var(--cat1-bg); color: var(--cat1-fg); }
+  .list-row .lead.catcol-2, .cat-tile .em.catcol-2, .fiche-vign.catcol-2, .chip.catcol-2 { background: var(--cat2-bg); color: var(--cat2-fg); }
+  .list-row .lead.catcol-3, .cat-tile .em.catcol-3, .fiche-vign.catcol-3, .chip.catcol-3 { background: var(--cat3-bg); color: var(--cat3-fg); }
+  .list-row .lead.catcol-4, .cat-tile .em.catcol-4, .fiche-vign.catcol-4, .chip.catcol-4 { background: var(--cat4-bg); color: var(--cat4-fg); }
+  .list-row .lead.catcol-5, .cat-tile .em.catcol-5, .fiche-vign.catcol-5, .chip.catcol-5 { background: var(--cat5-bg); color: var(--cat5-fg); }
+  .list-row .lead.catcol-6, .cat-tile .em.catcol-6, .fiche-vign.catcol-6, .chip.catcol-6 { background: var(--cat6-bg); color: var(--cat6-fg); }
+  .list-row .lead.catcol-7, .cat-tile .em.catcol-7, .fiche-vign.catcol-7, .chip.catcol-7 { background: var(--cat7-bg); color: var(--cat7-fg); }
+  .chip.on.catcol-0, .chip.on.catcol-1, .chip.on.catcol-2, .chip.on.catcol-3,
+  .chip.on.catcol-4, .chip.on.catcol-5, .chip.on.catcol-6, .chip.on.catcol-7 { box-shadow: inset 0 0 0 1.5px currentColor; }
 </style>
 </head>
 <body>
@@ -747,6 +796,12 @@
   }
   const catOf = id => (window._categories || []).find(c => c.id === id) || CAT_FALLBACK;
   const catLabel = c => (LANG === 'es' && c.nomEs) ? c.nomEs : (c.nom || c.nomEs || '');
+  const N_CATCOL = 8;
+  function catClass(c) {
+    if (!c || c.id === 'autre') return '';
+    const idx = catsSorted().findIndex(x => x.id === c.id);
+    return 'catcol-' + ((idx < 0 ? 0 : idx) % N_CATCOL);
+  }
   const EMOJIS = ['🥩','🍗','🍖','🥓','🍔','🌭','🥪','🐟','🦐','🦑','🦀','🐙','🥦','🥬','🥕','🧅','🧄','🥔','🍅','🌽','🥒','🫑','🍄','🥗','🍎','🍌','🍓','🫐','🍇','🍊','🍋','🍑','🥝','🍒','🍉','🥭','🍍','🥥','🧀','🥛','🧈','🥚','🍳','🍦','🥖','🍞','🥐','🥨','🫓','🥫','🧂','🍝','🍚','🫘','🌾','🍫','🍪','🍬','🍭','🍯','🍰','🧁','☕','🍵','🧃','🥤','🧋','🍷','🍺','🍾','🧊','🍢','🧴','🧼','🧻','🪥','🧽','🧹','🧺','🪣','👶','🍼','🐾','🐕','🐈','🌿','📦','🛒','💊','🌶️','🥜','🍶','🧇'];
 
   const STALE_DAYS = 60;
@@ -784,7 +839,7 @@
   function vignette(p) {
     if (p && p.thumb) return `<div class="lead photo"><img src="${p.thumb}" alt=""></div>`;
     const c = p ? catOf(p.categorie) : CAT_FALLBACK;
-    return `<div class="lead">${c.emoji}</div>`;
+    return `<div class="lead ${catClass(c)}">${c.emoji}</div>`;
   }
 
   // ================= LOGIQUE PRIX =================
@@ -1097,7 +1152,7 @@
   function renderCatsPicker() {
     const cats = catsSorted();
     $('s-cats').innerHTML = (cats.length ? cats : CATS_DEFAUT).map(c =>
-      `<button type="button" class="chip${S.newCat === c.id ? ' on' : ''}" data-k="${c.id}" onclick="pickCat('${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('');
+      `<button type="button" class="chip ${catClass(c)}${S.newCat === c.id ? ' on' : ''}" data-k="${c.id}" onclick="pickCat('${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('');
   }
   function pickCat(k) {
     S.newCat = k;
@@ -1413,8 +1468,8 @@
     const cats = catsSorted();
     box.innerHTML = `<div class="cat-grid">` + (cats.length ? cats : CATS_DEFAUT).map(c => {
       const n = counts[c.id] || 0;
-      return `<button class="cat-tile" onclick="openCat('${c.id}')" ${n ? '' : 'style="opacity:.45"'}>
-        <div class="em">${c.emoji}</div><div class="nm">${esc(catLabel(c))}</div><div class="ct">${n ? n + ' ' + plur(n, t('produit_s'), t('produit_p')) : '—'}</div>
+      return `<button class="cat-tile" onclick="openCat('${c.id}')" ${n ? '' : 'style="opacity:.5"'}>
+        <div class="em ${catClass(c)}">${c.emoji}</div><div class="nm">${esc(catLabel(c))}</div><div class="ct">${n ? n + ' ' + plur(n, t('produit_s'), t('produit_p')) : '—'}</div>
       </button>`;
     }).join('') + `</div>`;
   }
@@ -1488,11 +1543,11 @@
     const promos = allReleves.filter(r => r.promo).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
     let html = `<div class="fiche-head">
-      <div class="fiche-vign">${p.thumb ? `<img src="${p.thumb}" alt="">` : c.emoji}</div>
+      <div class="fiche-vign ${p.thumb ? '' : catClass(c)}">${p.thumb ? `<img src="${p.thumb}" alt="">` : c.emoji}</div>
       <div class="grow">
         <div class="page-title" style="margin:0">${esc(p.nom)}</div>
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-          <button class="chip" onclick="editProduit('${p.id}')">${c.emoji} ${esc(catLabel(c))} · ${unitLabel(p.unite)} ✏️</button>
+          <button class="chip ${catClass(c)}" onclick="editProduit('${p.id}')">${c.emoji} ${esc(catLabel(c))} · ${unitLabel(p.unite)} ✏️</button>
           <button class="chip" onclick="pickPhoto('${p.id}')">${p.thumb ? t('f_photo_change') : t('f_photo_add')}</button>
         </div>
         ${p.codeBarres ? `<div class="tiny muted" style="margin-top:6px">${t('fiche_barcode')} : ${esc(p.codeBarres)}</div>` : ''}
@@ -1871,7 +1926,7 @@
       <div class="card pad stack">
         <div class="field-label">${t('reg_cats')} (${cats.length})</div>
         ${cats.map((c, i) => `<div class="spread">
-          <button class="link-btn" onclick="changerEmojiCategorie('${c.id}')" style="font-size:18px">${c.emoji}</button>
+          <button class="${catClass(c)}" onclick="changerEmojiCategorie('${c.id}')" style="width:34px;height:34px;padding:0;border-radius:9px;border:none;font-size:17px;flex-shrink:0;display:grid;place-items:center;${catClass(c) ? '' : 'background:var(--card2)'}">${c.emoji}</button>
           <div class="grow ellipsis">${esc(catLabel(c))}</div>
           <span style="white-space:nowrap">
             <button class="link-btn" ${i === 0 ? 'style="opacity:.3"' : ''} onclick="deplacerCategorie('${c.id}',-1)">↑</button>
@@ -2038,7 +2093,7 @@
       </div>
       <div class="field-label" style="margin-top:12px">${t('edit_cat')}</div>
       <div id="ep-cats" style="display:flex;flex-wrap:wrap;gap:7px">
-        ${(cats.length ? cats : CATS_DEFAUT).map(c => `<button type="button" class="chip ${c.id === p.categorie ? 'on' : ''}" data-k="${c.id}" onclick="epPickCat('${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('')}
+        ${(cats.length ? cats : CATS_DEFAUT).map(c => `<button type="button" class="chip ${catClass(c)} ${c.id === p.categorie ? 'on' : ''}" data-k="${c.id}" onclick="epPickCat('${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('')}
       </div>
       <div class="field-label" style="margin-top:12px">${t('edit_unit')}</div>
       <div class="seg" id="ep-unit">

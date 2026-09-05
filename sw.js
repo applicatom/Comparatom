@@ -1,4 +1,4 @@
-const CACHE = 'comparatom-v7';
+const CACHE = 'comparatom-v8';
 const ASSETS = ['./index.html', './manifest.json', './icon.png'];
 
 self.addEventListener('install', e => {
