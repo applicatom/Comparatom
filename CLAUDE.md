@@ -134,14 +134,16 @@ par article le moins cher) · Réglages
 
 `APP_VERSION` (constante) affichée dans Réglages. `verifierMAJ()` compare le `Last-Modified`
 du `index.html` en ligne et propose de recharger (purge SW + caches).
-Palette : **zinc + teal** (accent `#0d9488`), clair + sombre + `data-theme`. Boutons avec
-relief (`box-shadow` + effet pressé au clic). Chaque catégorie a une couleur dédiée parmi
-8 teintes froides (`--cat0-bg/fg` … `--cat7-bg/fg`, cyclique par index d'ordre, `catClass(c)`
-dans `index.html`) appliquée aux vignettes produit, tuiles de rayon, chips et fiche produit —
-« Autre » reste neutre (gris). Sélecteurs composés (ex. `.lead.catcol-0`) pour l'emporter sur
-les fonds par défaut de `.lead`/`.chip`/`.cat-tile .em`/`.fiche-vign`.
+**Design** : en-tête en dégradé teal (blanc dessus), nav basse avec pastille active en
+dégradé teal, gros titres, boutons en dégradé avec ombre colorée + effet pressé, bandeau
+« meilleur prix » `.hero` vert vif, pastilles pleines (`.pill.green/amber/red`).
+Clair + sombre via `data-theme`. **10 couleurs de catégorie pleines et vives**
+(`--cat0` … `--cat9`, cycliques par index d'ordre, `catClass(c)`, `N_CATCOL=10`) :
+fond plein + emoji pour les vignettes/tuiles/fiche (sélecteurs composés `.lead.catcol-N` etc.),
+teinte claire + texte coloré pour les chips (`.chip.catcol-N`) et le bouton emoji des
+Réglages (`.catcol-N` autonome). « Autre » reste neutre.
 `sw.js` : **network-first** pour le shell (index.html/navigation/sw.js), cache-first pour le
-reste ; cache `comparatom-v8` — **bump `-vN`** à chaque changement (force l'éviction) ;
+reste ; cache `comparatom-v9` — **bump `-vN`** à chaque changement (force l'éviction) ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 
