@@ -134,16 +134,19 @@ par article le moins cher) · Réglages
 
 `APP_VERSION` (constante) affichée dans Réglages. `verifierMAJ()` compare le `Last-Modified`
 du `index.html` en ligne et propose de recharger (purge SW + caches).
-**Design** : en-tête en dégradé teal (blanc dessus), nav basse avec pastille active en
-dégradé teal, gros titres, boutons en dégradé avec ombre colorée + effet pressé, bandeau
-« meilleur prix » `.hero` vert vif, pastilles pleines (`.pill.green/amber/red`).
-Clair + sombre via `data-theme`. **10 couleurs de catégorie pleines et vives**
-(`--cat0` … `--cat9`, cycliques par index d'ordre, `catClass(c)`, `N_CATCOL=10`) :
-fond plein + emoji pour les vignettes/tuiles/fiche (sélecteurs composés `.lead.catcol-N` etc.),
-teinte claire + texte coloré pour les chips (`.chip.catcol-N`) et le bouton emoji des
-Réglages (`.catcol-N` autonome). « Autre » reste neutre.
+**Design — direction « Nuit »** : identité bleu-nuit électrique, police **Sora**
+(Google Fonts), gros chiffres (`font-variant-numeric: tabular-nums`), accents avec halo.
+Thème **sombre** de référence + thème **clair** jumeau (`--bg` bleu-gris, jamais de blanc pur),
+même personnalité. Tout passe par les tokens `:root` / `@media dark` / `[data-theme]` —
+JAMAIS de couleur définie seulement dans un bloc thème. Sémantique : `--green` menthe =
+« bon prix », `--red` corail = « cher », `--accent` bleu = interactif ; `--amber` or = écart moyen.
+Bandeau meilleur prix `.hero` = dégradé menthe, texte `--on-hero`. Pastilles `.pill.*` =
+teinte translucide (`color-mix`). **10 couleurs de rayon vives** (`--cat0` … `--cat9`,
+cycliques par index d'ordre, `catClass(c)`, `N_CATCOL=10`) : fond plein + emoji pour
+vignettes/tuiles/fiche (sélecteurs composés `.lead.catcol-N` etc.), teinte claire + texte
+coloré pour les chips (`.chip.catcol-N`) et le bouton emoji Réglages (`.catcol-N` autonome).
 `sw.js` : **network-first** pour le shell (index.html/navigation/sw.js), cache-first pour le
-reste ; cache `comparatom-v9` — **bump `-vN`** à chaque changement (force l'éviction) ;
+reste ; cache `comparatom-v10` — **bump `-vN`** à chaque changement (force l'éviction) ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 
