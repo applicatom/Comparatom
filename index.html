@@ -700,7 +700,7 @@
       liste_split_on:'Réparti sur {n} magasins', liste_show_split:'voir la répartition',
       liste_tosee:'À voir sur place (prix inconnu)', liste_tap_price:'toucher pour relever le prix',
       liste_sort_label:'Trier', liste_sort_add:"Ordre d'ajout", liste_sort_rayon:'Par rayon',
-      liste_unclassified:'Non classé',
+      liste_unclassified:'Non classé', liste_choose_rayon:'Choisir un rayon', liste_not_recognized:'pas reconnu · toucher pour choisir un rayon',
       reg_user:'Mon prénom (auteur des relevés)', reg_user_ph:'Ton prénom',
       reg_foyers:'Foyers', reg_foyer_new_ph:"Nom d'un nouveau foyer", reg_foyer_create:'Créer un foyer', reg_rename:'renommer',
       reg_magasins:'Magasins', reg_no_mag:'Aucun magasin', reg_produits:'Produits', reg_no_prod:'Aucun produit',
@@ -786,7 +786,7 @@
       liste_split_on:'Repartido en {n} tiendas', liste_show_split:'ver el reparto',
       liste_tosee:'Ver en la tienda (precio desconocido)', liste_tap_price:'toca para anotar el precio',
       liste_sort_label:'Ordenar', liste_sort_add:'Orden de agregado', liste_sort_rayon:'Por pasillo',
-      liste_unclassified:'Sin clasificar',
+      liste_unclassified:'Sin clasificar', liste_choose_rayon:'Elegir un pasillo', liste_not_recognized:'no reconocido · toca para elegir un pasillo',
       reg_user:'Mi nombre (autor de los registros)', reg_user_ph:'Tu nombre',
       reg_foyers:'Hogares', reg_foyer_new_ph:'Nombre de un nuevo hogar', reg_foyer_create:'Crear un hogar', reg_rename:'renombrar',
       reg_magasins:'Tiendas', reg_no_mag:'Ninguna tienda', reg_produits:'Productos', reg_no_prod:'Ningún producto',
@@ -866,15 +866,15 @@
   // "libre" (ou proposer une catégorie pour un nouveau produit) même écrit dans l'autre
   // langue du foyer ou avec une faute de frappe.
   const KEYWORDS = {
-    legumes: ['brocoli','brócoli','broccoli','tomate','tomates','tomato','carotte','carottes','zanahoria','zanahorias','poivron','poivrons','pimiento','pimientos','courgette','courgettes','calabacin','calabacín','oignon','oignons','cebolla','cebollas','ail','ajo','pommedeterre','patate','patates','papa','papas','patata','patatas','salade','laitue','lechuga','champignon','champignons','champinon','champiñón','concombre','concombres','pepino','epinard','epinards','espinaca','espinacas','haricot','haricots','judia','judía','frijol','frijoles','poireau','poireaux','puerro','aubergine','aubergines','berenjena','betterave','remolacha','chou','choux','col','asperge','asperges','esparrago','espárrago','artichaut','alcachofa','radis','rabano','rábano','celeri','céleri','apio','courge','calabaza','potiron','petitpois','guisante','guisantes','mais','maiz','maíz','legume','legumes','légume','légumes','verdura','verduras'],
-    fruits: ['pomme','pommes','manzana','manzanas','apple','banane','bananes','banana','platano','plátano','orange','oranges','naranja','naranjas','fraise','fraises','fresa','fresas','raisin','raisins','uva','uvas','citron','citrons','limon','limón','pamplemousse','pomelo','melon','melón','pasteque','pastèque','sandia','sandía','poire','poires','pera','peras','peche','pêche','peches','durazno','melocoton','melocotón','abricot','abricots','albaricoque','kiwi','kiwis','ananas','pina','piña','mangue','mangues','mango','avocat','avocats','aguacate','cerise','cerises','cereza','cerezas','mandarine','mandarina','fruit','fruits','fruta','frutas','myrtille','myrtilles','arandano','arándano','framboise','framboises','frambuesa'],
-    cremerie: ['lait','leche','milk','yaourt','yaourts','yogur','yogurt','fromage','fromages','queso','quesos','cheese','beurre','mantequilla','butter','creme','crème','crema','oeuf','oeufs','œuf','œufs','huevo','huevos','egg','eggs','fromageblanc','petitsuisse'],
-    viande: ['poulet','pollo','chicken','boeuf','bœuf','carnederes','beef','porc','cerdo','pork','jambon','jamon','jamón','ham','saucisse','saucisses','salchicha','salchichas','sausage','steak','bacon','tocino','dinde','pavo','turkey','agneau','cordero','lamb','viande','meat','carne','lardon','lardons','chorizo','merguez'],
+    legumes: ['brocoli','brócoli','broccoli','tomate','tomates','tomato','jitomate','jitomates','carotte','carottes','zanahoria','zanahorias','poivron','poivrons','pimiento','pimientos','chile','chiles','courgette','courgettes','calabacin','calabacín','calabacita','calabacitas','oignon','oignons','cebolla','cebollas','ail','ajo','pommedeterre','patate','patates','papa','papas','patata','patatas','salade','ensalada','ensaladas','laitue','lechuga','champignon','champignons','champinon','champiñón','concombre','concombres','pepino','epinard','epinards','espinaca','espinacas','haricot','haricots','judia','judía','frijol','frijoles','poireau','poireaux','puerro','aubergine','aubergines','berenjena','betterave','remolacha','betabel','chou','choux','col','asperge','asperges','esparrago','espárrago','artichaut','alcachofa','radis','rabano','rábano','celeri','céleri','apio','courge','calabaza','potiron','petitpois','guisante','guisantes','mais','maiz','maíz','elote','elotes','cilantro','coriandre','rosti','rostis','röstis','legume','legumes','légume','légumes','verdura','verduras'],
+    fruits: ['pomme','pommes','manzana','manzanas','apple','banane','bananes','banana','platano','plátano','orange','oranges','naranja','naranjas','fraise','fraises','fresa','fresas','raisin','raisins','uva','uvas','citron','citrons','limon','limón','pamplemousse','pomelo','toronja','melon','melón','pasteque','pastèque','sandia','sandía','poire','poires','pera','peras','peche','pêche','peches','durazno','melocoton','melocotón','abricot','abricots','albaricoque','kiwi','kiwis','ananas','pina','piña','mangue','mangues','mango','avocat','avocats','aguacate','cerise','cerises','cereza','cerezas','mandarine','mandarina','papaye','papaya','goyave','guayaba','fruit','fruits','fruta','frutas','myrtille','myrtilles','arandano','arándano','framboise','framboises','frambuesa'],
+    cremerie: ['lait','leche','milk','yaourt','yaourts','yogur','yogurt','fromage','fromages','queso','quesos','cheese','emmental','emental','ementale','gruyere','gruyère','comte','comté','camembert','brie','roquefort','mozzarella','feta','cheddar','chevre','chèvre','parmesan','parmesano','mascarpone','ricotta','raclette','mimolette','reblochon','cantal','beurre','mantequilla','butter','creme','crème','crema','oeuf','oeufs','œuf','œufs','huevo','huevos','egg','eggs','fromageblanc','petitsuisse'],
+    viande: ['poulet','pollo','chicken','boeuf','bœuf','carnederes','beef','porc','cerdo','puerco','pork','jambon','jamon','jamón','ham','saucisse','saucisses','salchicha','salchichas','sausage','steak','bacon','tocino','dinde','pavo','turkey','agneau','cordero','lamb','viande','meat','carne','lardon','lardons','chorizo','merguez'],
     poisson: ['saumon','salmon','salmón','thon','atun','atún','tuna','crevette','crevettes','camaron','camarón','gamba','gambas','shrimp','poisson','pescado','fish','merlu','merluza','cabillaud','bacalao','sardine','sardines','sardina','sardinas','truite','trucha','moule','moules','mejillon','mejillón','calamar','calamares','calmar','poulpe','pulpo'],
-    boulangerie: ['pain','pan','bread','baguette','baguettes','croissant','croissants','brioche','patisserie','pâtisserie','pastel','pastry','viennoiserie','biscotte','biscottes'],
-    boissons: ['eau','agua','water','jus','jugo','zumo','juice','soda','sodas','vin','vino','wine','biere','bière','cerveza','beer','cafe','café','coffee','the','thé','te','té','tea','boisson','boissons','bebida','bebidas','limonade','limonada','cola'],
-    'epicerie-salee': ['pates','pâtes','pasta','riz','arroz','rice','farine','harina','flour','huile','aceite','oil','sel','sal','salt','conserve','conserves','lata','latas','sauce','salsa','soupe','soupes','sopa','cereales','céréales','cereal','ketchup','mayonnaise','mayonesa','moutarde','mostaza','vinaigre','vinagre','lentille','lentilles','lenteja','lentejas','poischiche','garbanzo','quinoa','couscous','lasagne','lasagnes','pizza'],
-    'epicerie-sucree': ['chocolat','chocolate','sucre','azucar','azúcar','sugar','biscuit','biscuits','galleta','galletas','cookie','cookies','gateau','gâteau','gateaux','gâteaux','confiture','mermelada','jam','miel','honey','bonbon','bonbons','caramelo','caramelos','candy','nutella','crepe','crêpe'],
+    boulangerie: ['pain','pan','bread','baguette','baguettes','croissant','croissants','brioche','patisserie','pâtisserie','pastel','pastry','viennoiserie','biscotte','biscottes','galette','galettes','crepe','crêpe','crepes','crêpes','tortilla','tortillas'],
+    boissons: ['eau','agua','water','jus','jugo','zumo','juice','soda','sodas','vin','vino','wine','biere','bière','cerveza','beer','cidre','sidra','cider','cafe','café','coffee','the','thé','te','té','tea','boisson','boissons','bebida','bebidas','limonade','limonada','cola'],
+    'epicerie-salee': ['pates','pâtes','pasta','riz','arroz','rice','farine','harina','flour','huile','aceite','oil','sel','sal','salt','conserve','conserves','lata','latas','sauce','salsa','soupe','soupes','sopa','gazpacho','cereales','céréales','cereal','ketchup','mayonnaise','mayonesa','moutarde','mostaza','vinaigre','vinagre','lentille','lentilles','lenteja','lentejas','poischiche','garbanzo','quinoa','couscous','lasagne','lasagnes','pizza','houmous','hummus'],
+    'epicerie-sucree': ['chocolat','chocolate','sucre','azucar','azúcar','sugar','biscuit','biscuits','galleta','galletas','cookie','cookies','gateau','gâteau','gateaux','gâteaux','confiture','mermelada','jam','miel','honey','bonbon','bonbons','caramelo','caramelos','candy','nutella'],
     surgeles: ['surgele','surgelé','surgeles','surgelés','congelado','congelados','frozen','glace','glaces','helado','helados','icecream'],
     hygiene: ['savon','savons','jabon','jabón','soap','shampoing','shampooing','champu','champú','shampoo','dentifrice','pastadental','toothpaste','papiertoilette','papelhigienico','papelhigiénico','toiletpaper','deodorant','déodorant','desodorante','rasoir','rasoirs','afeitadora','tampon','tampones','compresa'],
     entretien: ['eponge','éponge','eponges','éponges','esponja','esponjas','sponge','sopalin','papeldecocina','papertowel','lessive','detergente','detergent','nettoyant','nettoyants','limpiador','limpiadores','cleaner','sacpoubelle','sacspoubelle','bolsadebasura','trashbag','javel','lejia','lejía','bleach'],
@@ -1872,6 +1872,22 @@
   }
   window.listeRowTap = listeRowTap;
 
+  // secours quand un article libre n'est reconnu par aucun mot-clé : classement manuel,
+  // toujours sans créer de produit
+  function choisirRayonListe(id) {
+    const cats = catsSorted();
+    openModal(`<h3>${t('liste_choose_rayon')}</h3>
+      <div class="stack">
+        ${cats.map(c => `<button type="button" class="chip ${catClass(c)}" style="width:100%;justify-content:flex-start" onclick="assignerRayonListe('${id}','${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('')}
+      </div>`);
+  }
+  async function assignerRayonListe(id, catId) {
+    try { await CT.updateDoc(CT.ref('liste', id), { categorie: catId }); closeModal(); }
+    catch (e) { toast('❌ ' + e.message); }
+  }
+  window.choisirRayonListe = choisirRayonListe;
+  window.assignerRayonListe = assignerRayonListe;
+
   const itemNom = it => it.libre ? it.libre : (prodById(it.produitId) ? prodById(it.produitId).nom : '?');
   // coût d'un item de liste dans un magasin ; {c, approx, unknown}
   function coutItemL(it, magasinId) {
@@ -1971,9 +1987,11 @@
       const { c: cost, approx: ap, unknown } = coutItemL(it, magId);
       if (!it.coche && !unknown) { total += cost; if (ap) approx = true; }
       const ecat = it.libre ? effectiveCat(it) : null;
-      const lead = it.libre ? (ecat ? vignette({ categorie: ecat }) : '') : vignette(p);
+      const lead = it.libre
+        ? (ecat ? vignette({ categorie: ecat }) : `<div class="lead" style="cursor:pointer" onclick="event.stopPropagation();choisirRayonListe('${it.id}')">❓</div>`)
+        : vignette(p);
       const priceLine = magId ? (unknown ? (it.libre ? '' : t('liste_price_unknown')) : (ap ? '≈ ' : '') + fmtEuro(cost)) : '';
-      const sub = [(qte > 1 ? '×' + qte : ''), priceLine, (it.libre ? t('liste_tap_price') : '')].filter(Boolean).join(' · ');
+      const sub = [(qte > 1 ? '×' + qte : ''), priceLine, (it.libre ? (ecat ? t('liste_tap_price') : t('liste_not_recognized')) : '')].filter(Boolean).join(' · ');
       return `<div class="list-row" style="cursor:pointer;${it.coche ? 'opacity:.45' : ''}" onclick="listeRowTap('${it.id}')">
         <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onclick="event.stopPropagation()" onchange="toggleListe('${it.id}',this.checked)" />
         ${lead}

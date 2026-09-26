@@ -137,9 +137,13 @@ moins cher) · Réglages (prénom, gestion des foyers/magasins/produits, thème,
 (a) proposer une catégorie par défaut sur un nouveau produit en Saisie, (b) montrer un
 indice de rayon dans la suggestion "Ajouter «X»" de la Liste, (c) taguer un article libre
 avec un `categorie` deviné (sans créer de produit) pour qu'il se range au bon endroit en
-tri « Par rayon ». Si tu ajoutes une catégorie personnalisée courante, pense à enrichir
-`KEYWORDS` en conséquence — sinon ses articles resteront "Non classé" tant qu'aucun mot-clé
-ne matche.
+tri « Par rayon ». `effectiveCat(it)` calcule cette catégorie à la volée (produit, tag déjà
+posé, ou devinette) pour les items déjà en base ; `ensureLibreCat(it)` la persiste une fois
+en silence pour les articles ajoutés avant la fonctionnalité ou jamais reconnus à l'époque.
+Si un mot n'est toujours pas reconnu, l'item affiche un bouton ❓ ("pas reconnu · toucher
+pour choisir un rayon") qui ouvre `choisirRayonListe()` → classement manuel dans
+`assignerRayonListe()`, toujours sans créer de produit. Si tu ajoutes une catégorie
+personnalisée courante, pense à enrichir `KEYWORDS` en conséquence.
 
 ## Versioning / PWA
 
@@ -157,7 +161,7 @@ cycliques par index d'ordre, `catClass(c)`, `N_CATCOL=10`) : fond plein + emoji 
 vignettes/tuiles/fiche (sélecteurs composés `.lead.catcol-N` etc.), teinte claire + texte
 coloré pour les chips (`.chip.catcol-N`) et le bouton emoji Réglages (`.catcol-N` autonome).
 `sw.js` : **network-first** pour le shell (index.html/navigation/sw.js), cache-first pour le
-reste ; cache `comparatom-v13` — **bump `-vN`** à chaque changement (force l'éviction) ;
+reste ; cache `comparatom-v14` — **bump `-vN`** à chaque changement (force l'éviction) ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 
