@@ -861,6 +861,63 @@
   }
   const EMOJIS = ['🥩','🍗','🍖','🥓','🍔','🌭','🥪','🐟','🦐','🦑','🦀','🐙','🥦','🥬','🥕','🧅','🧄','🥔','🍅','🌽','🥒','🫑','🍄','🥗','🍎','🍌','🍓','🫐','🍇','🍊','🍋','🍑','🥝','🍒','🍉','🥭','🍍','🥥','🧀','🥛','🧈','🥚','🍳','🍦','🥖','🍞','🥐','🥨','🫓','🥫','🧂','🍝','🍚','🫘','🌾','🍫','🍪','🍬','🍭','🍯','🍰','🧁','☕','🍵','🧃','🥤','🧋','🍷','🍺','🍾','🧊','🍢','🧴','🧼','🧻','🪥','🧽','🧹','🧺','🪣','👶','🍼','🐾','🐕','🐈','🌿','📦','🛒','💊','🌶️','🥜','🍶','🧇'];
 
+  // ================= DEVINER LE RAYON D'UN NOM DE PRODUIT =================
+  // Dictionnaire FR/ES (+ variantes anglicisées courantes) : sert à classer un article
+  // "libre" (ou proposer une catégorie pour un nouveau produit) même écrit dans l'autre
+  // langue du foyer ou avec une faute de frappe.
+  const KEYWORDS = {
+    legumes: ['brocoli','brócoli','broccoli','tomate','tomates','tomato','carotte','carottes','zanahoria','zanahorias','poivron','poivrons','pimiento','pimientos','courgette','courgettes','calabacin','calabacín','oignon','oignons','cebolla','cebollas','ail','ajo','pommedeterre','patate','patates','papa','papas','patata','patatas','salade','laitue','lechuga','champignon','champignons','champinon','champiñón','concombre','concombres','pepino','epinard','epinards','espinaca','espinacas','haricot','haricots','judia','judía','frijol','frijoles','poireau','poireaux','puerro','aubergine','aubergines','berenjena','betterave','remolacha','chou','choux','col','asperge','asperges','esparrago','espárrago','artichaut','alcachofa','radis','rabano','rábano','celeri','céleri','apio','courge','calabaza','potiron','petitpois','guisante','guisantes','mais','maiz','maíz','legume','legumes','légume','légumes','verdura','verduras'],
+    fruits: ['pomme','pommes','manzana','manzanas','apple','banane','bananes','banana','platano','plátano','orange','oranges','naranja','naranjas','fraise','fraises','fresa','fresas','raisin','raisins','uva','uvas','citron','citrons','limon','limón','pamplemousse','pomelo','melon','melón','pasteque','pastèque','sandia','sandía','poire','poires','pera','peras','peche','pêche','peches','durazno','melocoton','melocotón','abricot','abricots','albaricoque','kiwi','kiwis','ananas','pina','piña','mangue','mangues','mango','avocat','avocats','aguacate','cerise','cerises','cereza','cerezas','mandarine','mandarina','fruit','fruits','fruta','frutas','myrtille','myrtilles','arandano','arándano','framboise','framboises','frambuesa'],
+    cremerie: ['lait','leche','milk','yaourt','yaourts','yogur','yogurt','fromage','fromages','queso','quesos','cheese','beurre','mantequilla','butter','creme','crème','crema','oeuf','oeufs','œuf','œufs','huevo','huevos','egg','eggs','fromageblanc','petitsuisse'],
+    viande: ['poulet','pollo','chicken','boeuf','bœuf','carnederes','beef','porc','cerdo','pork','jambon','jamon','jamón','ham','saucisse','saucisses','salchicha','salchichas','sausage','steak','bacon','tocino','dinde','pavo','turkey','agneau','cordero','lamb','viande','meat','carne','lardon','lardons','chorizo','merguez'],
+    poisson: ['saumon','salmon','salmón','thon','atun','atún','tuna','crevette','crevettes','camaron','camarón','gamba','gambas','shrimp','poisson','pescado','fish','merlu','merluza','cabillaud','bacalao','sardine','sardines','sardina','sardinas','truite','trucha','moule','moules','mejillon','mejillón','calamar','calamares','calmar','poulpe','pulpo'],
+    boulangerie: ['pain','pan','bread','baguette','baguettes','croissant','croissants','brioche','patisserie','pâtisserie','pastel','pastry','viennoiserie','biscotte','biscottes'],
+    boissons: ['eau','agua','water','jus','jugo','zumo','juice','soda','sodas','vin','vino','wine','biere','bière','cerveza','beer','cafe','café','coffee','the','thé','te','té','tea','boisson','boissons','bebida','bebidas','limonade','limonada','cola'],
+    'epicerie-salee': ['pates','pâtes','pasta','riz','arroz','rice','farine','harina','flour','huile','aceite','oil','sel','sal','salt','conserve','conserves','lata','latas','sauce','salsa','soupe','soupes','sopa','cereales','céréales','cereal','ketchup','mayonnaise','mayonesa','moutarde','mostaza','vinaigre','vinagre','lentille','lentilles','lenteja','lentejas','poischiche','garbanzo','quinoa','couscous','lasagne','lasagnes','pizza'],
+    'epicerie-sucree': ['chocolat','chocolate','sucre','azucar','azúcar','sugar','biscuit','biscuits','galleta','galletas','cookie','cookies','gateau','gâteau','gateaux','gâteaux','confiture','mermelada','jam','miel','honey','bonbon','bonbons','caramelo','caramelos','candy','nutella','crepe','crêpe'],
+    surgeles: ['surgele','surgelé','surgeles','surgelés','congelado','congelados','frozen','glace','glaces','helado','helados','icecream'],
+    hygiene: ['savon','savons','jabon','jabón','soap','shampoing','shampooing','champu','champú','shampoo','dentifrice','pastadental','toothpaste','papiertoilette','papelhigienico','papelhigiénico','toiletpaper','deodorant','déodorant','desodorante','rasoir','rasoirs','afeitadora','tampon','tampones','compresa'],
+    entretien: ['eponge','éponge','eponges','éponges','esponja','esponjas','sponge','sopalin','papeldecocina','papertowel','lessive','detergente','detergent','nettoyant','nettoyants','limpiador','limpiadores','cleaner','sacpoubelle','sacspoubelle','bolsadebasura','trashbag','javel','lejia','lejía','bleach'],
+    bebe: ['couche','couches','panal','pañal','panales','pañales','diaper','diapers','laitbebe','laitbébé','lechedebebe','lechedebebé','baby','lingette','lingettes','toallita','toallitas'],
+    animaux: ['croquette','croquettes','croqueta','croquetas','petfood','patee','pâtée','litiere','litière','arena'],
+  };
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    const m = a.length, n = b.length;
+    if (!m) return n; if (!n) return m;
+    let prev = Array.from({ length: n + 1 }, (_, i) => i);
+    for (let i = 1; i <= m; i++) {
+      const cur = [i];
+      for (let j = 1; j <= n; j++) cur[j] = a[i - 1] === b[j - 1] ? prev[j - 1] : 1 + Math.min(prev[j - 1], prev[j], cur[j - 1]);
+      prev = cur;
+    }
+    return prev[n];
+  }
+  // devine une catégorie à partir d'un nom tapé (tolère langue FR/ES et fautes de frappe)
+  function guessCategorie(nomRaw) {
+    const q = norm(nomRaw).replace(/[^a-z0-9]/g, m => m === ' ' ? ' ' : '');
+    if (q.length < 3) return null;
+    const flat = q.replace(/\s+/g, '');
+    const tokens = [...new Set([flat, ...q.split(/\s+/).filter(w => w.length >= 3)])];
+    let best = null, bestScore = Infinity;
+    for (const catId in KEYWORDS) {
+      for (const kw of KEYWORDS[catId]) {
+        for (const tok of tokens) {
+          let score = Infinity;
+          if (tok === kw) score = 0;
+          else if (tok.length >= 4 && kw.length >= 4 && (tok.includes(kw) || kw.includes(tok))) score = 0.4;
+          else if (tok.length >= 3 && kw.length >= 3) {
+            const d = levenshtein(tok, kw);
+            const tol = Math.max(tok.length, kw.length) > 7 ? 2 : 1;
+            if (d <= tol) score = d + 0.6;
+          }
+          if (score < bestScore) { bestScore = score; best = catId; }
+        }
+      }
+    }
+    return bestScore <= 2.6 ? best : null;
+  }
+
   const STALE_DAYS = 60;
   const DEAD_DAYS = 120;
   function unitSuffix(u) { return u === 'piece' ? t('u_piece') : u; }
@@ -1247,7 +1304,7 @@
     if (!exact && matches.length === 0) {
       $('s-newprod').style.display = 'block';
       S.newProd = true;
-      if (!S.newCat) pickCat('autre');
+      if (!S.newCat) pickCat(guessCategorie($('s-produit').value) || 'autre');
       renderCatsPicker();
     } else {
       $('s-newprod').style.display = 'none';
@@ -1769,7 +1826,9 @@
       const ic = p.thumb ? `<img src="${p.thumb}" style="width:20px;height:20px;border-radius:5px;object-fit:cover;vertical-align:middle">` : c.emoji;
       return `<div class="ac-item" onclick="ajoutListe('${p.id}')"><span class="em">${ic}</span><span class="grow">${esc(p.nom)}</span></div>`;
     }).join('');
-    html += `<div class="ac-item" onclick="ajoutListeLibre()"><span class="em">➕</span><span class="grow">${t('liste_add_free', { q: esc($('l-add').value) })}</span></div>`;
+    const guess = guessCategorie($('l-add').value);
+    const guessTag = guess ? ` <span class="tiny muted">${catOf(guess).emoji} ${esc(catLabel(catOf(guess)))}</span>` : '';
+    html += `<div class="ac-item" onclick="ajoutListeLibre()"><span class="em">➕</span><span class="grow">${t('liste_add_free', { q: esc($('l-add').value) })}${guessTag}</span></div>`;
     box.innerHTML = html;
     box.style.display = 'block';
   }
@@ -1785,7 +1844,10 @@
     if (!nom) return;
     $('l-add').value = ''; $('l-ac').style.display = 'none';
     if ((window._liste || []).some(x => x.libre && norm(x.libre) === norm(nom))) return toast(t('msg_already_list'));
-    try { await CT.addDoc(CT.col('liste'), { libre: nom, qte: 1, coche: false, addedAt: Date.now() }); }
+    const doc = { libre: nom, qte: 1, coche: false, addedAt: Date.now() };
+    const guess = guessCategorie(nom);
+    if (guess) doc.categorie = guess;
+    try { await CT.addDoc(CT.col('liste'), doc); }
     catch (e) { toast('❌ ' + e.message); }
   }
   window.onListeInput = onListeInput; window.ajoutListe = ajoutListe; window.ajoutListeLibre = ajoutListeLibre;
@@ -1874,8 +1936,8 @@
     const items = (window._liste || []).slice();
     if (triRayon) {
       items.sort((a, b) => {
-        const ca = a.libre ? null : prodById(a.produitId)?.categorie;
-        const cb = b.libre ? null : prodById(b.produitId)?.categorie;
+        const ca = a.libre ? (a.categorie || null) : prodById(a.produitId)?.categorie;
+        const cb = b.libre ? (b.categorie || null) : prodById(b.produitId)?.categorie;
         return rayonIndex(ca) - rayonIndex(cb) || itemNom(a).localeCompare(itemNom(b));
       });
     } else {
@@ -1892,7 +1954,7 @@
       const qte = it.qte || 1;
       const { c: cost, approx: ap, unknown } = coutItemL(it, magId);
       if (!it.coche && !unknown) { total += cost; if (ap) approx = true; }
-      const lead = it.libre ? '' : vignette(p);
+      const lead = it.libre ? (it.categorie ? vignette({ categorie: it.categorie }) : '') : vignette(p);
       const priceLine = magId ? (unknown ? (it.libre ? '' : t('liste_price_unknown')) : (ap ? '≈ ' : '') + fmtEuro(cost)) : '';
       const sub = [(qte > 1 ? '×' + qte : ''), priceLine, (it.libre ? t('liste_tap_price') : '')].filter(Boolean).join(' · ');
       return `<div class="list-row" style="cursor:pointer;${it.coche ? 'opacity:.45' : ''}" onclick="listeRowTap('${it.id}')">
@@ -1914,7 +1976,7 @@
       const groupsMap = new Map();
       items.forEach(it => {
         const p = it.libre ? null : prodById(it.produitId);
-        const cat = p ? catOf(p.categorie) : null;
+        const cat = p ? catOf(p.categorie) : (it.categorie ? catOf(it.categorie) : null);
         const key = cat ? cat.id : '__none__';
         if (!groupsMap.has(key)) groupsMap.set(key, { cat, list: [] });
         groupsMap.get(key).list.push(it);
