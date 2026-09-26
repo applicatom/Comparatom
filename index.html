@@ -1872,18 +1872,24 @@
   }
   window.listeRowTap = listeRowTap;
 
-  // secours quand un article libre n'est reconnu par aucun mot-clé : classement manuel,
-  // toujours sans créer de produit
-  function choisirRayonListe(id) {
+  // changer le rayon d'un article de la liste (produit réel ou article libre) -> reclasse
+  // automatiquement (le tri "Par rayon" et le regroupement se refont tout seuls au prochain
+  // snapshot Firestore). Pour un produit réel, on change la catégorie du produit (donc
+  // partout dans l'app) ; pour un article libre, juste un tag sur cet item de liste.
+  function choisirRayonListe(id, produitId) {
     const cats = catsSorted();
+    const pidArg = produitId ? `'${produitId}'` : 'null';
     openModal(`<h3>${t('liste_choose_rayon')}</h3>
       <div class="stack">
-        ${cats.map(c => `<button type="button" class="chip ${catClass(c)}" style="width:100%;justify-content:flex-start" onclick="assignerRayonListe('${id}','${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('')}
+        ${cats.map(c => `<button type="button" class="chip ${catClass(c)}" style="width:100%;justify-content:flex-start" onclick="assignerRayonListe('${id}',${pidArg},'${c.id}')">${c.emoji} ${esc(catLabel(c))}</button>`).join('')}
       </div>`);
   }
-  async function assignerRayonListe(id, catId) {
-    try { await CT.updateDoc(CT.ref('liste', id), { categorie: catId }); closeModal(); }
-    catch (e) { toast('❌ ' + e.message); }
+  async function assignerRayonListe(id, produitId, catId) {
+    try {
+      if (produitId) await CT.updateDoc(CT.ref('produits', produitId), { categorie: catId });
+      else await CT.updateDoc(CT.ref('liste', id), { categorie: catId });
+      closeModal();
+    } catch (e) { toast('❌ ' + e.message); }
   }
   window.choisirRayonListe = choisirRayonListe;
   window.assignerRayonListe = assignerRayonListe;
@@ -1987,18 +1993,16 @@
       const { c: cost, approx: ap, unknown } = coutItemL(it, magId);
       if (!it.coche && !unknown) { total += cost; if (ap) approx = true; }
       const ecat = it.libre ? effectiveCat(it) : null;
-      const lead = it.libre
-        ? (ecat ? vignette({ categorie: ecat }) : `<div class="lead" style="cursor:pointer" onclick="event.stopPropagation();choisirRayonListe('${it.id}')">❓</div>`)
-        : vignette(p);
       const priceLine = magId ? (unknown ? (it.libre ? '' : t('liste_price_unknown')) : (ap ? '≈ ' : '') + fmtEuro(cost)) : '';
       const sub = [(qte > 1 ? '×' + qte : ''), priceLine, (it.libre ? (ecat ? t('liste_tap_price') : t('liste_not_recognized')) : '')].filter(Boolean).join(' · ');
+      const pidArg = it.produitId ? `,'${it.produitId}'` : '';
       return `<div class="list-row" style="cursor:pointer;${it.coche ? 'opacity:.45' : ''}" onclick="listeRowTap('${it.id}')">
         <input type="checkbox" ${it.coche ? 'checked' : ''} style="width:20px;height:20px" onclick="event.stopPropagation()" onchange="toggleListe('${it.id}',this.checked)" />
-        ${lead}
         <div class="grow">
           <div class="ellipsis" style="${it.coche ? 'text-decoration:line-through' : ''}">${it.libre ? esc(it.libre) : `<b>${esc(p ? p.nom : '?')}</b>`}</div>
           ${sub ? `<div class="tiny muted ellipsis">${sub}</div>` : ''}
         </div>
+        <button class="btn ghost small" onclick="event.stopPropagation();choisirRayonListe('${it.id}'${pidArg})">🏷️</button>
         ${qte > 1 ? `<button class="btn ghost small" onclick="event.stopPropagation();qteListe('${it.id}',${qte - 1})">−</button>` : ''}
         <button class="btn ghost small" onclick="event.stopPropagation();qteListe('${it.id}',${qte + 1})">＋</button>
         <button class="btn ghost small" onclick="event.stopPropagation();supprListe('${it.id}')">✕</button>

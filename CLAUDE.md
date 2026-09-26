@@ -140,10 +140,19 @@ avec un `categorie` deviné (sans créer de produit) pour qu'il se range au bon 
 tri « Par rayon ». `effectiveCat(it)` calcule cette catégorie à la volée (produit, tag déjà
 posé, ou devinette) pour les items déjà en base ; `ensureLibreCat(it)` la persiste une fois
 en silence pour les articles ajoutés avant la fonctionnalité ou jamais reconnus à l'époque.
-Si un mot n'est toujours pas reconnu, l'item affiche un bouton ❓ ("pas reconnu · toucher
-pour choisir un rayon") qui ouvre `choisirRayonListe()` → classement manuel dans
-`assignerRayonListe()`, toujours sans créer de produit. Si tu ajoutes une catégorie
-personnalisée courante, pense à enrichir `KEYWORDS` en conséquence.
+Si un mot n'est toujours pas reconnu, l'item affiche "pas reconnu · toucher pour choisir
+un rayon" en sous-titre. Si tu ajoutes une catégorie personnalisée courante, pense à
+enrichir `KEYWORDS` en conséquence.
+
+**Changer le rayon d'un article depuis la liste** : chaque ligne (article réel OU libre)
+a un bouton 🏷️ (`choisirRayonListe(id, produitId?)`) qui ouvre le même sélecteur de
+catégories que partout ailleurs. `assignerRayonListe(id, produitId, catId)` écrit soit sur
+`produits/{produitId}.categorie` (article lié à un vrai produit — change sa catégorie
+partout dans l'app, pas juste dans la liste), soit sur `liste/{id}.categorie` (article
+libre). Le classement se met à jour en direct via les listeners Firestore, donc l'article
+change immédiatement de section en tri « Par rayon ». Pas de vignette colorée par ligne
+d'article (jugé trop chargé) : l'emoji de catégorie n'apparaît qu'à l'en-tête de section
+de rayon (`renderListe`), jamais sur la ligne elle-même.
 
 ## Versioning / PWA
 
