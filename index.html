@@ -501,6 +501,12 @@
           <select id="l-magasin" onchange="renderListe()"></select>
         </label>
 
+        <div class="field-label" style="margin-bottom:6px" data-i18n="liste_sort_label">Trier</div>
+        <div class="seg" id="l-sort" style="margin-bottom:16px">
+          <button type="button" data-v="ajout" onclick="setListeSort('ajout')" data-i18n="liste_sort_add">Ordre d'ajout</button>
+          <button type="button" data-v="rayon" onclick="setListeSort('rayon')" data-i18n="liste_sort_rayon">Par rayon</button>
+        </div>
+
         <div id="liste-body"></div>
       </section>
 
@@ -618,6 +624,7 @@
     userNom: 'comparatom_user_nom',
     theme: 'comparatom_theme',
     lang: 'comparatom_lang',
+    listeSort: 'comparatom_liste_sort',
   };
 
   // ================= I18N =================
@@ -692,6 +699,8 @@
       liste_opti:'Où acheter', liste_one_store:'Tout au même endroit',
       liste_split_on:'Réparti sur {n} magasins', liste_show_split:'voir la répartition',
       liste_tosee:'À voir sur place (prix inconnu)', liste_tap_price:'toucher pour relever le prix',
+      liste_sort_label:'Trier', liste_sort_add:"Ordre d'ajout", liste_sort_rayon:'Par rayon',
+      liste_unclassified:'Non classé',
       reg_user:'Mon prénom (auteur des relevés)', reg_user_ph:'Ton prénom',
       reg_foyers:'Foyers', reg_foyer_new_ph:"Nom d'un nouveau foyer", reg_foyer_create:'Créer un foyer', reg_rename:'renommer',
       reg_magasins:'Magasins', reg_no_mag:'Aucun magasin', reg_produits:'Produits', reg_no_prod:'Aucun produit',
@@ -776,6 +785,8 @@
       liste_opti:'Dónde comprar', liste_one_store:'Todo en un solo lugar',
       liste_split_on:'Repartido en {n} tiendas', liste_show_split:'ver el reparto',
       liste_tosee:'Ver en la tienda (precio desconocido)', liste_tap_price:'toca para anotar el precio',
+      liste_sort_label:'Ordenar', liste_sort_add:'Orden de agregado', liste_sort_rayon:'Por pasillo',
+      liste_unclassified:'Sin clasificar',
       reg_user:'Mi nombre (autor de los registros)', reg_user_ph:'Tu nombre',
       reg_foyers:'Hogares', reg_foyer_new_ph:'Nombre de un nuevo hogar', reg_foyer_create:'Crear un hogar', reg_rename:'renombrar',
       reg_magasins:'Tiendas', reg_no_mag:'Ninguna tienda', reg_produits:'Productos', reg_no_prod:'Ningún producto',
@@ -835,6 +846,18 @@
     if (!c || c.id === 'autre') return '';
     const idx = catsSorted().findIndex(x => x.id === c.id);
     return 'catcol-' + ((idx < 0 ? 0 : idx) % N_CATCOL);
+  }
+  // Ordre "rayons de supermarché" par défaut (globalement le même partout) : fruits/légumes
+  // à l'entrée, puis épicerie, frais, boucherie/poissonnerie, puis le reste. Les catégories
+  // absentes de cette liste (personnalisées) sont ajoutées à la fin, dans leur propre ordre.
+  const RAYON_ORDER = ['legumes', 'fruits', 'boulangerie', 'epicerie-salee', 'epicerie-sucree',
+    'boissons', 'surgeles', 'cremerie', 'viande', 'poisson', 'hygiene', 'entretien', 'bebe', 'animaux', 'autre'];
+  function rayonIndex(catId) {
+    if (!catId) return RAYON_ORDER.length + 999; // article libre / sans catégorie -> à la fin
+    const i = RAYON_ORDER.indexOf(catId);
+    if (i >= 0) return i;
+    const c = catOf(catId);
+    return RAYON_ORDER.length + (c.ordre == null ? 500 : c.ordre);
   }
   const EMOJIS = ['🥩','🍗','🍖','🥓','🍔','🌭','🥪','🐟','🦐','🦑','🦀','🐙','🥦','🥬','🥕','🧅','🧄','🥔','🍅','🌽','🥒','🫑','🍄','🥗','🍎','🍌','🍓','🫐','🍇','🍊','🍋','🍑','🥝','🍒','🍉','🥭','🍍','🥥','🧀','🥛','🧈','🥚','🍳','🍦','🥖','🍞','🥐','🥨','🫓','🥫','🧂','🍝','🍚','🫘','🌾','🍫','🍪','🍬','🍭','🍯','🍰','🧁','☕','🍵','🧃','🥤','🧋','🍷','🍺','🍾','🧊','🍢','🧴','🧼','🧻','🪥','🧽','🧹','🧺','🪣','👶','🍼','🐾','🐕','🐈','🌿','📦','🛒','💊','🌶️','🥜','🍶','🧇'];
 
@@ -1835,16 +1858,36 @@
     return { single, groups, splitTotal, nStores: Object.keys(groups).length, inconnus };
   }
 
+  function setListeSort(mode) {
+    localStorage.setItem(LS.listeSort, mode);
+    document.querySelectorAll('#l-sort button').forEach(b => b.classList.toggle('on', b.dataset.v === mode));
+    renderListe();
+  }
+  window.setListeSort = setListeSort;
+
   function renderListe() {
     const box = $('liste-body');
-    const items = (window._liste || []).slice().sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
+    const parMagasin = document.getElementById('l-magasin'); // évite un crash si appelé avant le rendu du select
+    const triRayon = (localStorage.getItem(LS.listeSort) || 'ajout') === 'rayon';
+    document.querySelectorAll('#l-sort button').forEach(b => b.classList.toggle('on', b.dataset.v === (triRayon ? 'rayon' : 'ajout')));
+
+    const items = (window._liste || []).slice();
+    if (triRayon) {
+      items.sort((a, b) => {
+        const ca = a.libre ? null : prodById(a.produitId)?.categorie;
+        const cb = b.libre ? null : prodById(b.produitId)?.categorie;
+        return rayonIndex(ca) - rayonIndex(cb) || itemNom(a).localeCompare(itemNom(b));
+      });
+    } else {
+      items.sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
+    }
     if (!items.length) { box.innerHTML = `<div class="empty"><div class="em">🛒</div><p>${t('liste_empty')}</p></div>`; return; }
 
-    const magId = $('l-magasin').value;
+    const magId = parMagasin ? parMagasin.value : '';
     const actifs = items.filter(x => !x.coche);
     let total = 0, approx = false;
 
-    const rowsHtml = items.map(it => {
+    function renderRow(it) {
       const p = it.libre ? null : prodById(it.produitId);
       const qte = it.qte || 1;
       const { c: cost, approx: ap, unknown } = coutItemL(it, magId);
@@ -1863,7 +1906,27 @@
         <button class="btn ghost small" onclick="event.stopPropagation();qteListe('${it.id}',${qte + 1})">＋</button>
         <button class="btn ghost small" onclick="event.stopPropagation();supprListe('${it.id}')">✕</button>
       </div>`;
-    }).join('');
+    }
+
+    let rowsHtml;
+    if (triRayon) {
+      // un groupe (titre + carte) par rayon, dans l'ordre "parcours du magasin"
+      const groupsMap = new Map();
+      items.forEach(it => {
+        const p = it.libre ? null : prodById(it.produitId);
+        const cat = p ? catOf(p.categorie) : null;
+        const key = cat ? cat.id : '__none__';
+        if (!groupsMap.has(key)) groupsMap.set(key, { cat, list: [] });
+        groupsMap.get(key).list.push(it);
+      });
+      rowsHtml = [...groupsMap.values()].map(({ cat, list }) => {
+        const label = cat ? `${cat.emoji} ${esc(catLabel(cat))}` : `📝 ${t('liste_unclassified')}`;
+        return `<div class="tiny muted" style="font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:16px 2px 8px">${label}</div>
+          <div class="card">${list.map(renderRow).join('')}</div>`;
+      }).join('');
+    } else {
+      rowsHtml = `<div class="card">${items.map(renderRow).join('')}</div>`;
+    }
 
     // total pour le magasin choisi
     let bandeau = '';
@@ -1903,7 +1966,7 @@
       opti += `</div>`;
     }
 
-    box.innerHTML = `<div class="card">${rowsHtml}</div>${bandeau}${opti}
+    box.innerHTML = `${rowsHtml}${bandeau}${opti}
       <p class="tiny muted center" style="margin-top:8px">${t('liste_approx_foot')}</p>
       <button class="btn ghost" style="margin-top:12px" onclick="viderCoches()">${t('liste_remove_checked')}</button>`;
   }

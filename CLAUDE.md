@@ -125,10 +125,11 @@ tous les foyers sont visibles ; au 1er lancement on entre direct si un seul foye
 bascule de langue) · Saisie (accueil ; produit, magasin, prix, marque/origine/note
 optionnels, photo à la création) · Produits (rayons dynamiques + recherche, vignettes photo) ·
 Fiche produit (comparatif par marque × magasin, moyennes, historique, photo) ·
-Stats (mes magasins) · Liste de courses (partagée ; articles réels OU libres ; carte
-« Où acheter » = `optiPanier` : meilleur magasin unique par couverture, ou panier réparti
-par article le moins cher) · Réglages
-(prénom, gestion des foyers/magasins/produits, thème, export).
+Stats (mes magasins) · Liste de courses (partagée ; articles réels OU libres ; tri « Ordre
+d'ajout » / « Par rayon » — `RAYON_ORDER`/`rayonIndex()`, ordre de parcours magasin type,
+persisté dans `comparatom_liste_sort`, regroupe en cartes par rayon ; carte « Où acheter » =
+`optiPanier` : meilleur magasin unique par couverture, ou panier réparti par article le
+moins cher) · Réglages (prénom, gestion des foyers/magasins/produits, thème, export).
 
 ## Versioning / PWA
 
@@ -146,7 +147,7 @@ cycliques par index d'ordre, `catClass(c)`, `N_CATCOL=10`) : fond plein + emoji 
 vignettes/tuiles/fiche (sélecteurs composés `.lead.catcol-N` etc.), teinte claire + texte
 coloré pour les chips (`.chip.catcol-N`) et le bouton emoji Réglages (`.catcol-N` autonome).
 `sw.js` : **network-first** pour le shell (index.html/navigation/sw.js), cache-first pour le
-reste ; cache `comparatom-v10` — **bump `-vN`** à chaque changement (force l'éviction) ;
+reste ; cache `comparatom-v11` — **bump `-vN`** à chaque changement (force l'éviction) ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 
