@@ -157,7 +157,7 @@ cycliques par index d'ordre, `catClass(c)`, `N_CATCOL=10`) : fond plein + emoji 
 vignettes/tuiles/fiche (sélecteurs composés `.lead.catcol-N` etc.), teinte claire + texte
 coloré pour les chips (`.chip.catcol-N`) et le bouton emoji Réglages (`.catcol-N` autonome).
 `sw.js` : **network-first** pour le shell (index.html/navigation/sw.js), cache-first pour le
-reste ; cache `comparatom-v12` — **bump `-vN`** à chaque changement (force l'éviction) ;
+reste ; cache `comparatom-v13` — **bump `-vN`** à chaque changement (force l'éviction) ;
 il laisse toujours passer les requêtes Firestore/Google en réseau.
 `manifest.json` : `scope`/`start_url` = `/Comparatom/` (chemin GitHub Pages).
 

@@ -1927,6 +1927,25 @@
   }
   window.setListeSort = setListeSort;
 
+  // catégorie "effective" d'un item de liste : celle du produit, celle déjà taguée sur un
+  // article libre, ou à défaut une devinée à la volée (pour les articles ajoutés avant
+  // cette fonctionnalité, ou jamais reconnus au moment de l'ajout).
+  const _healedListeCats = new Set();
+  function effectiveCat(it) {
+    if (!it.libre) return it.produitId ? (prodById(it.produitId)?.categorie || null) : null;
+    if (it.categorie) return it.categorie;
+    return guessCategorie(it.libre);
+  }
+  // répare silencieusement en base les articles libres déjà présents qui n'avaient pas
+  // encore de catégorie (ajoutés avant l'introduction de la devinette, ou non reconnus alors)
+  function ensureLibreCat(it) {
+    if (!it.libre || it.categorie || _healedListeCats.has(it.id)) return;
+    const g = guessCategorie(it.libre);
+    if (!g) return;
+    _healedListeCats.add(it.id);
+    CT.updateDoc(CT.ref('liste', it.id), { categorie: g }).catch(() => { _healedListeCats.delete(it.id); });
+  }
+
   function renderListe() {
     const box = $('liste-body');
     const parMagasin = document.getElementById('l-magasin'); // évite un crash si appelé avant le rendu du select
@@ -1934,12 +1953,9 @@
     document.querySelectorAll('#l-sort button').forEach(b => b.classList.toggle('on', b.dataset.v === (triRayon ? 'rayon' : 'ajout')));
 
     const items = (window._liste || []).slice();
+    items.forEach(ensureLibreCat);
     if (triRayon) {
-      items.sort((a, b) => {
-        const ca = a.libre ? (a.categorie || null) : prodById(a.produitId)?.categorie;
-        const cb = b.libre ? (b.categorie || null) : prodById(b.produitId)?.categorie;
-        return rayonIndex(ca) - rayonIndex(cb) || itemNom(a).localeCompare(itemNom(b));
-      });
+      items.sort((a, b) => rayonIndex(effectiveCat(a)) - rayonIndex(effectiveCat(b)) || itemNom(a).localeCompare(itemNom(b)));
     } else {
       items.sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
     }
@@ -1954,7 +1970,8 @@
       const qte = it.qte || 1;
       const { c: cost, approx: ap, unknown } = coutItemL(it, magId);
       if (!it.coche && !unknown) { total += cost; if (ap) approx = true; }
-      const lead = it.libre ? (it.categorie ? vignette({ categorie: it.categorie }) : '') : vignette(p);
+      const ecat = it.libre ? effectiveCat(it) : null;
+      const lead = it.libre ? (ecat ? vignette({ categorie: ecat }) : '') : vignette(p);
       const priceLine = magId ? (unknown ? (it.libre ? '' : t('liste_price_unknown')) : (ap ? '≈ ' : '') + fmtEuro(cost)) : '';
       const sub = [(qte > 1 ? '×' + qte : ''), priceLine, (it.libre ? t('liste_tap_price') : '')].filter(Boolean).join(' · ');
       return `<div class="list-row" style="cursor:pointer;${it.coche ? 'opacity:.45' : ''}" onclick="listeRowTap('${it.id}')">
@@ -1975,8 +1992,8 @@
       // un groupe (titre + carte) par rayon, dans l'ordre "parcours du magasin"
       const groupsMap = new Map();
       items.forEach(it => {
-        const p = it.libre ? null : prodById(it.produitId);
-        const cat = p ? catOf(p.categorie) : (it.categorie ? catOf(it.categorie) : null);
+        const ec = effectiveCat(it);
+        const cat = ec ? catOf(ec) : null;
         const key = cat ? cat.id : '__none__';
         if (!groupsMap.has(key)) groupsMap.set(key, { cat, list: [] });
         groupsMap.get(key).list.push(it);
